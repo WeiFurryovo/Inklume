@@ -59,7 +59,15 @@ Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based
 
 本项目是纯静态 Astro 输出，`wrangler.jsonc` 将 `dist/` 配置为 Workers Static Assets：
 
-部署前，请把 `astro-paper.config.ts` 中的 `site.url` 从占位地址改为实际的 Workers 或自定义域名；该值用于 canonical URL、RSS、Sitemap 和 OpenGraph。
+站点地址由构建变量 `SITE_URL` 控制，Astro 会在构建阶段将它写入 canonical URL、RSS、Sitemap 和 OpenGraph。未设置时会使用 `https://inklume.example.com/` 占位地址。
+
+本地构建可以在 `.env` 中设置：
+
+```dotenv
+SITE_URL=https://blog.example.com/
+```
+
+在 Cloudflare Workers Builds 的项目设置中，把 `SITE_URL` 添加到 **Build Environment Variables**。它是构建变量，不是 `wrangler.jsonc` 的运行时 `vars`；当前项目输出的是静态 HTML。
 
 ```bash
 npm run deploy

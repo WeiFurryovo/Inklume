@@ -1,9 +1,26 @@
 import { defineAstroPaperConfig } from "./src/types/config";
 
+const DEFAULT_SITE_URL = "https://inklume.example.com/";
+const configuredSiteUrl = process.env.SITE_URL?.trim() || DEFAULT_SITE_URL;
+const siteUrl = (() => {
+  try {
+    const parsedSiteUrl = new URL(configuredSiteUrl);
+    if (!/^https?:$/.test(parsedSiteUrl.protocol)) {
+      throw new Error("only http(s) URLs are supported");
+    }
+    return parsedSiteUrl.href;
+  } catch {
+    throw new Error(
+      `SITE_URL must be an absolute http(s) URL, received "${configuredSiteUrl}".`
+    );
+  }
+})();
+
 export default defineAstroPaperConfig({
   site: {
-    // Replace this with the Workers or custom-domain URL before deployment.
-    url: "https://inklume.example.com/",
+    // Resolved at build time from SITE_URL; the placeholder keeps local builds
+    // usable when no environment variable has been configured yet.
+    url: siteUrl,
     title: "Inklume",
     description:
       "Inklume 是一个记录技术、创作与生活的中英双语博客。A bilingual journal of technology, creativity, and life.",

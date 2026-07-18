@@ -59,7 +59,15 @@ Sveltia CMS is Git-based: saving content creates Git commits rather than rows in
 
 This project is a fully static Astro build. `wrangler.jsonc` publishes `dist/` as Workers Static Assets:
 
-Before deploying, replace the placeholder `site.url` in `astro-paper.config.ts` with the actual Workers or custom-domain URL. Astro uses it for canonical URLs, RSS, the sitemap, and OpenGraph metadata.
+The site URL is controlled by the build variable `SITE_URL`. Astro writes it into canonical URLs, RSS, the sitemap, and OpenGraph metadata during the build. If it is unset, the build uses the placeholder `https://inklume.example.com/`.
+
+For a local build, set it in `.env`:
+
+```dotenv
+SITE_URL=https://blog.example.com/
+```
+
+In Cloudflare Workers Builds, add `SITE_URL` under the project's **Build Environment Variables**. This is a build variable, not a runtime `vars` entry in `wrangler.jsonc`; the current project emits static HTML.
 
 ```bash
 npm run deploy
