@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
 
-app_title: Inklume CMS
+app_title: Sveltia CMS
 
 backend:
   name: github

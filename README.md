@@ -27,7 +27,7 @@ npm run dev
 
 - 中文首页：`http://localhost:4321/`
 - 英文首页：`http://localhost:4321/en/`
-- CMS：`http://localhost:4321/admin/index.html`
+- Sveltia CMS：`http://localhost:4321/admin/index.html`
 
 搜索索引需要先完成一次构建：
 
@@ -47,13 +47,13 @@ public/admin/index.html
 public/admin/config.yml
 ```
 
-中英文文章使用相同文件名时，Sveltia 会将它们视为同一篇文章的不同语言版本。
+中英文文章使用相同文件名时，Sveltia CMS 会将它们视为同一篇文章的不同语言版本。
 
 ## Sveltia CMS
 
 `public/admin/config.yml` 已配置 GitHub backend 和双语 `multiple_folders` 内容模型。个人使用时可以在 Sveltia 登录页使用 GitHub Personal Access Token；多人或非技术编辑者可以额外部署 [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) 并配置 OAuth。
 
-CMS 的内容提交到 GitHub 后会触发构建。Sveltia 目前是 Git-based CMS，保存内容就是创建 Git 提交，不提供独立数据库草稿。
+Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based CMS，保存内容就是创建 Git 提交，不提供独立数据库草稿。
 
 ## Cloudflare Workers 部署
 
@@ -74,8 +74,8 @@ npm run deploy
 
 ## 图片
 
-小规模图片可以放在 `public/uploads/` 并由 Git 管理。照片数量或文件体积变大后，可以把 Sveltia 的媒体存储迁移到 Cloudflare R2。
+小规模图片可以放在 `public/uploads/` 并由 Git 管理。照片数量或文件体积变大后，可以把 Sveltia CMS 的媒体存储迁移到 Cloudflare R2。
 
 ## 许可证与致谢
 
-Inklume 当前基于 [AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的双语路由和内容结构开发，并保留原项目的许可证文件。主题和内容代码按本仓库许可证发布。
+本仓库是 Inklume 对 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的个人改版，沿用了它的双语路由和内容结构；不是上游项目本身。AstroPages-Bilingual 基于 [Sat Naing 的 AstroPaper](https://github.com/satnaing/astro-paper)，后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的许可证文件和来源说明均予以保留。

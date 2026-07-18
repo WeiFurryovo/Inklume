@@ -27,7 +27,7 @@ npm run dev
 
 - Chinese home: `http://localhost:4321/`
 - English home: `http://localhost:4321/en/`
-- CMS: `http://localhost:4321/admin/index.html`
+- Sveltia CMS: `http://localhost:4321/admin/index.html`
 
 The search index is generated during the build:
 
@@ -47,13 +47,13 @@ public/admin/index.html
 public/admin/config.yml
 ```
 
-Matching filenames link the Chinese and English versions of a post in Sveltia.
+Matching filenames link the Chinese and English versions of a post in Sveltia CMS.
 
 ## Sveltia CMS
 
 `public/admin/config.yml` configures the GitHub backend and the bilingual `multiple_folders` content model. For personal use, sign in with a GitHub Personal Access Token. For non-technical editors, deploy the [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) and configure OAuth.
 
-Sveltia is Git-based: saving content creates Git commits rather than rows in a separate draft database.
+Sveltia CMS is Git-based: saving content creates Git commits rather than rows in a separate draft database.
 
 ## Deploying to Cloudflare Workers
 
@@ -74,8 +74,8 @@ The static site does not need the `@astrojs/cloudflare` adapter. Add it later on
 
 ## Images
 
-Small media files can live in `public/uploads/` and be committed to Git. Move Sveltia media storage to Cloudflare R2 when the collection becomes large.
+Small media files can live in `public/uploads/` and be committed to Git. Move Sveltia CMS media storage to Cloudflare R2 when the collection becomes large.
 
 ## License and Attribution
 
-Inklume currently uses the bilingual routing and content structure of [AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual), while retaining the original license file. See the repository license for details.
+This repository is a personal Inklume adaptation of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual), not the upstream project itself. AstroPages-Bilingual is based on [Sat Naing's AstroPaper](https://github.com/satnaing/astro-paper), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original license and attribution are retained.
