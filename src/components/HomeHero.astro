@@ -1,0 +1,81 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import IconLanguage from "@/assets/icons/IconLanguage.svg";
+import IconRss from "@/assets/icons/IconRss.svg";
+import LinkButton from "./LinkButton.astro";
+
+type Props = {
+  locale: string;
+};
+
+const { locale } = Astro.props;
+const isZh = locale === "zh";
+const alternateLocale = isZh ? "en" : "zh";
+const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
+
+const copy = isZh
+  ? {
+      eyebrow: "中英双语手记 / BILINGUAL FIELD NOTES",
+      intro:
+        "记录正在构建的东西、遇到的问题，以及值得留下的生活切片。中文为主，英文并行。",
+      action: "浏览文章",
+      nowLabel: "此刻",
+      now: "正在搭建一套轻量、可拥有、能长期写下去的个人发布空间。",
+      switchLabel: "阅读 English 版本",
+    }
+  : {
+      eyebrow: "BILINGUAL FIELD NOTES / 中英双语手记",
+      intro:
+        "Notes on things being built, problems worth unpacking, and fragments of life worth keeping. Written in English and Chinese.",
+      action: "Read the notes",
+      nowLabel: "Now",
+      now: "Building a lightweight, owned publishing space designed for years of writing.",
+      switchLabel: "阅读中文版本",
+    };
+---
+
+<section id="hero" class="border-border border-b py-10 sm:py-14">
+  <div class="grid gap-8 sm:grid-cols-[minmax(0,1fr)_15rem] sm:items-end">
+    <div>
+      <p class="text-accent mb-3 text-xs font-semibold uppercase">
+        {copy.eyebrow}
+      </p>
+      <h1 class="text-5xl leading-none font-bold sm:text-6xl">Inklume</h1>
+      <p class="text-muted-foreground mt-5 max-w-2xl text-lg leading-8">
+        {copy.intro}
+      </p>
+      <div class="mt-7 flex flex-wrap items-center gap-4">
+        <LinkButton
+          href={getRelativeLocaleUrl(locale, "posts")}
+          class="bg-accent text-accent-foreground hover:bg-accent-secondary rounded-md px-4 py-2 font-semibold hover:text-white"
+        >
+          {copy.action}
+          <IconArrowRight class="size-5 rtl:-rotate-180" />
+        </LinkButton>
+        <a
+          href={rssHref}
+          class="border-border hover:border-accent hover:text-accent grid size-10 place-items-center rounded-md border"
+          aria-label="RSS Feed"
+          title="RSS Feed"
+        >
+          <IconRss class="size-5" />
+        </a>
+      </div>
+    </div>
+
+    <aside class="border-border border-s ps-5">
+      <p class="text-accent-secondary text-xs font-semibold uppercase">
+        {copy.nowLabel}
+      </p>
+      <p class="mt-2 text-sm leading-6">{copy.now}</p>
+      <a
+        href={getRelativeLocaleUrl(alternateLocale, "")}
+        class="text-accent mt-4 inline-flex items-center gap-2 text-sm font-semibold hover:underline"
+      >
+        <IconLanguage class="size-4" />
+        {copy.switchLabel}
+      </a>
+    </aside>
+  </div>
+</section>

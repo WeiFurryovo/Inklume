@@ -3,7 +3,11 @@ import satori from "satori";
 import sharp from "sharp";
 import { fontData, experimental_getFontFileURL } from "astro:assets";
 import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
+import { inklumeOgTheme } from "@/utils/ogTheme";
 import config from "@/config";
+
+const ogDescription =
+  "Bilingual field notes on technology, creativity, and life.";
 
 export const GET: APIRoute = async context => {
   const fonts = fontData["--font-google-sans-code"];
@@ -28,7 +32,7 @@ export const GET: APIRoute = async context => {
       type: "div",
       props: {
         style: {
-          background: "#fefbfb",
+          background: inklumeOgTheme.background,
           width: "100%",
           height: "100%",
           display: "flex",
@@ -44,8 +48,8 @@ export const GET: APIRoute = async context => {
                 position: "absolute",
                 top: "-1px",
                 right: "-1px",
-                border: "4px solid #000",
-                background: "#ecebeb",
+                border: `4px solid ${inklumeOgTheme.border}`,
+                background: inklumeOgTheme.elevated,
                 opacity: "0.9",
                 borderRadius: "4px",
                 display: "flex",
@@ -60,8 +64,8 @@ export const GET: APIRoute = async context => {
             type: "div",
             props: {
               style: {
-                border: "4px solid #000",
-                background: "#fefbfb",
+                border: `4px solid ${inklumeOgTheme.accent}`,
+                background: inklumeOgTheme.surface,
                 borderRadius: "4px",
                 display: "flex",
                 justifyContent: "center",
@@ -98,15 +102,22 @@ export const GET: APIRoute = async context => {
                           {
                             type: "p",
                             props: {
-                              style: { fontSize: 72, fontWeight: "bold" },
+                              style: {
+                                fontSize: 72,
+                                fontWeight: "bold",
+                                color: inklumeOgTheme.foreground,
+                              },
                               children: config.site.title,
                             },
                           },
                           {
                             type: "p",
                             props: {
-                              style: { fontSize: 28 },
-                              children: config.site.description,
+                              style: {
+                                fontSize: 28,
+                                color: inklumeOgTheme.muted,
+                              },
+                              children: ogDescription,
                             },
                           },
                         ],
@@ -125,7 +136,11 @@ export const GET: APIRoute = async context => {
                         children: {
                           type: "span",
                           props: {
-                            style: { overflow: "hidden", fontWeight: "bold" },
+                            style: {
+                              overflow: "hidden",
+                              fontWeight: "bold",
+                              color: inklumeOgTheme.coral,
+                            },
                             children: new URL(config.site.url).hostname,
                           },
                         },

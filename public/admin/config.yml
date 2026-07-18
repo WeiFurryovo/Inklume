@@ -1,0 +1,151 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+app_title: Inklume CMS
+
+backend:
+  name: github
+  repo: WeiFurryovo/Inklume
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+output:
+  omit_empty_optional_fields: true
+
+i18n:
+  structure: multiple_folders
+  locales: [zh, en]
+  default_locale: zh
+  initial_locales: default
+  omit_default_locale_from_preview_path: true
+
+slug:
+  encoding: unicode
+  clean_accents: true
+
+collections:
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
+    icon: article
+    folder: src/content/posts
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    i18n: true
+    slug: "{{slug}}"
+    preview_path: "/{{locale}}/posts/{{slug}}"
+    summary: "{{title}} - {{pubDatetime | date('YYYY-MM-DD')}}"
+    fields:
+      - name: title
+        label: Title
+        widget: string
+        i18n: true
+      - name: description
+        label: Description
+        widget: text
+        i18n: true
+      - name: author
+        label: Author
+        widget: string
+        required: false
+        i18n: duplicate
+      - name: pubDatetime
+        label: Published At
+        widget: datetime
+        default: "{{now}}"
+        input_timezone: Asia/Singapore
+        output_utc: true
+        i18n: duplicate
+      - name: modDatetime
+        label: Updated At
+        widget: datetime
+        required: false
+        input_timezone: Asia/Singapore
+        output_utc: true
+        i18n: true
+      - name: featured
+        label: Featured
+        widget: boolean
+        default: false
+        required: false
+        i18n: duplicate
+      - name: draft
+        label: Draft
+        widget: boolean
+        default: true
+        required: false
+        i18n: true
+      - name: gallery
+        label: Include in Gallery
+        widget: boolean
+        default: false
+        required: false
+        i18n: duplicate
+      - name: tags
+        label: Tags
+        widget: list
+        default: [others]
+        i18n: true
+      - name: ogImage
+        label: Social Image
+        widget: image
+        required: false
+        i18n: duplicate
+      - name: canonicalURL
+        label: Canonical URL
+        widget: string
+        required: false
+        i18n: true
+      - name: hideEditPost
+        label: Hide Edit Link
+        widget: boolean
+        default: false
+        required: false
+        i18n: duplicate
+      - name: timezone
+        label: Display Timezone
+        widget: string
+        required: false
+        i18n: duplicate
+      - name: body
+        label: Body
+        widget: richtext
+        i18n: true
+
+  - name: pages
+    label: Pages
+    label_singular: Page
+    icon: web
+    folder: src/content/pages
+    create: true
+    extension: md
+    format: yaml-frontmatter
+    i18n: true
+    slug: "{{slug}}"
+    preview_path: "/{{locale}}/{{slug}}"
+    fields:
+      - name: title
+        label: Title
+        widget: string
+        i18n: true
+      - name: description
+        label: Description
+        widget: text
+        required: false
+        i18n: true
+      - name: ogImage
+        label: Social Image
+        widget: image
+        required: false
+        i18n: duplicate
+      - name: canonicalURL
+        label: Canonical URL
+        widget: string
+        required: false
+        i18n: true
+      - name: body
+        label: Body
+        widget: richtext
+        i18n: true

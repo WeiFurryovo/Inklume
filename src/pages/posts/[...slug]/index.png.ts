@@ -1,25 +1,17 @@
 import type { APIRoute } from "astro";
-import { getCollection } from "astro:content";
 import { fontData, experimental_getFontFileURL } from "astro:assets";
 import satori from "satori";
 import sharp from "sharp";
 import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
-import { getPostSlug } from "@/utils/getPostPaths";
+import { inklumeOgTheme } from "@/utils/ogTheme";
 import config from "@/config";
 
 export async function getStaticPaths() {
-  if (!config.features.dynamicOgImage) {
-    return [];
-  }
-
-  const posts = await getCollection("posts", ({ id }) =>
-    id.startsWith("zh/")
-  ).then(p => p.filter(({ data }) => !data.draft && !data.ogImage));
-
-  return posts.map(post => ({
-    params: { slug: getPostSlug(post.id, post.filePath) },
-    props: post,
-  }));
+  // The shared renderer is also used by the English route below. Chinese
+  // titles are intentionally left on the static branded card until a
+  // Satori-compatible CJK font is bundled; emitting tofu glyphs is worse than
+  // using a consistent fallback image.
+  return [];
 }
 
 export const GET: APIRoute = async ({ props, url }) => {
@@ -49,7 +41,7 @@ export const GET: APIRoute = async ({ props, url }) => {
       type: "div",
       props: {
         style: {
-          background: "#fefbfb",
+          background: inklumeOgTheme.background,
           width: "100%",
           height: "100%",
           display: "flex",
@@ -64,8 +56,8 @@ export const GET: APIRoute = async ({ props, url }) => {
                 position: "absolute",
                 top: "-1px",
                 right: "-1px",
-                border: "4px solid #000",
-                background: "#ecebeb",
+                border: `4px solid ${inklumeOgTheme.border}`,
+                background: inklumeOgTheme.elevated,
                 opacity: "0.9",
                 borderRadius: "4px",
                 display: "flex",
@@ -80,8 +72,8 @@ export const GET: APIRoute = async ({ props, url }) => {
             type: "div",
             props: {
               style: {
-                border: "4px solid #000",
-                background: "#fefbfb",
+                border: `4px solid ${inklumeOgTheme.accent}`,
+                background: inklumeOgTheme.surface,
                 borderRadius: "4px",
                 display: "flex",
                 justifyContent: "center",
@@ -107,6 +99,7 @@ export const GET: APIRoute = async ({ props, url }) => {
                         style: {
                           fontSize: 72,
                           fontWeight: "bold",
+                          color: inklumeOgTheme.foreground,
                           maxHeight: "84%",
                           overflow: "hidden",
                         },
@@ -128,7 +121,13 @@ export const GET: APIRoute = async ({ props, url }) => {
                             type: "span",
                             props: {
                               children: [
-                                "by ",
+                                {
+                                  type: "span",
+                                  props: {
+                                    style: { color: inklumeOgTheme.muted },
+                                    children: "by ",
+                                  },
+                                },
                                 {
                                   type: "span",
                                   props: {
@@ -142,6 +141,7 @@ export const GET: APIRoute = async ({ props, url }) => {
                                     style: {
                                       overflow: "hidden",
                                       fontWeight: "bold",
+                                      color: inklumeOgTheme.accent,
                                     },
                                     children: props.data.author,
                                   },
@@ -152,7 +152,11 @@ export const GET: APIRoute = async ({ props, url }) => {
                           {
                             type: "span",
                             props: {
-                              style: { overflow: "hidden", fontWeight: "bold" },
+                              style: {
+                                overflow: "hidden",
+                                fontWeight: "bold",
+                                color: inklumeOgTheme.coral,
+                              },
                               children: config.site.title,
                             },
                           },

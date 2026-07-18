@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 # Serialize runs so concurrent commits don't race on the push. Don't cancel an
 # in-flight run — a half-generated commit is worse than waiting.
@@ -32,6 +32,8 @@ jobs:
     name: Generate gallery thumbnails
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
 
     steps:
       - name: "☁️ Checkout repository"
@@ -52,19 +54,14 @@ jobs:
           sudo install /tmp/ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /tmp/ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
           ffmpeg -version | head -1
 
-      - name: "📦 Install pnpm"
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.11.1
-
       - name: "⬢ Use Node.js (from .nvmrc)"
         uses: actions/setup-node@v4
         with:
           node-version-file: ".nvmrc"
-          cache: "pnpm"
+          cache: "npm"
 
       - name: "📦 Install dependencies"
-        run: pnpm install
+        run: npm ci
 
       # Don't fail the job yet: a few unreachable images shouldn't block
       # committing the thumbnails that did generate. We surface it at the end.

@@ -1,16 +1,15 @@
 ---
 title: "关于"
-description: "关于这个双语博客。"
+description: "关于 Inklume。"
 ---
 
-这是一个使用 [Astro](https://astro.build/) 和 [AstroPaper](https://github.com/satnaing/astro-paper) 主题构建的中英双语博客，并针对原生国际化做了重构。
+Inklume 是一个由自己拥有的中英双语写作空间，用来记录技术、创作与生活。
 
 中文文章位于站点根路径，英文文章位于 `/en/` 下。点击页眉的语言切换即可在两种语言间跳转。
 
-## 特性
+## 原则
 
-- 基于 Astro 原生 i18n 路由的双语内容
-- 明暗主题切换
-- 基于 [Pagefind](https://pagefind.app/) 的静态全文搜索
-- 支持 Markdown / MDX、代码高亮与 callouts
-- 部署在 Cloudflare Pages 的纯静态输出
+- 内容以 Markdown 保存，随时可以迁移
+- 中文与英文共享结构，但可以独立表达
+- 页面尽量快速、安静，并让文章始终处于中心
+- 站点由 Astro 构建，通过 Cloudflare Workers 发布

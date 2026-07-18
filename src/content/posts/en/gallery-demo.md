@@ -9,7 +9,7 @@ tags:
 ---
 
 Any post that sets `gallery: true` in its frontmatter contributes its
-image-host photos to the [Gallery](/gallery) page, grouped as an album that
+image-host photos to the [Gallery](/en/gallery) page, grouped as an album that
 links back here. Hover a photo (or open it) to read the caption, camera, and
 shooting settings pulled from its EXIF.
 

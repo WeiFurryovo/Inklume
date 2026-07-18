@@ -1,16 +1,15 @@
 ---
 title: "About"
-description: "About this bilingual blog."
+description: "About Inklume."
 ---
 
-This is a bilingual (Chinese / English) blog built with [Astro](https://astro.build/) and the [AstroPaper](https://github.com/satnaing/astro-paper) theme, refactored for native internationalization.
+Inklume is an owned bilingual writing space for technology, creative work, and life.
 
 Chinese articles live at the site root, English articles under `/en/`. Use the language switch in the header to move between the two.
 
-## Features
+## Principles
 
-- Bilingual content with native Astro i18n routing
-- Light & dark mode
-- Static full-text search via [Pagefind](https://pagefind.app/)
-- Markdown / MDX, code highlighting, and callouts
-- Fast static output deployed on Cloudflare Pages
+- Keep content portable as plain Markdown
+- Give Chinese and English a shared structure without forcing identical prose
+- Keep the interface fast and quiet so the writing stays central
+- Build with Astro and publish through Cloudflare Workers

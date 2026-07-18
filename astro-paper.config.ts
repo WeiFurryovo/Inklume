@@ -2,13 +2,16 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astropages-bilingual.pages.dev/",
-    title: "AstroPaper Bilingual",
-    description: "A bilingual blog based on Astro Paper",
-    author: "tosaki",
-    profile: "https://t0saki.com",
-    ogImage: "astropaper-og.jpg",
-    // Default locale of the bilingual site (Chinese at root, English at /en/).
+    // Replace this with the Workers or custom-domain URL before deployment.
+    url: "https://inklume.example.com/",
+    title: "Inklume",
+    description:
+      "Inklume 是一个记录技术、创作与生活的中英双语博客。A bilingual journal of technology, creativity, and life.",
+    author: "WeiFurryovo",
+    profile: "https://github.com/WeiFurryovo",
+    // Default social card; individual posts still receive generated OG images.
+    ogImage: "inklume-og.png",
+    // Default locale of the Inklume bilingual site (Chinese at root, English at /en/).
     // Used as the html lang fallback when Astro.currentLocale is undefined.
     lang: "zh",
     timezone: "Asia/Singapore",
@@ -21,15 +24,15 @@ export default defineAstroPaperConfig({
   },
   features: {
     lightAndDarkMode: true,
-    // Dynamic per-post OG images (satori + sharp). Works in the pure-static
-    // Node build. Latin titles render fully; CJK titles fall back to the
-    // satori font set (see og.png.ts) — same behaviour as before the rebase.
+    // Dynamic per-post OG images (satori + sharp) are generated for English
+    // posts. Chinese posts use the static branded card until a
+    // Satori-compatible CJK font is bundled.
     dynamicOgImage: true,
     showArchives: true,
     showBackButton: true,
     editPost: {
       enabled: true,
-      url: "https://github.com/t0saki/AstroPages-Bilingual/edit/main/",
+      url: "https://github.com/WeiFurryovo/Inklume/edit/main/",
     },
     search: "pagefind",
     gallery: {
@@ -38,10 +41,11 @@ export default defineAstroPaperConfig({
     },
   },
   socials: [
-    { name: "github", url: "https://github.com/t0saki/AstroPages-Bilingual" },
-    { name: "x", url: "https://x.com/username" },
-    { name: "linkedin", url: "https://www.linkedin.com/in/username/" },
-    { name: "mail", url: "mailto:yourmail@gmail.com" },
+    {
+      name: "github",
+      url: "https://github.com/WeiFurryovo/Inklume",
+      linkTitle: "Inklume on GitHub",
+    },
   ],
   shareLinks: [
     { name: "whatsapp", url: "https://wa.me/?text=" },

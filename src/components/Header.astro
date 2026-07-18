@@ -8,9 +8,10 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconSearch from "@/assets/icons/IconSearch.svg";
 import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconX from "@/assets/icons/IconX.svg";
+import IconEdit from "@/assets/icons/IconEdit.svg";
 import LinkButton from "./LinkButton.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
-import { stripBase, stripLocale } from "@/utils/withBase";
+import { getAssetPath, stripBase, stripLocale } from "@/utils/withBase";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -52,9 +53,14 @@ const isActive = (path: string) => {
   >
     <a
       href={getRelativeLocaleUrl(locale, "")}
-      class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+      class="group absolute flex items-center gap-2 py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
     >
-      {site.title}
+      <span
+        aria-hidden="true"
+        class="bg-accent text-accent-foreground grid size-8 place-items-center rounded-md text-base font-bold transition-transform group-hover:-rotate-6"
+        >I</span
+      >
+      <span>{site.title}</span>
     </a>
     <nav
       id="nav-menu"
@@ -169,6 +175,17 @@ const isActive = (path: string) => {
             </li>
           )
         }
+        <li class="col-span-1 flex items-center justify-center">
+          <a
+            href={getAssetPath("admin/index.html")}
+            data-astro-reload
+            class="focus-outline hover:text-accent relative grid size-8 place-items-center"
+            title="Inklume CMS"
+            aria-label="Inklume CMS"
+          >
+            <IconEdit class="size-5" />
+          </a>
+        </li>
         <li class="col-span-2 flex items-center justify-center sm:col-span-1">
           <LanguageSwitcher />
         </li>

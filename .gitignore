@@ -16,7 +16,11 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.*
+!.env.example
 .env.production
+.dev.vars
+.dev.vars.*
 
 # macOS-specific files
 .DS_Store
@@ -27,3 +31,6 @@ pnpm-debug.log*
 # pagefind
 
 public/pagefind
+
+# local visual regression captures
+.visual-check/

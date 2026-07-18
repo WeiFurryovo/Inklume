@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#121816"/>
+  <rect x="72" y="72" width="112" height="112" rx="18" fill="#62d6a1"/>
+  <path d="M105 96h46v11h-16v42h16v11h-46v-11h16v-42h-16z" fill="#121816"/>
+  <circle cx="167" cy="89" r="12" fill="#ff8b79"/>
+  <text x="72" y="330" fill="#edf5f0" font-family="sans-serif" font-size="108" font-weight="700">Inklume</text>
+  <text x="78" y="405" fill="#a9bdb3" font-family="sans-serif" font-size="34">Bilingual field notes on technology, creativity, and life.</text>
+  <line x1="78" y1="492" x2="1122" y2="492" stroke="#3b4b44" stroke-width="2"/>
+  <text x="78" y="548" fill="#62d6a1" font-family="monospace" font-size="24">中文 / ENGLISH</text>
+</svg>

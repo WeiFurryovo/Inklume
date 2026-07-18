@@ -87,7 +87,7 @@ if (typeof initOgImage === "string") {
   ogImageUrl = initOgImage.src;
 }
 
-if (!ogImageUrl && config.features.dynamicOgImage) {
+if (!ogImageUrl && locale !== "zh" && config.features.dynamicOgImage) {
   const postUrl = getPostUrl(post.id, post.filePath, locale).replace(
     /\/+$/,
     ""

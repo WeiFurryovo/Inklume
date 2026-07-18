@@ -21,11 +21,8 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
 
-// Pure-static build deployed to Cloudflare Pages.
-// NOTE: the Astro 6 Cloudflare *Workers* adapter is intentionally NOT used here
-// because its workerd prerenderer currently fails static builds
-// (withastro/astro#15684, #15650). A Keystatic + Workers/SSR variant of this
-// project is preserved on the `keystatic-workers` branch (see README).
+// Inklume is intentionally pure-static. The generated dist/ directory is
+// uploaded as Workers Static Assets; no runtime adapter is needed for the blog.
 export default defineConfig({
   site: config.site.url,
 

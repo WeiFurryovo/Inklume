@@ -1,7 +1,7 @@
 ---
-title: Welcome to AstroPaper
+title: Welcome to Inklume
 pubDatetime: 2026-01-11T00:00:00Z
-description: This is a sample English blog post to demonstrate the bilingual blog system.
+description: "The first Inklume entry: a bilingual writing space that is owned, portable, and built to last."
 featured: true
 draft: false
 tags:
@@ -9,25 +9,22 @@ tags:
   - introduction
 ---
 
-# Welcome to AstroPaper Bilingual Blog
+# Welcome to Inklume
 
-This is a bilingual blog system built on the AstroPaper theme.
+Inklume is a bilingual personal publishing space for projects in progress, problems worth unpacking, and fragments of life worth keeping.
 
-## Key Features
+## Why Inklume
 
-- 🌍 **Bilingual Support**: Full Chinese and English content support
-- 🚀 **High Performance**: Built on Astro 5 static site generation
-- ✍️ **Keystatic CMS**: Intuitive content management experience
-- ☁️ **Cloudflare Pages**: Edge deployment, global acceleration
+`Ink` is for writing; `lume` is for a quiet source of light. The name does not belong to a framework. It is a reminder to write the thought down first, then let it be seen.
 
-## Tech Stack
+## How this space works
 
-This blog uses the following technologies:
+Posts live as Markdown in an owned Git repository. Sveltia CMS provides the editor, Astro rebuilds both language editions after each content change, and Cloudflare Workers distributes the resulting static site.
 
-- Astro v5 with Native i18n
-- Keystatic Headless CMS
-- TailwindCSS v4
-- TypeScript
+- Chinese content lives at the site root
+- English content lives under `/en/`
+- Git keeps the content and its history portable
+- Search, equations, and pages are generated at build time
 
 ## Math Formulas
 
@@ -37,4 +34,4 @@ $$
 \int_0^1 x^2 \, dx = \frac{1}{3}
 $$
 
-Enjoy!
+This is only the first edition. From here, the writing matters more than the feature list.

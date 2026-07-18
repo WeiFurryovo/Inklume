@@ -1,13 +1,17 @@
 {
-  "name": "bilingual-blog",
+  "name": "inklume",
   "type": "module",
-  "version": "6.1.0",
+  "version": "0.1.0",
+  "description": "A bilingual Astro journal powered by Sveltia CMS and Cloudflare Workers.",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/ && cp _redirects dist/",
+    "build": "astro check && astro build && pagefind --site dist && cp _redirects dist/",
+    "deploy": "npm run build && wrangler deploy",
+    "check": "astro check",
+    "type-check": "tsc --noEmit",
     "preview": "astro preview",
     "sync": "astro sync",
     "astro": "astro",
@@ -51,6 +55,14 @@
     "prettier": "3.8.3",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.107.1"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true,
+    "esbuild@0.27.7": true,
+    "esbuild@0.27.2": true,
+    "esbuild@0.28.1": true,
+    "workerd@1.20260714.1": true
   }
 }
