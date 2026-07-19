@@ -19,7 +19,7 @@ Inklume is a bilingual personal publishing space for projects in progress, probl
 
 ## How this space works
 
-Posts live as Markdown in an owned Git repository. Sveltia CMS provides the editor, Astro rebuilds both language editions after each content change, and Cloudflare Workers distributes the resulting static site.
+Posts live as Markdown in an owned Git repository. Sveltia CMS provides the editor, Astro rebuilds both language editions after each content change, and Cloudflare Pages publishes the resulting static site.
 
 - Chinese content lives at the site root
 - English content lives under `/en/`

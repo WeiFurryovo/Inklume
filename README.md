@@ -2,15 +2,15 @@
 
 [English](README-en.md)
 
-一个由 Astro、Sveltia CMS 和 Cloudflare Workers 驱动的中英双语个人写作空间。
+一个由 Astro、Sveltia CMS 和 Cloudflare Pages 驱动的中英双语个人写作空间。
 
-Inklume 把内容保存在 Git 仓库中：访客看到的是 Astro 构建的静态页面，编辑者通过 `/admin/index.html` 的 Sveltia CMS 修改 Markdown，提交后由 Workers Builds 自动重新发布。
+Inklume 把内容保存在 Git 仓库中：访客看到的是 Astro 构建的静态页面，编辑者通过 `/admin/index.html` 的 Sveltia CMS 修改 Markdown，提交后由 Cloudflare Pages 自动重新构建并发布。
 
 ## 特性
 
 - Astro 原生 i18n：中文位于根路径，英文位于 `/en/`
 - Sveltia CMS：Git-based 内容管理，不需要数据库
-- Cloudflare Workers Static Assets：静态优先，按需再扩展 Worker API
+- Cloudflare Pages：通过 Git 集成自动构建静态站点，并提供分支和 Pull Request 预览
 - Pagefind 静态全文搜索
 - Markdown / MDX、代码高亮、数学公式与 callouts
 - 按文章组织的照片相册和 PhotoSwipe 灯箱
@@ -55,30 +55,35 @@ public/admin/config.yml
 
 Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based CMS，保存内容就是创建 Git 提交，不提供独立数据库草稿。
 
-## Cloudflare Workers 部署
+## Cloudflare Pages 部署
 
-本项目是纯静态 Astro 输出，`wrangler.jsonc` 将 `dist/` 配置为 Workers Static Assets：
+本项目是纯静态 Astro 输出，`wrangler.jsonc` 使用 `pages_build_output_dir` 指向 `dist/`。推荐在 Cloudflare Pages 中连接这个 GitHub 仓库，让 Pages 负责构建和发布。
 
-站点地址由构建变量 `SITE_URL` 控制，Astro 会在构建阶段将它写入 canonical URL、RSS、Sitemap 和 OpenGraph。未设置时会使用 `https://inklume.example.com/` 占位地址。
+在 Cloudflare Dashboard 的 **Workers & Pages → Create application → Pages → Import an existing Git repository** 中选择 `WeiFurryovo/Inklume`，然后设置：
 
-本地构建可以在 `.env` 中设置：
+- Production branch：`main`
+- Project name：`inklume`
+- Build command：`npm run build`
+- Build output directory：`dist`
+- 仓库 `.nvmrc` 已固定 Node.js `24`；如果构建镜像没有读取它，再在环境变量中添加 `NODE_VERSION=24`
 
-```dotenv
-SITE_URL=https://blog.example.com/
+在 Pages 项目的 **Settings → Environment variables** 中，为 Production 配置稳定的 `SITE_URL`，例如 `https://blog.example.com/`。它是构建变量，Astro 会在构建阶段将它写入 canonical URL、RSS、Sitemap 和 OpenGraph；修改后需要重新触发一次部署。Pages 自动注入的 `CF_PAGES_URL` 会作为没有自定义 `SITE_URL` 时的回退值，预览部署也能使用对应的预览地址，但生产环境建议始终设置 `SITE_URL`。
+
+本地构建可以在命令前设置：
+
+```bash
+SITE_URL=https://blog.example.com/ npm run build
 ```
 
-在 Cloudflare Workers Builds 的项目设置中，把 `SITE_URL` 添加到 **Build Environment Variables**。它是构建变量，不是 `wrangler.jsonc` 的运行时 `vars`；当前项目输出的是静态 HTML。
+连接 GitHub 后，推送到 `main` 会自动发布，其他分支和 Pull Request 会生成预览。Sveltia CMS 提交内容到 `main` 后也会触发 Pages 构建；相册缩略图工作流回写的提交会触发后续构建。
 
 ```bash
 npm run deploy
 ```
 
-也可以在 Cloudflare Workers Builds 中配置：
+`npm run deploy` 用 Wrangler 直接发布到已存在的 `inklume` Pages 项目，适合本地手动发布；先在 Dashboard 创建 Git 集成项目并连接 GitHub 后，日常通常不需要运行它。不要在创建 Git 集成项目之前运行此命令，以免误创建无法切换回 Git 集成的 Direct Upload 项目。
 
-- Build command: `npm run build`
-- Deploy command: `npx wrangler deploy`
-
-纯静态博客不需要 `@astrojs/cloudflare` adapter。若以后加入 SSR、API 或 Cloudflare bindings，再单独启用 adapter，并审查运行时依赖。
+纯静态博客不需要 `@astrojs/cloudflare` adapter。若以后加入 SSR、API 或 Cloudflare bindings，再单独启用 Pages Functions/adapter，并审查运行时依赖。
 
 ## 图片
 

@@ -1,7 +1,10 @@
 import { defineAstroPaperConfig } from "./src/types/config";
 
 const DEFAULT_SITE_URL = "https://inklume.example.com/";
-const configuredSiteUrl = process.env.SITE_URL?.trim() || DEFAULT_SITE_URL;
+const configuredSiteUrl =
+  process.env.SITE_URL?.trim() ||
+  process.env.CF_PAGES_URL?.trim() ||
+  DEFAULT_SITE_URL;
 const siteUrl = (() => {
   try {
     const parsedSiteUrl = new URL(configuredSiteUrl);

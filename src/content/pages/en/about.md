@@ -12,4 +12,4 @@ Chinese articles live at the site root, English articles under `/en/`. Use the l
 - Keep content portable as plain Markdown
 - Give Chinese and English a shared structure without forcing identical prose
 - Keep the interface fast and quiet so the writing stays central
-- Build with Astro and publish through Cloudflare Workers
+- Build with Astro and publish through Cloudflare Pages

@@ -2,14 +2,14 @@
   "name": "inklume",
   "type": "module",
   "version": "0.1.0",
-  "description": "A bilingual Astro journal powered by Sveltia CMS and Cloudflare Workers.",
+  "description": "A bilingual Astro journal powered by Sveltia CMS and Cloudflare Pages.",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build && pagefind --site dist && cp _redirects dist/",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name inklume",
     "check": "astro check",
     "type-check": "tsc --noEmit",
     "preview": "astro preview",

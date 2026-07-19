@@ -2,15 +2,15 @@
 
 [中文](README.md)
 
-A bilingual personal writing space powered by Astro, Sveltia CMS, and Cloudflare Workers.
+A bilingual personal writing space powered by Astro, Sveltia CMS, and Cloudflare Pages.
 
-Inklume keeps content in Git: visitors receive Astro-generated static pages, while editors use the Sveltia CMS at `/admin/index.html`. Every content commit can trigger a Workers Builds deployment.
+Inklume keeps content in Git: visitors receive Astro-generated static pages, while editors use the Sveltia CMS at `/admin/index.html`. Every content commit can trigger a Cloudflare Pages build and deployment.
 
 ## Features
 
 - Native Astro i18n: Chinese at the root and English under `/en/`
 - Sveltia CMS with a GitHub backend and no database
-- Cloudflare Workers Static Assets with a static-first architecture
+- Cloudflare Pages Git integration with branch and pull request previews
 - Pagefind full-text search
 - Markdown / MDX, syntax highlighting, math, and callouts
 - Article-based photo gallery with a PhotoSwipe lightbox
@@ -55,30 +55,35 @@ Matching filenames link the Chinese and English versions of a post in Sveltia CM
 
 Sveltia CMS is Git-based: saving content creates Git commits rather than rows in a separate draft database.
 
-## Deploying to Cloudflare Workers
+## Deploying to Cloudflare Pages
 
-This project is a fully static Astro build. `wrangler.jsonc` publishes `dist/` as Workers Static Assets:
+This project is a fully static Astro build. `wrangler.jsonc` uses `pages_build_output_dir` to point Pages at `dist/`. The recommended setup is to connect this GitHub repository to Cloudflare Pages and let Pages build and publish it.
 
-The site URL is controlled by the build variable `SITE_URL`. Astro writes it into canonical URLs, RSS, the sitemap, and OpenGraph metadata during the build. If it is unset, the build uses the placeholder `https://inklume.example.com/`.
+In the Cloudflare Dashboard, open **Workers & Pages → Create application → Pages → Import an existing Git repository**, select `WeiFurryovo/Inklume`, and set:
 
-For a local build, set it in `.env`:
+- Production branch: `main`
+- Project name: `inklume`
+- Build command: `npm run build`
+- Build output directory: `dist`
+- The repository's `.nvmrc` pins Node.js `24`; if the build image does not read it, add `NODE_VERSION=24` as an environment variable
 
-```dotenv
-SITE_URL=https://blog.example.com/
+In the Pages project's **Settings → Environment variables**, set a stable Production `SITE_URL`, for example `https://blog.example.com/`. This build variable is written into canonical URLs, RSS, the sitemap, and OpenGraph metadata; trigger a new deployment after changing it. Pages automatically injects `CF_PAGES_URL`, which is used as the fallback when `SITE_URL` is not set and gives preview builds their deployment URL, but production should always set `SITE_URL`.
+
+For a local build, set it on the command:
+
+```bash
+SITE_URL=https://blog.example.com/ npm run build
 ```
 
-In Cloudflare Workers Builds, add `SITE_URL` under the project's **Build Environment Variables**. This is a build variable, not a runtime `vars` entry in `wrangler.jsonc`; the current project emits static HTML.
+With Git integration enabled, pushes to `main` deploy automatically, while other branches and pull requests receive preview deployments. Sveltia CMS commits to `main` trigger the same Pages build; the gallery thumbnail workflow's generated commit triggers the follow-up build.
 
 ```bash
 npm run deploy
 ```
 
-For Workers Builds, use:
+`npm run deploy` uses Wrangler to upload directly to an existing `inklume` Pages project for local/manual deployments; create the Git-integrated project in the dashboard first. Do not run it before that setup, because a Direct Upload project cannot later be switched to Git integration. Git-integrated projects normally do not need it.
 
-- Build command: `npm run build`
-- Deploy command: `npx wrangler deploy`
-
-The static site does not need the `@astrojs/cloudflare` adapter. Add it later only if the project gains SSR, APIs, or Cloudflare bindings, and audit runtime dependencies at that point.
+The static site does not need the `@astrojs/cloudflare` adapter. Add Pages Functions/the adapter later only if the project gains SSR, APIs, or Cloudflare bindings, and audit runtime dependencies at that point.
 
 ## Images
 

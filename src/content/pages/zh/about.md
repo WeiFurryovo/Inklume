@@ -12,4 +12,4 @@ Inklume 是一个由自己拥有的中英双语写作空间，用来记录技术
 - 内容以 Markdown 保存，随时可以迁移
 - 中文与英文共享结构，但可以独立表达
 - 页面尽量快速、安静，并让文章始终处于中心
-- 站点由 Astro 构建，通过 Cloudflare Workers 发布
+- 站点由 Astro 构建，通过 Cloudflare Pages 发布

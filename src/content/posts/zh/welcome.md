@@ -19,7 +19,7 @@ Inklume 是一个中英双语的个人写作空间。这里会留下正在构建
 
 ## 这个空间如何运作
 
-文章以 Markdown 保存在自己的 Git 仓库里。Sveltia CMS 提供编辑界面，Astro 在每次内容更新后重新生成中文与英文站点，最后由 Cloudflare Workers 分发静态文件。
+文章以 Markdown 保存在自己的 Git 仓库里。Sveltia CMS 提供编辑界面，Astro 在每次内容更新后重新生成中文与英文站点，最后由 Cloudflare Pages 发布静态文件。
 
 - 中文内容位于站点根路径
 - 英文内容位于 `/en/`

@@ -1,7 +1,7 @@
 name: Gallery thumbnails
 
 # When a gallery post changes, regenerate thumbnails + manifest and commit them
-# back to main. That bot commit triggers a second Cloudflare build which picks
+# back to main. That bot commit triggers a second Cloudflare Pages build which picks
 # up the new thumbnails (the "double build" — the first build renders any new
 # photo from its original URL as a fallback until this lands).
 #
@@ -80,7 +80,7 @@ jobs:
             echo "No gallery changes to commit."
             exit 0
           fi
-          # No [skip ci]: the resulting push must trigger the second Workers build.
+          # No [skip ci]: the resulting push must trigger the second Pages build.
           git commit -m "chore(gallery): regenerate thumbnails + manifest"
           git pull --rebase origin main
           git push origin HEAD:main

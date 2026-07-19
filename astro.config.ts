@@ -22,7 +22,7 @@ import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
 
 // Inklume is intentionally pure-static. The generated dist/ directory is
-// uploaded as Workers Static Assets; no runtime adapter is needed for the blog.
+// uploaded to Cloudflare Pages; no runtime adapter is needed for the blog.
 export default defineConfig({
   site: config.site.url,
 
