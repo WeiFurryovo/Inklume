@@ -2,13 +2,14 @@
 
 [中文](README.md)
 
-A bilingual personal writing space powered by Astro, Sveltia CMS, and Cloudflare Pages.
+A bilingual personal writing space using [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) as its frontend foundation, powered by Astro, Sveltia CMS, and Cloudflare Pages.
 
 Inklume keeps content in Git: visitors receive Astro-generated static pages, while editors use the Sveltia CMS at `/admin/index.html`. Every content commit can trigger a Cloudflare Pages build and deployment.
 
 ## Features
 
 - Native Astro i18n: Chinese at the root and English under `/en/`
+- Astro Theme Pure navigation, cards, theme switcher, and icon components
 - Sveltia CMS with a GitHub backend and no database
 - Cloudflare Pages Git integration with branch and pull request previews
 - Pagefind full-text search
@@ -91,4 +92,4 @@ Small media files can live in `public/uploads/` and be committed to Git. Move Sv
 
 ## License and Attribution
 
-This repository is a personal Inklume adaptation of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual), not the upstream project itself. AstroPages-Bilingual is based on [Sat Naing's AstroPaper](https://github.com/satnaing/astro-paper), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original license and attribution are retained.
+This repository is a personal Inklume adaptation of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual), not the upstream project itself. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original MIT license and attribution are retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the theme notice.

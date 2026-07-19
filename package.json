@@ -2,7 +2,7 @@
   "name": "inklume",
   "type": "module",
   "version": "0.1.0",
-  "description": "A bilingual Astro journal powered by Sveltia CMS and Cloudflare Pages.",
+  "description": "A bilingual Astro journal using Astro Theme Pure, Sveltia CMS, and Cloudflare Pages.",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -23,9 +23,9 @@
     "@astrojs/mdx": "^6.0.1",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
-    "@chinese-fonts/sypxzs": "^3.0.0",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.2",
+    "astro-pure": "1.4.6",
     "dayjs": "^1.11.21",
     "katex": "^0.17.0",
     "lodash.kebabcase": "^4.1.1",
@@ -56,6 +56,7 @@
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "typescript": "^6.0.3",
+    "unocss": "^66.6.8",
     "wrangler": "^4.107.1"
   },
   "allowScripts": {

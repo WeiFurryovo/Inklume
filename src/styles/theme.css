@@ -1,44 +1,54 @@
-/* Register design tokens for Tailwind v4 */
+/* Pure-compatible color channels shared by Tailwind and UnoCSS. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent-secondary: var(--accent-secondary);
-  --color-surface: var(--surface);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  /* CJK-capable stack: Source Han Serif (via @chinese-fonts/sypxzs, imported in
-     Layout) for Chinese, Google Sans Code + system fonts as fallbacks. */
+  --color-primary: hsl(var(--primary));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-secondary: hsl(var(--accent-secondary));
+  --color-surface: hsl(var(--surface));
+  --color-card: hsl(var(--card));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
   --font-app:
-    "Source Han Serif CN for Display", var(--font-google-sans-code),
-    "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    var(--font-satoshi), "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+    system-ui, sans-serif;
 }
 
-/* Light theme values */
-:root,
-[data-theme="light"] {
-  --background: #f4f7f5;
-  --foreground: #18211e;
-  --surface: #ffffff;
-  --accent: #087f5b;
-  --accent-foreground: #ffffff;
-  --accent-secondary: #d95f4f;
-  --muted: #e3ebe6;
-  --muted-foreground: #607068;
-  --border: #cdd9d2;
+:root {
+  --primary: 198 30% 42%;
+  --background: 210 33% 99%;
+  --foreground: 240 10% 4%;
+  --muted-foreground: 240 4% 32%;
+  --muted: 240 5% 96%;
+  --card: 0 0% 100%;
+  --border: 240 6% 88%;
+  --input: 240 6% 90%;
+  --ring: 198 30% 42%;
+  --accent: var(--primary);
+  --accent-foreground: 0 0% 100%;
+  --accent-secondary: 8 65% 58%;
+  --surface: var(--card);
+  --radius: 0.5rem;
+  --un-default-border-color: hsl(var(--border) / 1);
 }
 
-/* Dark theme values */
-[data-theme="dark"] {
-  --background: #121816;
-  --foreground: #edf5f0;
-  --surface: #1a2420;
-  --accent: #62d6a1;
-  --accent-foreground: #ffffff;
-  --accent-secondary: #ff8b79;
-  --muted: #26332e;
-  --muted-foreground: #a9bdb3;
-  --border: #3b4b44;
+.dark {
+  --primary: 195 68% 76%;
+  --background: 240 21% 5%;
+  --foreground: 0 0% 98%;
+  --muted-foreground: 240 5% 75%;
+  --muted: 240 6% 13%;
+  --card: 240 4% 18%;
+  --border: 240 4% 23%;
+  --input: 240 4% 18%;
+  --ring: 195 68% 76%;
+  --accent: var(--primary);
+  --accent-foreground: 240 21% 5%;
+  --accent-secondary: 8 85% 72%;
+  --surface: var(--card);
+  color-scheme: dark;
 }

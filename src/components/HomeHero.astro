@@ -1,9 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import IconLanguage from "@/assets/icons/IconLanguage.svg";
-import IconRss from "@/assets/icons/IconRss.svg";
-import LinkButton from "./LinkButton.astro";
+import { Icon } from "astro-pure/user";
+import { getAssetPath } from "@/utils/withBase";
 
 type Props = {
   locale: string;
@@ -16,7 +14,6 @@ const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
 
 const copy = isZh
   ? {
-      eyebrow: "中英双语手记 / BILINGUAL FIELD NOTES",
       intro:
         "记录正在构建的东西、遇到的问题，以及值得留下的生活切片。中文为主，英文并行。",
       action: "浏览文章",
@@ -25,7 +22,6 @@ const copy = isZh
       switchLabel: "阅读 English 版本",
     }
   : {
-      eyebrow: "BILINGUAL FIELD NOTES / 中英双语手记",
       intro:
         "Notes on things being built, problems worth unpacking, and fragments of life worth keeping. Written in English and Chinese.",
       action: "Read the notes",
@@ -35,47 +31,70 @@ const copy = isZh
     };
 ---
 
-<section id="hero" class="border-border border-b py-10 sm:py-14">
-  <div class="grid gap-8 sm:grid-cols-[minmax(0,1fr)_15rem] sm:items-end">
-    <div>
-      <p class="text-accent mb-3 text-xs font-semibold uppercase">
-        {copy.eyebrow}
-      </p>
-      <h1 class="text-5xl leading-none font-bold sm:text-6xl">Inklume</h1>
-      <p class="text-muted-foreground mt-5 max-w-2xl text-lg leading-8">
-        {copy.intro}
-      </p>
-      <div class="mt-7 flex flex-wrap items-center gap-4">
-        <LinkButton
-          href={getRelativeLocaleUrl(locale, "posts")}
-          class="bg-accent text-accent-foreground hover:bg-accent-secondary rounded-md px-4 py-2 font-semibold hover:text-white"
-        >
-          {copy.action}
-          <IconArrowRight class="size-5 rtl:-rotate-180" />
-        </LinkButton>
-        <a
-          href={rssHref}
-          class="border-border hover:border-accent hover:text-accent grid size-10 place-items-center rounded-md border"
-          aria-label="RSS Feed"
-          title="RSS Feed"
-        >
-          <IconRss class="size-5" />
-        </a>
-      </div>
-    </div>
+<section
+  id="hero"
+  class="pure-animate flex flex-col items-center py-10 text-center sm:py-14"
+>
+  <img
+    src={getAssetPath("favicon.svg")}
+    alt="Inklume"
+    width="112"
+    height="112"
+    fetchpriority="high"
+    class="border-border bg-background size-24 rounded-3xl border p-1 shadow-sm sm:size-28"
+  />
 
-    <aside class="border-border border-s ps-5">
-      <p class="text-accent-secondary text-xs font-semibold uppercase">
-        {copy.nowLabel}
-      </p>
-      <p class="mt-2 text-sm leading-6">{copy.now}</p>
-      <a
-        href={getRelativeLocaleUrl(alternateLocale, "")}
-        class="text-accent mt-4 inline-flex items-center gap-2 text-sm font-semibold hover:underline"
-      >
-        <IconLanguage class="size-4" />
-        {copy.switchLabel}
-      </a>
-    </aside>
+  <div class="mt-6 flex max-w-2xl flex-col items-center gap-3">
+    <p class="text-primary text-xs font-medium tracking-normal uppercase">
+      Bilingual field notes / 中英双语手记
+    </p>
+    <h1 class="text-3xl font-medium sm:text-4xl">Inklume</h1>
+    <p class="text-muted-foreground text-base leading-7 sm:text-lg">
+      {copy.intro}
+    </p>
+  </div>
+
+  <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+    <a
+      href={getRelativeLocaleUrl(locale, "posts")}
+      class="bg-muted text-foreground hover:bg-card hover:text-primary inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium no-underline transition-colors"
+    >
+      {copy.action}
+      <span aria-hidden="true">→</span>
+    </a>
+    <a
+      href="https://github.com/WeiFurryovo/Inklume"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-muted text-muted-foreground hover:bg-card hover:text-primary inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm no-underline transition-colors"
+    >
+      <Icon name="github" class="size-4" />
+      GitHub
+    </a>
+    <a
+      href={rssHref}
+      class="bg-muted text-muted-foreground hover:bg-card hover:text-primary grid size-9 place-items-center rounded-lg border transition-colors"
+      aria-label="RSS Feed"
+      title="RSS Feed"
+    >
+      <Icon name="rss" class="size-4" />
+    </a>
+  </div>
+
+  <div
+    class="border-border mt-9 flex w-full max-w-2xl flex-col gap-2 border-t pt-5 text-start sm:flex-row sm:items-start sm:justify-between sm:gap-8"
+  >
+    <div>
+      <p class="text-primary text-xs font-medium uppercase">{copy.nowLabel}</p>
+      <p class="text-muted-foreground mt-1 text-sm leading-6">{copy.now}</p>
+    </div>
+    <a
+      href={getRelativeLocaleUrl(alternateLocale, "")}
+      data-lang-switch={alternateLocale}
+      class="text-primary inline-flex shrink-0 items-center gap-1.5 pt-1 text-sm font-medium no-underline hover:underline"
+    >
+      <Icon name="earth" class="size-4" />
+      {copy.switchLabel}
+    </a>
   </div>
 </section>

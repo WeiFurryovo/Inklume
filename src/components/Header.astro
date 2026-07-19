@@ -1,241 +1,224 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconUnderline from "@/assets/icons/IconUnderline.svg";
-import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
-import IconArchive from "@/assets/icons/IconArchive.svg";
-import IconPhoto from "@/assets/icons/IconPhoto.svg";
-import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
-import IconSearch from "@/assets/icons/IconSearch.svg";
-import IconMoon from "@/assets/icons/IconMoon.svg";
-import IconX from "@/assets/icons/IconX.svg";
-import IconEdit from "@/assets/icons/IconEdit.svg";
-import LinkButton from "./LinkButton.astro";
+import { Icon } from "astro-pure/user";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { getAssetPath, stripBase, stripLocale } from "@/utils/withBase";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-const { site, features } = config;
-
-const locale = Astro.currentLocale ?? config.site.lang;
+const { features, site } = config;
+const locale = Astro.currentLocale ?? site.lang;
 const t = useTranslations(locale);
 
-// Strip the base prefix so isActive comparisons work regardless of deploy subdirectory.
-// e.g. with base "/blog": "/blog/posts/slug" → "/posts/slug"
 const relativePath = stripBase(Astro.url.pathname);
-const pathWithoutTrailingSlash =
+const normalizedPath =
   relativePath.endsWith("/") && relativePath !== "/"
     ? relativePath.slice(0, -1)
     : relativePath;
-
-const currentPath = stripLocale(pathWithoutTrailingSlash, locale);
+const currentPath = stripLocale(normalizedPath, locale);
 
 const isActive = (path: string) => {
-  const currentPathArray = currentPath.split("/").filter(p => p.trim());
-  const pathArray = path.split("/").filter(p => p.trim());
-  return currentPath === path || currentPathArray[0] === pathArray[0];
+  const currentRoot = currentPath.split("/").filter(Boolean)[0];
+  const targetRoot = path.split("/").filter(Boolean)[0];
+  return currentPath === path || currentRoot === targetRoot;
 };
+
+const menu = [
+  { title: t.nav.posts, path: "/posts" },
+  { title: t.nav.tags, path: "/tags" },
+  ...(features.showArchives
+    ? [{ title: t.nav.archives, path: "/archives" }]
+    : []),
+  ...(features.gallery.enabled
+    ? [{ title: t.nav.gallery, path: "/gallery" }]
+    : []),
+  { title: t.nav.about, path: "/about" },
+];
 ---
 
 <a
   id="skip-to-content"
   href="#main-content"
-  class="bg-background text-accent absolute inset-s-16 -top-full z-50 px-3 py-2 backdrop-blur-lg transition-all focus:top-4"
+  class="bg-background text-primary fixed inset-s-4 -top-full z-[70] rounded-lg border px-3 py-2 shadow-lg transition-all focus:top-4"
 >
   {t.a11y.skipToContent}
 </a>
 
-<header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
->
+<header class="site-shell sticky top-0 z-50 pt-4">
   <div
-    class="border-border bg-background relative flex w-full items-baseline justify-between border-b py-4 sm:items-center sm:py-6"
+    id="site-header"
+    class="flex min-h-12 items-center justify-between rounded-2xl border border-transparent px-2 py-1.5 transition-all duration-300"
   >
     <a
       href={getRelativeLocaleUrl(locale, "")}
-      class="group absolute flex items-center gap-2 py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
+      class="group flex min-w-0 items-center gap-2 px-1 text-lg font-medium no-underline"
+      aria-label={site.title}
     >
-      <span
-        aria-hidden="true"
-        class="bg-accent text-accent-foreground grid size-8 place-items-center rounded-md text-base font-bold transition-transform group-hover:-rotate-6"
-        >I</span
-      >
-      <span>{site.title}</span>
+      <img
+        src={getAssetPath("favicon.svg")}
+        alt=""
+        width="30"
+        height="30"
+        class="size-7 rounded-lg transition-transform group-hover:-rotate-6"
+      />
+      <span class="truncate">{site.title}</span>
     </a>
-    <nav
-      id="nav-menu"
-      class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"
-    >
-      <button
-        id="menu-btn"
-        class="focus-outline self-end p-2 sm:hidden"
-        aria-label={t.a11y.openMenu}
-        aria-expanded="false"
-        aria-controls="menu-items"
-        data-label-open={t.a11y.openMenu}
-        data-label-close={t.a11y.closeMenu}
+
+    <div class="flex items-center gap-2">
+      <div
+        id="nav-panel"
+        class="bg-background absolute inset-x-4 top-[4.25rem] hidden flex-col rounded-xl border p-3 shadow-lg md:static md:flex md:flex-row md:items-center md:border-0 md:bg-transparent md:p-0 md:shadow-none"
       >
-        <IconX id="close-icon" class="hidden" />
-        <IconMenuDeep id="menu-icon" />
-      </button>
-      <ul
-        id="menu-items"
-        class="[&>li>a]:hover:text-accent mt-4 hidden w-44 grid-cols-2 place-content-center gap-2 sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0 sm:[&>li]:h-8 [&>li>a]:block [&>li>a]:px-4 [&>li>a]:py-3 [&>li>a]:text-center [&>li>a]:font-medium sm:[&>li>a]:px-2 sm:[&>li>a]:py-1"
-      >
-        <li class="col-span-2">
-          <a
-            href={getRelativeLocaleUrl(locale, "posts")}
-            class:list={{ "active-nav": isActive("/posts") }}
-          >
-            {t.nav.posts}
-          </a>
-        </li>
-        <li class="col-span-2">
-          <a
-            href={getRelativeLocaleUrl(locale, "tags")}
-            class:list={{ "active-nav": isActive("/tags") }}
-          >
-            {t.nav.tags}
-          </a>
-        </li>
-        <li class="col-span-2">
-          <a
-            href={getRelativeLocaleUrl(locale, "about")}
-            class:list={{ "active-nav": isActive("/about") }}
-          >
-            {t.nav.about}
-          </a>
-        </li>
-        {
-          features.gallery.enabled && (
-            <li class="col-span-2">
-              <LinkButton
-                href={getRelativeLocaleUrl(locale, "gallery")}
-                class:list={[
-                  "focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0",
-                  { "active-nav": isActive("/gallery") },
-                ]}
-                title={t.nav.gallery}
-                aria-label={t.nav.gallery}
-              >
-                <IconPhoto class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" />
-                <span class="sm:sr-only">{t.nav.gallery}</span>
-                {isActive("/gallery") && (
-                  <IconUnderline
-                    aria-hidden="true"
-                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6"
-                  />
-                )}
-              </LinkButton>
-            </li>
-          )
-        }
-        {
-          features.showArchives && (
-            <li class="col-span-2">
-              <LinkButton
-                href={getRelativeLocaleUrl(locale, "archives")}
-                class:list={[
-                  "focus-outline flex size-full justify-center p-3 sm:relative sm:size-8 sm:p-0",
-                  { "active-nav": isActive("/archives") },
-                ]}
-                title={t.nav.archives}
-                aria-label={t.nav.archives}
-              >
-                <IconArchive class="hidden sm:absolute sm:top-1/2 sm:left-1/2 sm:block sm:size-6 sm:-translate-x-1/2 sm:-translate-y-1/2" />
-                <span class="sm:sr-only">{t.nav.archives}</span>
-                {isActive("/archives") && (
-                  <IconUnderline
-                    aria-hidden="true"
-                    class="scale-125 max-sm:hidden sm:absolute sm:bottom-0 sm:w-6"
-                  />
-                )}
-              </LinkButton>
-            </li>
-          )
-        }
-        {
-          features.search !== false && (
-            <li class="col-span-1 flex items-center justify-center">
-              <LinkButton
+        <nav aria-label="Primary navigation">
+          <ul class="flex flex-col md:flex-row md:items-center">
+            {
+              menu.map(item => (
+                <li>
+                  <a
+                    href={getRelativeLocaleUrl(locale, item.path.slice(1))}
+                    class:list={[
+                      "block rounded-lg px-3 py-2 text-sm font-medium no-underline transition-colors",
+                      isActive(item.path)
+                        ? "bg-muted text-primary"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    ]}
+                    aria-current={isActive(item.path) ? "page" : undefined}
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <div
+          class="border-border mt-2 flex items-center justify-end gap-1 border-t pt-2 md:ms-2 md:mt-0 md:border-s md:border-t-0 md:ps-2 md:pt-0"
+        >
+          {
+            features.search !== false && (
+              <a
                 href={getRelativeLocaleUrl(locale, "search")}
-                class:list={["focus-outline relative size-8"]}
+                class="hover:bg-muted hover:text-primary grid size-9 place-items-center rounded-lg"
                 title={t.nav.search}
                 aria-label={t.nav.search}
               >
-                <IconSearch class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2" />
-                <span class="sr-only">{t.nav.search}</span>
-                {isActive("/search") && (
-                  <IconUnderline
-                    aria-hidden="true"
-                    class="absolute bottom-0 w-6 scale-125 max-sm:inset-s-2"
-                  />
-                )}
-              </LinkButton>
-            </li>
-          )
-        }
-        <li class="col-span-1 flex items-center justify-center">
+                <Icon name="search" class="size-5" />
+              </a>
+            )
+          }
           <a
-            href={getAssetPath("admin/index.html")}
+            href={getAssetPath("admin/")}
             data-astro-reload
-            class="focus-outline hover:text-accent relative grid size-8 place-items-center"
+            class="hover:bg-muted hover:text-primary grid size-9 place-items-center rounded-lg"
             title="Sveltia CMS"
             aria-label="Sveltia CMS"
           >
-            <IconEdit class="size-5" />
+            <Icon name="document" class="size-5" />
           </a>
-        </li>
-        <li class="col-span-2 flex items-center justify-center sm:col-span-1">
           <LanguageSwitcher />
-        </li>
-        {
-          features.lightAndDarkMode && (
-            <li class="col-span-1 flex items-center justify-center">
-              <button
-                id="theme-btn"
-                class="focus-outline hover:[&>svg]:stroke-accent relative size-12 p-4 sm:size-8"
-                title={t.a11y.toggleTheme}
-                aria-label="auto"
-                aria-live="polite"
-              >
-                <IconMoon class="absolute top-[50%] left-[50%] translate-[-50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <IconSunHigh class="absolute top-[50%] left-[50%] translate-[-50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-              </button>
-            </li>
-          )
-        }
-      </ul>
-    </nav>
+        </div>
+      </div>
+
+      {
+        features.lightAndDarkMode && (
+          <button
+            id="theme-toggle"
+            class="hover:bg-muted hover:text-primary grid size-9 place-items-center rounded-lg border transition-colors"
+            title={t.a11y.toggleTheme}
+            aria-label={t.a11y.toggleTheme}
+          >
+            <Icon name="computer" class="theme-system size-5" />
+            <Icon name="sun" class="theme-light hidden size-5" />
+            <Icon name="moon" class="theme-dark hidden size-5" />
+          </button>
+        )
+      }
+
+      <button
+        id="menu-toggle"
+        class="hover:bg-muted hover:text-primary grid size-9 place-items-center rounded-lg border transition-colors md:hidden"
+        aria-label={t.a11y.openMenu}
+        aria-expanded="false"
+        data-label-open={t.a11y.openMenu}
+        data-label-close={t.a11y.closeMenu}
+      >
+        <Icon name="menu" class="size-5" />
+      </button>
+    </div>
   </div>
 </header>
 
+<script is:inline>
+  (function () {
+    var button = document.getElementById("theme-toggle");
+    if (button)
+      button.dataset.theme = localStorage.getItem("theme") || "system";
+  })();
+</script>
+
 <script>
-  function toggleNav() {
-    const menuBtn = document.querySelector<HTMLButtonElement>("#menu-btn");
-    const menuItems = document.querySelector("#menu-items");
-    const menuIcon = document.querySelector("#menu-icon");
-    const closeIcon = document.querySelector("#close-icon");
+  import { setTheme } from "astro-pure/utils";
 
-    if (!menuBtn || !menuItems || !menuIcon || !closeIcon) return;
+  function initHeader() {
+    const header = document.querySelector<HTMLElement>("#site-header");
+    const menuButton =
+      document.querySelector<HTMLButtonElement>("#menu-toggle");
+    const themeButton =
+      document.querySelector<HTMLButtonElement>("#theme-toggle");
 
-    const openLabel = menuBtn.dataset.labelOpen ?? "Open menu";
-    const closeLabel = menuBtn.dataset.labelClose ?? "Close menu";
+    if (!header || header.dataset.ready === "true") return;
+    header.dataset.ready = "true";
 
-    menuBtn.addEventListener("click", () => {
-      const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
+    const updateHeader = () => {
+      header.dataset.scrolled = String(window.scrollY > 12);
+    };
+    updateHeader();
+    window.addEventListener("scroll", updateHeader, { passive: true });
 
-      menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
-      menuBtn.setAttribute("aria-label", openMenu ? openLabel : closeLabel);
+    menuButton?.addEventListener("click", () => {
+      const expanded = header.dataset.expanded === "true";
+      header.dataset.expanded = String(!expanded);
+      menuButton.setAttribute("aria-expanded", String(!expanded));
+      menuButton.setAttribute(
+        "aria-label",
+        expanded
+          ? (menuButton.dataset.labelOpen ?? "Open menu")
+          : (menuButton.dataset.labelClose ?? "Close menu")
+      );
+    });
 
-      menuItems.classList.toggle("hidden");
-      menuItems.classList.toggle("grid");
-      menuIcon.classList.toggle("hidden");
-      closeIcon.classList.toggle("hidden");
+    themeButton?.addEventListener("click", () => {
+      themeButton.dataset.theme = setTheme(undefined, true) ?? "system";
     });
   }
 
-  toggleNav();
-
-  document.addEventListener("astro:after-swap", toggleNav);
+  initHeader();
+  document.addEventListener("astro:page-load", initHeader);
 </script>
+
+<style>
+  #site-header[data-scrolled="true"],
+  #site-header[data-expanded="true"] {
+    border-color: hsl(var(--border));
+    background: hsl(var(--background) / 0.9);
+    box-shadow:
+      0 1px 0 rgb(24 24 27 / 0.04),
+      0 10px 24px rgb(24 24 27 / 0.08);
+    backdrop-filter: blur(14px);
+  }
+
+  #site-header[data-expanded="true"] #nav-panel {
+    display: flex;
+  }
+
+  #theme-toggle[data-theme="light"] .theme-system,
+  #theme-toggle[data-theme="dark"] .theme-system {
+    display: none;
+  }
+
+  #theme-toggle[data-theme="light"] .theme-light,
+  #theme-toggle[data-theme="dark"] .theme-dark {
+    display: block;
+  }
+</style>

@@ -67,7 +67,7 @@ const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
                       {monthGroup.length}
                     </sup>
                   </div>
-                  <ul>
+                  <ul class="flex flex-1 flex-col gap-3">
                     {monthGroup
                       .sort(
                         (a, b) =>

@@ -4,7 +4,7 @@
 @import "rehype-callouts/theme/obsidian";
 @import "katex/dist/katex.min.css";
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   * {
@@ -23,11 +23,15 @@
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-4xl;
 }
 
 @utility app-layout {
   @apply max-w-app mx-auto w-full px-4;
+}
+
+@utility site-shell {
+  @apply mx-auto w-full max-w-[70rem] px-4 sm:px-7 lg:px-10;
 }
 
 @utility app-layout-wide {
@@ -44,6 +48,27 @@
 
 :target {
   scroll-margin-block: 1rem;
+}
+
+@keyframes pure-fade-in-up {
+  from {
+    transform: translateY(1.25rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pure-animate {
+  animation: 300ms pure-fade-in-up both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pure-animate {
+    animation-duration: 1ms;
+  }
 }
 
 /* ===== Article image hover info (caption + EXIF) =====

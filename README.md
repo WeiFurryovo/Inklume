@@ -2,13 +2,14 @@
 
 [English](README-en.md)
 
-一个由 Astro、Sveltia CMS 和 Cloudflare Pages 驱动的中英双语个人写作空间。
+一个使用 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 作为前台基底、由 Astro、Sveltia CMS 和 Cloudflare Pages 驱动的中英双语个人写作空间。
 
 Inklume 把内容保存在 Git 仓库中：访客看到的是 Astro 构建的静态页面，编辑者通过 `/admin/index.html` 的 Sveltia CMS 修改 Markdown，提交后由 Cloudflare Pages 自动重新构建并发布。
 
 ## 特性
 
 - Astro 原生 i18n：中文位于根路径，英文位于 `/en/`
+- Astro Theme Pure 的轻量导航、卡片、主题切换与图标组件
 - Sveltia CMS：Git-based 内容管理，不需要数据库
 - Cloudflare Pages：通过 Git 集成自动构建静态站点，并提供分支和 Pull Request 预览
 - Pagefind 静态全文搜索
@@ -91,4 +92,4 @@ npm run deploy
 
 ## 许可证与致谢
 
-本仓库是 Inklume 对 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的个人改版，沿用了它的双语路由和内容结构；不是上游项目本身。AstroPages-Bilingual 基于 [Sat Naing 的 AstroPaper](https://github.com/satnaing/astro-paper)，后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的许可证文件和来源说明均予以保留。
+本仓库是 Inklume 对 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的个人改版，沿用了它的双语路由和内容结构；不是上游项目本身。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的 MIT 许可证和来源说明均予以保留，第三方主题说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。

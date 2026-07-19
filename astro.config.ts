@@ -7,6 +7,7 @@ import {
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
+import AstroPureIntegration from "astro-pure";
 import { unified } from "@astrojs/markdown-remark";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
@@ -20,6 +21,7 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
+import pureConfig from "./src/pure.config";
 
 // Inklume is intentionally pure-static. The generated dist/ directory is
 // uploaded to Cloudflare Pages; no runtime adapter is needed for the blog.
@@ -60,6 +62,9 @@ export default defineConfig({
         return true;
       },
     }),
+    // Pure provides the visual system and reusable components. Inklume keeps
+    // its own locale-aware routes, content collections and Pagefind command.
+    AstroPureIntegration(pureConfig),
   ],
 
   markdown: {
@@ -90,6 +95,16 @@ export default defineConfig({
   },
 
   fonts: [
+    {
+      name: "Satoshi",
+      cssVariable: "--font-satoshi",
+      provider: fontProviders.fontshare(),
+      fallbacks: ["system-ui", "sans-serif"],
+      weights: [400, 500, 600, 700],
+      styles: ["normal", "italic"],
+      subsets: ["latin"],
+      formats: ["woff2"],
+    },
     {
       name: "Google Sans Code",
       cssVariable: "--font-google-sans-code",
