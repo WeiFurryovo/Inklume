@@ -144,7 +144,7 @@ export function getArticleImageInfo(
   return info;
 }
 
-/** Extract whitelisted images from a post body, de-duplicated, in document order. */
+/** Extract local or whitelisted images, de-duplicated, in document order. */
 function extractPhotos(body: string, domains: Set<string>): GalleryPhoto[] {
   const photos: GalleryPhoto[] = [];
   const seen = new Set<string>();
@@ -153,13 +153,16 @@ function extractPhotos(body: string, domains: Set<string>): GalleryPhoto[] {
     let url = match[2]?.trim() ?? "";
     if (url.startsWith("<") && url.endsWith(">")) url = url.slice(1, -1);
     if (!url || seen.has(url)) continue;
-    let hostname: string;
-    try {
-      hostname = new URL(url).hostname;
-    } catch {
-      continue; // relative paths / non-absolute URLs are ignored
+    const isLocal = url.startsWith("/") && !url.startsWith("//");
+    if (!isLocal) {
+      let hostname: string;
+      try {
+        hostname = new URL(url).hostname;
+      } catch {
+        continue;
+      }
+      if (!domains.has(hostname)) continue;
     }
-    if (!domains.has(hostname)) continue;
     seen.add(url);
     photos.push(buildPhoto(url, alt));
   }

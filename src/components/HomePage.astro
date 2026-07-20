@@ -1,0 +1,214 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { Quote } from "astro-pure/advanced";
+import { Button, Card as PureCard, Icon, Label } from "astro-pure/user";
+import Card from "./Card.astro";
+import Section from "./home/Section.astro";
+import ProjectCard from "./home/ProjectCard.astro";
+import { getGalleryAlbums } from "@/utils/getGalleryAlbums";
+import config from "@/config";
+
+type Props = {
+  locale: string;
+  posts: CollectionEntry<"posts">[];
+};
+
+const { locale, posts } = Astro.props;
+const isZh = locale === "zh";
+const sourceUrl =
+  config.socials.find(social => social.name === "github")?.url ??
+  config.site.profile;
+const albums = getGalleryAlbums(posts);
+const galleryPhotos = albums.flatMap(album =>
+  album.photos.map(photo => ({
+    ...photo,
+    href: album.post.url,
+    albumTitle: album.post.title,
+  }))
+);
+const homePosts = [
+  ...posts.filter(post => post.data.featured),
+  ...posts.filter(post => !post.data.featured),
+].slice(0, config.posts.perIndex);
+
+const copy = isZh
+  ? {
+      location: "新加坡",
+      source: "源代码",
+      action: "阅读文章",
+      aboutTitle: "关于",
+      aboutRole: "开发者 / 写作者",
+      about:
+        "Inklume 是一个由自己拥有的中英双语写作空间，记录技术、创作与生活，也记录构建这个空间本身的过程。",
+      moreAbout: "更多关于我",
+      postsTitle: "文章",
+      morePosts: "更多文章",
+      galleryTitle: "相册",
+      galleryFallback: "浏览旅途中的影像",
+      publishingTitle: "发布方式",
+      publishingHeading: "独立、静态、可迁移",
+      publishingDescription:
+        "Markdown 内容由 Sveltia CMS 管理，Astro 构建后通过 Cloudflare Pages 发布。",
+      stackTitle: "技术栈",
+      languages: "内容",
+      frontend: "前端",
+      platform: "平台",
+    }
+  : {
+      location: "Singapore",
+      source: "Source code",
+      action: "Read the journal",
+      aboutTitle: "About",
+      aboutRole: "Developer / Writer",
+      about:
+        "Inklume is an owned bilingual writing space for technology, creative work, everyday life, and the process of building the space itself.",
+      moreAbout: "More about me",
+      postsTitle: "Posts",
+      morePosts: "More posts",
+      galleryTitle: "Gallery",
+      galleryFallback: "Browse images from the road",
+      publishingTitle: "Publishing",
+      publishingHeading: "Independent, static, portable",
+      publishingDescription:
+        "Sveltia CMS manages Markdown content, Astro builds the site, and Cloudflare Pages publishes it.",
+      stackTitle: "Stack",
+      languages: "Content",
+      frontend: "Frontend",
+      platform: "Platform",
+    };
+
+const stack = [
+  { title: copy.languages, items: ["Markdown", "MDX", "i18n"] },
+  { title: copy.frontend, items: ["Astro", "Pure", "Pagefind"] },
+  { title: copy.platform, items: ["Sveltia CMS", "GitHub", "Cloudflare"] },
+];
+---
+
+<main id="main-content" class="flex w-full flex-col items-center">
+  <section
+    class="animate mb-10 flex flex-col items-center gap-y-7"
+    id="content-header"
+  >
+    <img
+      src="https://avatars.githubusercontent.com/u/106266815?v=4"
+      alt={config.site.author}
+      width="112"
+      height="112"
+      class="h-28 w-28 rounded-full border object-cover p-1"
+      loading="eager"
+      fetchpriority="high"
+    />
+
+    <div class="flex flex-col items-center gap-y-4">
+      <h1 class="text-3xl font-medium">{config.site.author}</h1>
+      <div class="flex flex-wrap justify-center gap-x-7 gap-y-3">
+        <Label title={copy.location}>
+          <Icon name="location" class="size-5" slot="icon" />
+        </Label>
+        <Label
+          title={copy.source}
+          as="a"
+          href={sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon name="github" class="size-5" slot="icon" />
+        </Label>
+      </div>
+    </div>
+
+    <a
+      href={getRelativeLocaleUrl(locale, "posts")}
+      class="bg-background flex flex-row items-center gap-x-3 rounded-full border px-4 py-2 text-sm shadow-sm transition-shadow hover:shadow-md"
+    >
+      <span class="relative flex items-center justify-center">
+        <span
+          class="absolute size-2 animate-ping rounded-full border border-green-400 bg-green-400 opacity-75"
+        ></span>
+        <span class="size-2 rounded-full bg-green-400"></span>
+      </span>
+      <span class="text-muted-foreground font-medium">{copy.action}</span>
+    </a>
+  </section>
+
+  <div id="content" class="animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6">
+    <Section title={copy.aboutTitle}>
+      <p class="text-muted-foreground">{copy.aboutRole}</p>
+      <p class="text-muted-foreground">{copy.about}</p>
+      <Button
+        title={copy.moreAbout}
+        class="w-fit self-end"
+        href={getRelativeLocaleUrl(locale, "about")}
+        variant="ahead"
+      />
+    </Section>
+
+    {
+      posts.length > 0 && (
+        <Section title={copy.postsTitle}>
+          <ul class="flex flex-col gap-y-1.5 sm:gap-y-2">
+            {homePosts.map(post => (
+              <Card {...post} />
+            ))}
+          </ul>
+          <Button
+            title={copy.morePosts}
+            class="w-fit self-end"
+            href={getRelativeLocaleUrl(locale, "posts")}
+            variant="ahead"
+          />
+        </Section>
+      )
+    }
+
+    {
+      galleryPhotos.length > 0 && (
+        <Section title={copy.galleryTitle}>
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {galleryPhotos.slice(0, 4).map(photo => (
+              <ProjectCard
+                href={photo.href}
+                heading={photo.albumTitle}
+                subheading={photo.alt || copy.galleryFallback}
+                image={photo.thumbSrc}
+                alt={photo.alt}
+              />
+            ))}
+          </div>
+          <Button
+            title={copy.galleryTitle}
+            class="w-fit self-end"
+            href={getRelativeLocaleUrl(locale, "gallery")}
+            variant="ahead"
+          />
+        </Section>
+      )
+    }
+
+    <Section title={copy.publishingTitle}>
+      <PureCard
+        heading={copy.publishingHeading}
+        subheading={copy.publishingDescription}
+        date="Astro · Sveltia CMS · Cloudflare Pages"
+      />
+    </Section>
+
+    <Section title={copy.stackTitle}>
+      {
+        stack.map(group => (
+          <div class="flex flex-col gap-y-2 md:flex-row md:gap-x-5 md:gap-y-0">
+            <h3 class="font-medium md:w-1/5">{group.title}</h3>
+            <div class="flex flex-row flex-wrap gap-x-4 gap-y-2 md:w-4/5">
+              {group.items.map(item => (
+                <Button as="span" title={item} variant="pill" />
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </Section>
+  </div>
+
+  <Quote class="mt-12" />
+</main>

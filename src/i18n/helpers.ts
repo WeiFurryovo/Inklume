@@ -31,6 +31,12 @@ export function getLocaleFromPath(pathname: string): Locale {
 export function getAlternatePath(pathname: string, target: Locale): string {
   const parts = pathname.split("/").filter(Boolean);
   if (parts[0] === "en") parts.shift(); // drop the current English prefix
+
+  // Localized tag names do not have a reliable one-to-one slug mapping.
+  // Send tag detail pages to the target language's tag index instead of a 404.
+  if (parts[0] === "tags" && parts.length > 1) parts.splice(1);
+  if (parts[0] === "404") parts.splice(0);
+
   if (target === "en") parts.unshift("en");
   if (parts.length === 0) return "/";
   const path = "/" + parts.join("/");

@@ -68,7 +68,7 @@ Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based
 - Build output directory：`dist`
 - 仓库 `.nvmrc` 已固定 Node.js `24`；如果构建镜像没有读取它，再在环境变量中添加 `NODE_VERSION=24`
 
-在 Pages 项目的 **Settings → Environment variables** 中，为 Production 配置稳定的 `SITE_URL`，例如 `https://blog.example.com/`。它是构建变量，Astro 会在构建阶段将它写入 canonical URL、RSS、Sitemap 和 OpenGraph；修改后需要重新触发一次部署。Pages 自动注入的 `CF_PAGES_URL` 会作为没有自定义 `SITE_URL` 时的回退值，预览部署也能使用对应的预览地址，但生产环境建议始终设置 `SITE_URL`。
+默认站点地址是稳定的 `https://inklume.pages.dev/`，无需额外变量即可正确生成 canonical URL、RSS、Sitemap 和 OpenGraph。绑定自定义域名后，在 Pages 项目的 **Settings → Environment variables** 中为 Production 配置 `SITE_URL`，例如 `https://blog.example.com/`；修改后需要重新触发一次部署。构建不会使用 Pages 自动注入的预览部署地址作为 canonical，避免搜索引擎收录带哈希的临时域名。
 
 本地构建可以在命令前设置：
 

@@ -1,0 +1,136 @@
+---
+import type { Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { Button, Icon } from "astro-pure/user";
+import Layout from "@/layouts/Layout.astro";
+import Header from "./Header.astro";
+import Footer from "./Footer.astro";
+import Card from "./Card.astro";
+import Pagination from "./Pagination.astro";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Tag = {
+  tag: string;
+  tagName: string;
+};
+
+type Props = {
+  locale: string;
+  page: Page<CollectionEntry<"posts">>;
+  tags: Tag[];
+  postsCount: number;
+};
+
+const { locale, page, tags, postsCount } = Astro.props;
+const t = useTranslations(locale);
+const copy =
+  locale === "zh"
+    ? {
+        pageSummary: `第 ${page.currentPage} 页 · 显示 ${page.data.length} / ${postsCount} 篇文章`,
+        archive: "按年份查看所有文章 →",
+        tags: "标签",
+        allTags: "查看全部 →",
+        empty: "还没有文章。",
+      }
+    : {
+        pageSummary: `Page ${page.currentPage} · Showing ${page.data.length} of ${postsCount} posts`,
+        archive: "View all posts by years →",
+        tags: "Tags",
+        allTags: "View all →",
+        empty: "No posts yet.",
+      };
+---
+
+<Layout
+  title={`${t.pages.postsTitle} | ${config.site.title}`}
+  description={t.pages.postsDesc}
+>
+  <Header />
+  <div class="w-full flex-1">
+    {
+      config.features.showBackButton && (
+        <Button
+          title={t.post.goBack}
+          href={getRelativeLocaleUrl(locale, "")}
+          variant="back"
+        />
+      )
+    }
+
+    <main id="main-content" class="mt-6 lg:mt-10">
+      <div id="content-header" class="animate">
+        <h1 class="mt-6 mb-6 text-3xl font-medium sm:mt-10">
+          {t.pages.postsTitle}
+        </h1>
+      </div>
+
+      {
+        page.data.length === 0 ? (
+          <p>{copy.empty}</p>
+        ) : (
+          <div class="grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8">
+            <section
+              aria-label={t.pages.postsTitle}
+              class="animate"
+              id="content"
+            >
+              <div class="mb-3 flex flex-col justify-between gap-2 text-sm sm:mb-5 sm:flex-row">
+                <span class="text-muted-foreground">{copy.pageSummary}</span>
+                {config.features.showArchives && (
+                  <a
+                    href={getRelativeLocaleUrl(locale, "archives")}
+                    data-astro-prefetch
+                  >
+                    {copy.archive}
+                  </a>
+                )}
+              </div>
+
+              <ul class="flex flex-col gap-y-4 text-start">
+                {page.data.map(post => (
+                  <Card {...post} detailed />
+                ))}
+              </ul>
+              <Pagination {page} />
+            </section>
+
+            {tags.length > 0 && (
+              <aside class="animate" id="sidebar">
+                <h2 class="mb-4 flex items-center text-lg font-medium">
+                  <Icon name="tag-2" class="me-2" />
+                  {copy.tags}
+                </h2>
+                <ul class="flex flex-wrap gap-2">
+                  {tags.slice(0, 50).map(tag => (
+                    <li>
+                      <Button
+                        title={tag.tagName}
+                        href={getRelativeLocaleUrl(locale, `tags/${tag.tag}`)}
+                        variant="pill"
+                      />
+                    </li>
+                  ))}
+                </ul>
+                <span class="mt-4 block sm:text-end">
+                  <a
+                    href={getRelativeLocaleUrl(locale, "tags")}
+                    data-astro-prefetch
+                  >
+                    {copy.allTags}
+                  </a>
+                </span>
+              </aside>
+            )}
+          </div>
+        )
+      }
+    </main>
+  </div>
+  <Footer />
+</Layout>
+
+<script>
+  sessionStorage.setItem("backUrl", window.location.pathname);
+</script>

@@ -4,12 +4,14 @@ pubDatetime: 2026-01-11T00:00:00Z
 description: "The first Inklume entry: a bilingual writing space that is owned, portable, and built to last."
 featured: true
 draft: false
+heroImage:
+  src: /inklume-og.png
+  alt: Inklume
+  color: "#659EB9"
 tags:
   - welcome
   - introduction
 ---
-
-# Welcome to Inklume
 
 Inklume is a bilingual personal publishing space for projects in progress, problems worth unpacking, and fragments of life worth keeping.
 

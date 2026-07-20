@@ -21,7 +21,11 @@ const pswpStrings = JSON.stringify({
 });
 ---
 
-<span id="post-images-config" hidden data-pswp-strings={pswpStrings}></span>
+<span
+  id="post-images-config"
+  hidden
+  data-pswp-strings={pswpStrings}
+  data-zoom-label={t.a11y.lightboxZoom}></span>
 
 <script>
   import type PhotoSwipeLightbox from "photoswipe/lightbox";
@@ -75,11 +79,19 @@ const pswpStrings = JSON.stringify({
   }
 
   function initPostImages() {
+    const article = document.getElementById("article");
+    if (!article) {
+      destroyViewer();
+      return;
+    }
+    if (article.dataset.postImagesReady === "true") return;
+    article.dataset.postImagesReady = "true";
+
     // Re-init cleanly across view transitions.
     destroyViewer();
 
-    const article = document.getElementById("article");
-    if (!article) return;
+    const configElement = document.getElementById("post-images-config");
+    const zoomLabel = configElement?.dataset.zoomLabel ?? "Zoom image";
 
     let infoMap: Record<string, ArticleImageInfo> = {};
     try {
@@ -100,7 +112,7 @@ const pswpStrings = JSON.stringify({
         image.setAttribute("aria-haspopup", "dialog");
         image.setAttribute(
           "aria-label",
-          image.alt ? `Zoom image: ${image.alt}` : "Zoom image"
+          image.alt ? `${zoomLabel}: ${image.alt}` : zoomLabel
         );
         const info = infoMap[image.getAttribute("src") ?? ""];
         if (info) decoratePhoto(image, info);
@@ -109,7 +121,7 @@ const pswpStrings = JSON.stringify({
 
     lightbox = createViewer(
       {},
-      parseViewerStrings(document.getElementById("post-images-config")),
+      parseViewerStrings(configElement),
       // Captions only for manifest photos — screenshots etc. stay caption-free.
       element => (element?.dataset.photo ? captionFromElement(element) : {})
     );
@@ -158,6 +170,7 @@ const pswpStrings = JSON.stringify({
     });
   }
 
+  initPostImages();
   document.addEventListener("astro:page-load", initPostImages);
   document.addEventListener("astro:before-swap", destroyViewer);
 </script>

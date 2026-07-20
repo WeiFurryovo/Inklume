@@ -1,10 +1,8 @@
 import { defineAstroPaperConfig } from "./src/types/config";
 
-const DEFAULT_SITE_URL = "https://inklume.example.com/";
+const DEFAULT_SITE_URL = "https://inklume.pages.dev/";
 const configuredSiteUrl =
-  process.env.SITE_URL?.trim() ||
-  process.env.CF_PAGES_URL?.trim() ||
-  DEFAULT_SITE_URL;
+  process.env.SITE_URL?.trim() || DEFAULT_SITE_URL;
 const siteUrl = (() => {
   try {
     const parsedSiteUrl = new URL(configuredSiteUrl);
@@ -21,8 +19,7 @@ const siteUrl = (() => {
 
 export default defineAstroPaperConfig({
   site: {
-    // Resolved at build time from SITE_URL; the placeholder keeps local builds
-    // usable when no environment variable has been configured yet.
+    // SITE_URL can override the stable Pages URL when a custom domain is added.
     url: siteUrl,
     title: "Inklume",
     description:
@@ -38,8 +35,8 @@ export default defineAstroPaperConfig({
     dir: "ltr",
   },
   posts: {
-    perPage: 4,
-    perIndex: 4,
+    perPage: 8,
+    perIndex: 10,
     scheduledPostMargin: 15 * 60 * 1000,
   },
   features: {

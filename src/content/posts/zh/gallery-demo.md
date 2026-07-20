@@ -3,6 +3,10 @@ title: 六帧世界
 pubDatetime: 2026-06-20T09:00:00Z
 description: 一篇演示相册功能的小影集——六张旅行照片，各自带着相机的 EXIF 信息。
 gallery: true
+heroImage:
+  src: /gallery/thumbs/2304d9d8b47b02ea.avif
+  alt: 秘鲁普诺，的的喀喀湖上的日出
+  color: "#D7A584"
 tags:
   - 旅行
   - 摄影

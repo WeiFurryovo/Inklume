@@ -1,6 +1,5 @@
 ---
 import { Font } from "astro:assets";
-import { ClientRouter } from "astro:transitions";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { ThemeProvider } from "astro-pure/components/basic";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
@@ -13,6 +12,8 @@ type Props = {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  highlightColor?: string;
+  ogType?: "website" | "article";
 };
 
 const { site } = config;
@@ -22,6 +23,8 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  highlightColor,
+  ogType = "website",
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
@@ -77,7 +80,6 @@ const rssHref = getRelativeLocaleUrl(
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
-    <link rel="icon" href={getAssetPath("favicon.ico")} />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
@@ -99,7 +101,7 @@ const rssHref = getRelativeLocaleUrl(
     <link rel="sitemap" href={getAssetPath("sitemap-index.xml")} />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={site.title} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -121,7 +123,7 @@ const rssHref = getRelativeLocaleUrl(
       href={new URL(rssHref, Astro.site)}
     />
 
-    <meta name="theme-color" content="#f5f9f7" />
+    <meta name="theme-color" content="#f9fbfc" />
 
     <!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) -->
     <slot name="head" />
@@ -150,11 +152,59 @@ const rssHref = getRelativeLocaleUrl(
     </script>
 
     <ThemeProvider />
-    <ClientRouter />
   </head>
   <body
-    class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
+    class="bg-background font-app text-foreground selection:bg-primary/20 flex min-h-svh justify-center"
   >
-    <slot />
+    {
+      highlightColor && (
+        <div
+          id="highlight-gradient"
+          class="pointer-events-none absolute inset-x-0 top-0 z-0 h-screen opacity-25"
+          style={`background-image:linear-gradient(${highlightColor},transparent)`}
+        />
+      )
+    }
+    <div
+      id="main-container"
+      class="relative z-10 flex min-h-svh w-full max-w-[70rem] flex-col justify-between"
+    >
+      <slot />
+    </div>
   </body>
 </html>
+
+<style define:vars={{ highlightColor }}>
+  :global(.highlight) {
+    --highlight-fg: color-mix(
+      in srgb,
+      var(--highlightColor) 40%,
+      hsl(var(--foreground))
+    );
+    color: var(--highlight-fg, hsl(var(--primary))) !important;
+  }
+
+  :global(.highlight-bg) {
+    background-color: var(--highlightColor, hsl(var(--primary))) !important;
+  }
+
+  #main-container {
+    padding-top: env(safe-area-inset-top);
+    padding-left: calc(1rem + env(safe-area-inset-left));
+    padding-right: calc(1rem + env(safe-area-inset-right));
+  }
+
+  @media (min-width: 40rem) {
+    #main-container {
+      padding-left: calc(1.75rem + env(safe-area-inset-left));
+      padding-right: calc(1.75rem + env(safe-area-inset-right));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    #main-container {
+      padding-left: calc(2.5rem + env(safe-area-inset-left));
+      padding-right: calc(2.5rem + env(safe-area-inset-right));
+    }
+  }
+</style>

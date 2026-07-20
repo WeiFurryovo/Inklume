@@ -15,7 +15,7 @@ export async function GET() {
   return rss({
     title: config.site.title,
     description: config.site.description,
-    site: config.site.url,
+    site: new URL("en/", config.site.url),
     items: sortedPosts.map(({ data, id, filePath }) => ({
       link: getPostUrl(id, filePath, "en"),
       title: data.title,

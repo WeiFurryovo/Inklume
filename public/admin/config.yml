@@ -88,6 +88,26 @@ collections:
         widget: list
         default: [others]
         i18n: true
+      - name: heroImage
+        label: Hero Image
+        widget: object
+        required: false
+        i18n: true
+        fields:
+          - name: src
+            label: Image
+            widget: image
+            i18n: duplicate
+          - name: alt
+            label: Alternative Text
+            widget: string
+            required: false
+            i18n: true
+          - name: color
+            label: Accent Color
+            widget: color
+            required: false
+            i18n: duplicate
       - name: ogImage
         label: Social Image
         widget: image
@@ -119,7 +139,7 @@ collections:
     label_singular: Page
     icon: web
     folder: src/content/pages
-    create: true
+    create: false
     extension: md
     format: yaml-frontmatter
     i18n: true

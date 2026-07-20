@@ -3,6 +3,10 @@ title: A World in Six Frames
 pubDatetime: 2026-06-20T09:00:00Z
 description: A short photo essay demonstrating the gallery feature — six travel photographs, each carrying its own camera EXIF.
 gallery: true
+heroImage:
+  src: /gallery/thumbs/2304d9d8b47b02ea.avif
+  alt: Sunrise over Lake Titicaca, Puno, Peru
+  color: "#D7A584"
 tags:
   - travel
   - photography

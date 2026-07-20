@@ -212,6 +212,7 @@ const pswpStrings = JSON.stringify({
     lightbox.init();
   }
 
+  initGallery();
   document.addEventListener("astro:page-load", initGallery);
   document.addEventListener("astro:before-swap", destroyLightbox);
 </script>

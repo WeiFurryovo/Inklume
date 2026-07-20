@@ -20,6 +20,14 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+
+  a {
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: hsl(var(--primary));
+  }
 }
 
 @utility max-w-app {
@@ -27,11 +35,11 @@
 }
 
 @utility app-layout {
-  @apply max-w-app mx-auto w-full px-4;
+  @apply mx-auto w-full md:w-4/5 lg:w-5/6;
 }
 
 @utility site-shell {
-  @apply mx-auto w-full max-w-[70rem] px-4 sm:px-7 lg:px-10;
+  @apply mx-auto w-full;
 }
 
 @utility app-layout-wide {
@@ -52,7 +60,7 @@
 
 @keyframes pure-fade-in-up {
   from {
-    transform: translateY(1.25rem);
+    transform: translateY(2rem);
     opacity: 0;
   }
   to {
@@ -61,13 +69,28 @@
   }
 }
 
+.animate,
 .pure-animate {
+  opacity: 0;
   animation: 300ms pure-fade-in-up both;
 }
 
+#content-header {
+  animation-delay: 50ms;
+}
+
+#content {
+  animation-delay: 100ms;
+}
+
+#sidebar {
+  animation-delay: 150ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .animate,
   .pure-animate {
-    animation-duration: 1ms;
+    animation-duration: 100ms;
   }
 }
 

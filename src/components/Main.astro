@@ -21,30 +21,31 @@ const backUrl = config.features.showBackButton
 <main
   data-backUrl={backUrl}
   id="main-content"
-  class:list={[
-    wide ? "app-layout-wide" : "app-layout",
-    "pure-animate pt-8 pb-4",
-    className,
-  ]}
+  class:list={[wide ? "w-full" : "app-layout", "animate pb-4", className]}
 >
-  <h1 class="text-3xl font-medium sm:text-4xl">{pageTitle}</h1>
+  <div id="content-header">
+    <h1 class="mt-6 text-3xl font-medium sm:mt-10">{pageTitle}</h1>
+  </div>
   {
     pageDesc && (
-      <p class="text-muted-foreground mt-2 mb-8 text-sm sm:text-base">
+      <p class="text-muted-foreground mt-2 mb-6 text-sm sm:text-base">
         {pageDesc}
       </p>
     )
   }
-  <slot />
+  <div id="content"><slot /></div>
 </main>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
+  function rememberBackUrl() {
     const mainContent: HTMLElement | null =
       document.querySelector("#main-content");
     const backUrl = mainContent?.dataset?.backurl;
     if (backUrl) {
       sessionStorage.setItem("backUrl", backUrl);
     }
-  });
+  }
+
+  rememberBackUrl();
+  document.addEventListener("astro:page-load", rememberBackUrl);
 </script>

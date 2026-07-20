@@ -1,0 +1,119 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { Icon } from "astro-pure/user";
+import Datetime from "./Datetime.astro";
+import EditPost from "@/pages/posts/[...slug]/_components/EditPost.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { formatReadingTime } from "@/utils/formatReadingTime";
+import { toTransitionName } from "@/utils/toTransitionName";
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  locale: string;
+  remarkPluginFrontmatter: Record<string, unknown>;
+};
+
+const { post, locale, remarkPluginFrontmatter } = Astro.props;
+const {
+  title,
+  description,
+  pubDatetime,
+  modDatetime,
+  timezone,
+  tags,
+  draft,
+  heroImage,
+  hideEditPost,
+} = post.data;
+const heroSrc = heroImage?.src;
+const minutesRead = formatReadingTime(
+  remarkPluginFrontmatter.minutesRead,
+  locale
+);
+---
+
+<header>
+  {
+    heroSrc && (
+      <div class="hero-image relative mb-6">
+        <img
+          src={heroSrc}
+          alt={heroImage?.alt || title}
+          class="relative z-10 h-auto max-h-[26rem] w-full max-w-[65ch] rounded-2xl object-cover"
+          fetchpriority="high"
+          loading="eager"
+        />
+        <img
+          src={heroSrc}
+          alt=""
+          aria-hidden="true"
+          class="hero-blur absolute end-0 top-4 z-0 mt-0 h-full max-h-[26rem] w-full max-w-[65ch] rounded-3xl object-cover opacity-60"
+          fetchpriority="high"
+          loading="eager"
+        />
+      </div>
+    )
+  }
+
+  {draft && <span class="text-red-500">(Draft)</span>}
+
+  <div class="article-info max-lg:mx-auto">
+    <div
+      class="text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-2 text-xs leading-6"
+    >
+      <Datetime {pubDatetime} {modDatetime} {timezone} />
+      {
+        minutesRead && (
+          <span class="flex items-center gap-1">
+            <Icon name="time" class="size-5" />
+            {minutesRead}
+          </span>
+        )
+      }
+      <span class="flex items-center gap-1">
+        <Icon name="earth" class="size-5" />
+        {locale === "zh" ? "中文" : "English"}
+      </span>
+      {
+        tags.length > 0 && (
+          <span class="flex items-center gap-1">
+            <Icon name="hashtag" class="size-5" />
+            {tags.map((tag, index) => (
+              <span>
+                <a
+                  class="hover:underline hover:underline-offset-4"
+                  data-pagefind-filter="tag"
+                  href={getRelativeLocaleUrl(locale, `tags/${slugifyStr(tag)}`)}
+                >
+                  {tag}
+                </a>
+                {index < tags.length - 1 && "/"}
+              </span>
+            ))}
+          </span>
+        )
+      }
+      <EditPost class="max-sm:hidden" {hideEditPost} {post} />
+    </div>
+
+    <h1
+      style={{ viewTransitionName: toTransitionName(title) }}
+      class="mt-4 text-2xl font-medium sm:mt-6 sm:mb-2 sm:text-3xl"
+    >
+      {title}
+    </h1>
+
+    <blockquote class="text-muted-foreground mt-3 text-sm italic">
+      <q>{description}</q>
+    </blockquote>
+  </div>
+
+  <div class="mt-4 w-1/2 border-t max-md:mx-auto sm:mt-6 sm:w-1/3"></div>
+</header>
+
+<style>
+  .hero-blur {
+    filter: blur(24px);
+  }
+</style>

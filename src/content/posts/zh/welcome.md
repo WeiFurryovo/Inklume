@@ -4,12 +4,14 @@ pubDatetime: 2026-01-11T00:00:00Z
 description: "Inklume 的第一篇文章：一个属于自己的双语写作空间，从这里开始。"
 featured: true
 draft: false
+heroImage:
+  src: /inklume-og.png
+  alt: Inklume
+  color: "#659EB9"
 tags:
   - 欢迎
   - 介绍
 ---
-
-# 欢迎来到 Inklume
 
 Inklume 是一个中英双语的个人写作空间。这里会留下正在构建的项目、值得拆解的问题，以及一些不该被时间冲走的生活片段。
 
