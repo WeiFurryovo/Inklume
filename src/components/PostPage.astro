@@ -41,7 +41,7 @@ const ui =
         copied: "已复制",
       }
     : {
-        toc: "Table of contents",
+        toc: "TABLE OF CONTENTS",
         toggleToc: "Toggle table of contents",
         headingLink: "Link to",
         copy: "Copy",
@@ -98,95 +98,97 @@ const ogImage = ogImageUrl
 >
   <Header />
 
-  {
-    config.features.showBackButton && (
-      <Button
-        id="back-button"
-        title={t.post.goBack}
-        href={getRelativeLocaleUrl(locale, "posts")}
-        variant="back"
-      />
-    )
-  }
-
-  <main
-    id="main-content"
-    class="mt-6 items-start gap-x-10 md:flex"
-    data-pagefind-body
-  >
-    <aside
-      class="animate max-md:bg-muted top-20 z-40 min-w-48 basis-60 overflow-y-auto max-md:fixed max-md:hidden max-md:border max-md:px-4 max-md:py-3 md:sticky md:order-2 lg:shrink-0"
-      style="height:calc(100vh - 7rem)"
-      id="sidebar"
-      data-pagefind-ignore
-    >
-      {
-        headings.length > 0 && (
-          <>
-            <h2 class="font-medium">{ui.toc}</h2>
-            <TOC class="post-toc" {headings} />
-          </>
-        )
-      }
-    </aside>
-    <div
-      id="sidebar-shade"
-      class="fixed inset-0 hidden bg-black/55"
-      style="z-index:31"
-    >
-    </div>
-
-    <article class="min-w-0 grow">
-      <div id="content-header" class="animate">
-        <PostHero {post} {locale} {remarkPluginFrontmatter} />
-      </div>
-
-      <div
-        id="content"
-        class="animate mt-8 max-w-none overflow-x-hidden md:min-w-[45ch]"
-      >
-        <div
-          id="article"
-          class="app-prose prose prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg) max-w-none"
-          data-heading-link-label={ui.headingLink}
-          data-copy-label={ui.copy}
-          data-copied-label={ui.copied}
-          data-back-to-top-label={t.post.backToTop}
-          data-image-info={Object.keys(imageInfo).length
-            ? JSON.stringify(imageInfo)
-            : undefined}
-        >
-          <Content />
-        </div>
-        <PostImages />
-      </div>
-    </article>
-  </main>
-
-  <div class="mt-6 items-start gap-x-10 md:flex">
-    <div class="text-muted-foreground flex-1 md:min-w-[50ch]">
-      <hr class="my-6 border-dashed" />
-      <EditPost class="mb-5 sm:hidden" {hideEditPost} {post} />
-      <ShareLinks />
-      <AdjacentPostNav {prevPost} {nextPost} />
-    </div>
-    <div class="min-w-48 basis-60"></div>
-  </div>
-
-  <BackToTop header="content-header" content="content">
+  <div class="w-full flex-1">
     {
-      headings.length > 0 && (
-        <button
-          slot="other-icons"
-          aria-label={ui.toggleToc}
-          class="bg-muted text-muted-foreground hover:border-border/75 flex size-10 items-center justify-center rounded-full border-2 border-transparent duration-300 sm:size-12 md:hidden"
-          id="sidebar-btn"
-        >
-          <Icon name="list" />
-        </button>
+      config.features.showBackButton && (
+        <Button
+          id="back-button"
+          title={t.post.goBack}
+          href={getRelativeLocaleUrl(locale, "posts")}
+          variant="back"
+        />
       )
     }
-  </BackToTop>
+
+    <main
+      id="main-content"
+      class="mt-6 items-start gap-x-10 md:flex"
+      data-pagefind-body
+    >
+      <aside
+        class="animate max-md:bg-muted top-20 z-40 min-w-48 basis-60 overflow-y-auto max-md:fixed max-md:hidden max-md:border max-md:px-4 max-md:py-3 md:sticky md:order-2 lg:shrink-0"
+        style="height:calc(100vh - 7rem)"
+        id="sidebar"
+        data-pagefind-ignore
+      >
+        {
+          headings.length > 0 && (
+            <>
+              <h2 class="font-medium">{ui.toc}</h2>
+              <TOC class="post-toc" {headings} />
+            </>
+          )
+        }
+      </aside>
+      <div
+        id="sidebar-shade"
+        class="fixed inset-0 hidden bg-black/55"
+        style="z-index:31"
+      >
+      </div>
+
+      <article class="min-w-0 grow">
+        <div id="content-header" class="animate">
+          <PostHero {post} {locale} {remarkPluginFrontmatter} />
+        </div>
+
+        <div
+          id="content"
+          class="animate mt-8 max-w-none overflow-x-hidden md:min-w-[45ch]"
+        >
+          <div
+            id="article"
+            class="app-prose prose prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg) max-w-none"
+            data-heading-link-label={ui.headingLink}
+            data-copy-label={ui.copy}
+            data-copied-label={ui.copied}
+            data-back-to-top-label={t.post.backToTop}
+            data-image-info={Object.keys(imageInfo).length
+              ? JSON.stringify(imageInfo)
+              : undefined}
+          >
+            <Content />
+          </div>
+          <PostImages />
+        </div>
+      </article>
+    </main>
+
+    <div class="mt-6 items-start gap-x-10 md:flex">
+      <div class="text-muted-foreground flex-1 md:min-w-[50ch]">
+        <hr class="my-6 border-dashed" />
+        <EditPost class="mb-5 sm:hidden" {hideEditPost} {post} />
+        <ShareLinks />
+        <AdjacentPostNav {prevPost} {nextPost} />
+      </div>
+      <div class="min-w-48 basis-60"></div>
+    </div>
+
+    <BackToTop header="content-header" content="content">
+      {
+        headings.length > 0 && (
+          <button
+            slot="other-icons"
+            aria-label={ui.toggleToc}
+            class="bg-muted text-muted-foreground hover:border-border/75 flex size-10 items-center justify-center rounded-full border-2 border-transparent duration-300 sm:size-12 md:hidden"
+            id="sidebar-btn"
+          >
+            <Icon name="list" />
+          </button>
+        )
+      }
+    </BackToTop>
+  </div>
 
   <Footer />
 </PostLayout>
