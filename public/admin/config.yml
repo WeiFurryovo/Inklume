@@ -6,6 +6,7 @@ backend:
   name: github
   repo: WeiFurryovo/Inklume
   branch: main
+  base_url: https://inklume.pages.dev
 
 media_folder: public/uploads
 public_folder: /uploads

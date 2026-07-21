@@ -52,13 +52,26 @@ public/admin/config.yml
 
 ## Sveltia CMS
 
-`public/admin/config.yml` 已配置 GitHub backend 和双语 `multiple_folders` 内容模型。个人使用时可以在 Sveltia 登录页使用 GitHub Personal Access Token；多人或非技术编辑者可以额外部署 [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) 并配置 OAuth。
+`public/admin/config.yml` 已配置 GitHub backend、双语 `multiple_folders` 内容模型和 GitHub OAuth。认证器基于官方 [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth)，以 Pages Functions 的形式集成在当前项目的 `/auth` 与 `/callback`，不需要额外部署 Worker。`public/_routes.json` 确保只有这两个路径调用 Functions，其余博客页面继续作为纯静态资源提供。
+
+首次部署时需要在 GitHub 的 [Developer settings → OAuth Apps](https://github.com/settings/developers) 注册一个 OAuth App：
+
+- Application name：`Inklume Sveltia CMS`
+- Homepage URL：`https://inklume.pages.dev/admin/`
+- Authorization callback URL：`https://inklume.pages.dev/callback`
+
+然后在 Cloudflare Pages 项目的 **Settings → Variables and Secrets** 中，为 Production 添加：
+
+- `GITHUB_CLIENT_ID`：OAuth App 的 Client ID，类型选择 Secret
+- `GITHUB_CLIENT_SECRET`：OAuth App 的 Client Secret，类型选择 Secret
+
+允许使用认证器的域名已通过 `wrangler.jsonc` 中的 `ALLOWED_DOMAINS=inklume.pages.dev` 固定。Client ID 本身不敏感，但 Pages 部署会覆盖未写入 Wrangler 配置的普通变量，所以这里也使用 Secret 类型来保留它。不要把 Client Secret 写进仓库或普通环境变量。配置后重新部署一次，打开 `https://inklume.pages.dev/admin/` 即可使用 GitHub 登录。预览部署和本地开发不会使用生产 OAuth，请改用 GitHub Personal Access Token 登录。以后绑定自定义域名时，还要把新主机名追加到 `wrangler.jsonc` 的 `ALLOWED_DOMAINS`，多个域名使用逗号分隔。
 
 Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based CMS，保存内容就是创建 Git 提交，不提供独立数据库草稿。
 
 ## Cloudflare Pages 部署
 
-本项目是纯静态 Astro 输出，`wrangler.jsonc` 使用 `pages_build_output_dir` 指向 `dist/`。推荐在 Cloudflare Pages 中连接这个 GitHub 仓库，让 Pages 负责构建和发布。
+本项目前台是静态 Astro 输出，只有 Sveltia OAuth 的 `/auth` 和 `/callback` 使用 Pages Functions。`wrangler.jsonc` 使用 `pages_build_output_dir` 指向 `dist/`。推荐在 Cloudflare Pages 中连接这个 GitHub 仓库，让 Pages 负责构建和发布。
 
 在 Cloudflare Dashboard 的 **Workers & Pages → Create application → Pages → Import an existing Git repository** 中选择 `WeiFurryovo/Inklume`，然后设置：
 
@@ -84,7 +97,7 @@ npm run deploy
 
 `npm run deploy` 用 Wrangler 直接发布到已存在的 `inklume` Pages 项目，适合本地手动发布；先在 Dashboard 创建 Git 集成项目并连接 GitHub 后，日常通常不需要运行它。不要在创建 Git 集成项目之前运行此命令，以免误创建无法切换回 Git 集成的 Direct Upload 项目。
 
-纯静态博客不需要 `@astrojs/cloudflare` adapter。若以后加入 SSR、API 或 Cloudflare bindings，再单独启用 Pages Functions/adapter，并审查运行时依赖。
+博客页面不需要 `@astrojs/cloudflare` adapter；仓库根目录的 `functions/` 会由 Pages 独立构建。若以后加入 SSR 或其他 Cloudflare bindings，再评估是否启用 adapter，并审查运行时依赖。
 
 ## 图片
 

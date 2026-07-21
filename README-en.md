@@ -52,13 +52,26 @@ Matching filenames link the Chinese and English versions of a post in Sveltia CM
 
 ## Sveltia CMS
 
-`public/admin/config.yml` configures the GitHub backend and the bilingual `multiple_folders` content model. For personal use, sign in with a GitHub Personal Access Token. For non-technical editors, deploy the [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) and configure OAuth.
+`public/admin/config.yml` configures the GitHub backend, the bilingual `multiple_folders` content model, and GitHub OAuth. The official [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) flow is integrated into this Pages project at `/auth` and `/callback`, so no separate Worker is required. `public/_routes.json` ensures that only those two paths invoke Functions; all blog pages remain static assets.
+
+For the first deployment, register an OAuth App under GitHub [Developer settings → OAuth Apps](https://github.com/settings/developers):
+
+- Application name: `Inklume Sveltia CMS`
+- Homepage URL: `https://inklume.pages.dev/admin/`
+- Authorization callback URL: `https://inklume.pages.dev/callback`
+
+Then add the following to Production under the Cloudflare Pages project's **Settings → Variables and Secrets**:
+
+- `GITHUB_CLIENT_ID`: the OAuth App Client ID, stored as a secret
+- `GITHUB_CLIENT_SECRET`: the OAuth App Client Secret, stored as a secret
+
+The allowed host is pinned as `ALLOWED_DOMAINS=inklume.pages.dev` in `wrangler.jsonc`. The Client ID is not sensitive, but Pages deployments overwrite plain-text dashboard variables that are absent from Wrangler configuration, so store it as a secret here to preserve it. Never commit the Client Secret or store it as a plain-text variable. Redeploy after setting the values, then use GitHub sign-in at `https://inklume.pages.dev/admin/`. Production OAuth is intentionally unavailable on preview deployments and local development; use GitHub Personal Access Token sign-in there. When adding a custom domain, append its hostname to `ALLOWED_DOMAINS` in `wrangler.jsonc`, using commas between multiple domains.
 
 Sveltia CMS is Git-based: saving content creates Git commits rather than rows in a separate draft database.
 
 ## Deploying to Cloudflare Pages
 
-This project is a fully static Astro build. `wrangler.jsonc` uses `pages_build_output_dir` to point Pages at `dist/`. The recommended setup is to connect this GitHub repository to Cloudflare Pages and let Pages build and publish it.
+The blog frontend is a static Astro build; only the Sveltia OAuth endpoints at `/auth` and `/callback` use Pages Functions. `wrangler.jsonc` points Pages at `dist/` with `pages_build_output_dir`. The recommended setup is to connect this GitHub repository to Cloudflare Pages and let Pages build and publish it.
 
 In the Cloudflare Dashboard, open **Workers & Pages → Create application → Pages → Import an existing Git repository**, select `WeiFurryovo/Inklume`, and set:
 
@@ -68,7 +81,7 @@ In the Cloudflare Dashboard, open **Workers & Pages → Create application → P
 - Build output directory: `dist`
 - The repository's `.nvmrc` pins Node.js `24`; if the build image does not read it, add `NODE_VERSION=24` as an environment variable
 
-In the Pages project's **Settings → Environment variables**, set a stable Production `SITE_URL`, for example `https://blog.example.com/`. This build variable is written into canonical URLs, RSS, the sitemap, and OpenGraph metadata; trigger a new deployment after changing it. Pages automatically injects `CF_PAGES_URL`, which is used as the fallback when `SITE_URL` is not set and gives preview builds their deployment URL, but production should always set `SITE_URL`.
+The default `https://inklume.pages.dev/` URL is used for canonical URLs, RSS, the sitemap, and OpenGraph metadata without extra configuration. After adding a custom domain, set a Production `SITE_URL` under the Pages project's **Settings → Environment variables**, for example `https://blog.example.com/`, then trigger a new deployment. Preview builds intentionally keep the stable production URL instead of using Cloudflare's temporary hash-based deployment URL.
 
 For a local build, set it on the command:
 
@@ -84,7 +97,7 @@ npm run deploy
 
 `npm run deploy` uses Wrangler to upload directly to an existing `inklume` Pages project for local/manual deployments; create the Git-integrated project in the dashboard first. Do not run it before that setup, because a Direct Upload project cannot later be switched to Git integration. Git-integrated projects normally do not need it.
 
-The static site does not need the `@astrojs/cloudflare` adapter. Add Pages Functions/the adapter later only if the project gains SSR, APIs, or Cloudflare bindings, and audit runtime dependencies at that point.
+The blog pages do not need the `@astrojs/cloudflare` adapter; Pages builds the root `functions/` directory separately. Reassess the adapter only if the project later gains SSR or additional Cloudflare bindings, and audit runtime dependencies at that point.
 
 ## Images
 

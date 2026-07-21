@@ -4,14 +4,19 @@
 # Except these files & folders
 !/src
 !/public
+!/functions
 !/.github
 !/scripts
+!/tests
 !tsconfig.json
 !astro.config.ts
 !package.json
+!wrangler.jsonc
 !.prettierrc
 !eslint.config.js
 !README.md
+!README-en.md
+!THIRD_PARTY_NOTICES.md
 !.vscode
 
 # Ignore MDX files
