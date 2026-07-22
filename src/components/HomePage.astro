@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import { getEntry, type CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Quote } from "astro-pure/advanced";
 import { Button, Card as PureCard, Icon, Label } from "astro-pure/user";
@@ -16,6 +16,15 @@ type Props = {
 
 const { locale, posts } = Astro.props;
 const isZh = locale === "zh";
+const homepage = await getEntry("homepage", `${locale}/home`);
+
+if (!homepage) {
+  throw new Error(
+    `Missing content entry: \`${locale}/home.yml\` in \`src/content/home/\``
+  );
+}
+
+const home = homepage.data;
 const sourceUrl =
   config.socials.find(social => social.name === "github")?.url ??
   config.site.profile;
@@ -34,44 +43,30 @@ const homePosts = [
 
 const copy = isZh
   ? {
-      location: "新加坡",
       source: "源代码",
       action: "阅读文章",
       aboutTitle: "关于",
-      aboutRole: "开发者 / 写作者",
-      about:
-        "Inklume 是一个由自己拥有的中英双语写作空间，记录技术、创作与生活，也记录构建这个空间本身的过程。",
       moreAbout: "更多关于我",
       postsTitle: "文章",
       morePosts: "更多文章",
       galleryTitle: "相册",
       galleryFallback: "浏览旅途中的影像",
       publishingTitle: "发布方式",
-      publishingHeading: "独立、静态、可迁移",
-      publishingDescription:
-        "Markdown 内容由 Sveltia CMS 管理，Astro 构建后通过 Cloudflare Pages 发布。",
       stackTitle: "技术栈",
       languages: "内容",
       frontend: "前端",
       platform: "平台",
     }
   : {
-      location: "Singapore",
       source: "Source code",
       action: "Read the journal",
       aboutTitle: "About",
-      aboutRole: "Developer / Writer",
-      about:
-        "Inklume is an owned bilingual writing space for technology, creative work, everyday life, and the process of building the space itself.",
       moreAbout: "More about me",
       postsTitle: "Posts",
       morePosts: "More posts",
       galleryTitle: "Gallery",
       galleryFallback: "Browse images from the road",
       publishingTitle: "Publishing",
-      publishingHeading: "Independent, static, portable",
-      publishingDescription:
-        "Sveltia CMS manages Markdown content, Astro builds the site, and Cloudflare Pages publishes it.",
       stackTitle: "Stack",
       languages: "Content",
       frontend: "Frontend",
@@ -92,7 +87,7 @@ const stack = [
   >
     <img
       src="https://avatars.githubusercontent.com/u/106266815?v=4"
-      alt={config.site.author}
+      alt={home.displayName}
       width="112"
       height="112"
       class="h-28 w-28 rounded-full border object-cover p-1"
@@ -101,9 +96,9 @@ const stack = [
     />
 
     <div class="flex flex-col items-center gap-y-4">
-      <h1 class="text-3xl font-medium">{config.site.author}</h1>
+      <h1 class="text-3xl font-medium">{home.displayName}</h1>
       <div class="flex flex-wrap justify-center gap-x-7 gap-y-3">
-        <Label title={copy.location}>
+        <Label title={home.location}>
           <Icon name="location" class="size-5" slot="icon" />
         </Label>
         <Label
@@ -134,8 +129,8 @@ const stack = [
 
   <div id="content" class="animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6">
     <Section title={copy.aboutTitle}>
-      <p class="text-muted-foreground">{copy.aboutRole}</p>
-      <p class="text-muted-foreground">{copy.about}</p>
+      <p class="text-muted-foreground">{home.role}</p>
+      <p class="text-muted-foreground">{home.about}</p>
       <Button
         title={copy.moreAbout}
         class="w-fit self-end"
@@ -188,8 +183,8 @@ const stack = [
 
     <Section title={copy.publishingTitle}>
       <PureCard
-        heading={copy.publishingHeading}
-        subheading={copy.publishingDescription}
+        heading={home.publishingHeading}
+        subheading={home.publishingDescription}
         date="Astro · Sveltia CMS · Cloudflare Pages"
       />
     </Section>

@@ -42,4 +42,16 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { posts, pages };
+const homepage = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{yml,yaml}", base: "./src/content/home" }),
+  schema: z.object({
+    displayName: z.string(),
+    location: z.string(),
+    role: z.string(),
+    about: z.string(),
+    publishingHeading: z.string(),
+    publishingDescription: z.string(),
+  }),
+});
+
+export const collections = { posts, pages, homepage };

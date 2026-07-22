@@ -44,11 +44,13 @@ src/content/posts/zh/my-post.md   # Chinese -> /posts/my-post/
 src/content/posts/en/my-post.md   # English -> /en/posts/my-post/
 src/content/pages/zh/about.md
 src/content/pages/en/about.md
+src/content/home/zh/home.yml      # Chinese homepage copy
+src/content/home/en/home.yml      # English homepage copy
 public/admin/index.html
 public/admin/config.yml
 ```
 
-Matching filenames link the Chinese and English versions of a post in Sveltia CMS.
+Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the display name, location, introduction, and publishing copy; saving those fields also triggers a Pages rebuild.
 
 ## Sveltia CMS
 

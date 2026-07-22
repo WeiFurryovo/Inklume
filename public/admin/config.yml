@@ -26,6 +26,44 @@ slug:
   clean_accents: true
 
 collections:
+  - name: homepage
+    label: Homepage
+    label_singular: Homepage
+    icon: home
+    i18n: true
+    files:
+      - name: home
+        label: Homepage
+        file: src/content/home/{{locale}}/home.yml
+        format: yaml
+        i18n: true
+        preview_path: "/{{locale}}/"
+        fields:
+          - name: displayName
+            label: Display Name
+            widget: string
+            i18n: true
+          - name: location
+            label: Location
+            widget: string
+            i18n: true
+          - name: role
+            label: Role
+            widget: string
+            i18n: true
+          - name: about
+            label: About
+            widget: text
+            i18n: true
+          - name: publishingHeading
+            label: Publishing Heading
+            widget: string
+            i18n: true
+          - name: publishingDescription
+            label: Publishing Description
+            widget: text
+            i18n: true
+
   - name: posts
     label: Blog Posts
     label_singular: Blog Post

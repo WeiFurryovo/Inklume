@@ -4,7 +4,7 @@
 
 一个使用 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 作为前台基底、由 Astro、Sveltia CMS 和 Cloudflare Pages 驱动的中英双语个人写作空间。
 
-Inklume 把内容保存在 Git 仓库中：访客看到的是 Astro 构建的静态页面，编辑者通过 `/admin/index.html` 的 Sveltia CMS 修改 Markdown，提交后由 Cloudflare Pages 自动重新构建并发布。
+Inklume 把内容保存在 Git 仓库中：访客看到的是 Astro 构建的静态页面，编辑者通过 `/admin/index.html` 的 Sveltia CMS 修改 Markdown 与 YAML 内容，提交后由 Cloudflare Pages 自动重新构建并发布。
 
 ## 特性
 
@@ -44,11 +44,13 @@ src/content/posts/zh/my-post.md   # 中文文章 -> /posts/my-post/
 src/content/posts/en/my-post.md   # 英文文章 -> /en/posts/my-post/
 src/content/pages/zh/about.md
 src/content/pages/en/about.md
+src/content/home/zh/home.yml      # 中文首页文案
+src/content/home/en/home.yml      # 英文首页文案
 public/admin/index.html
 public/admin/config.yml
 ```
 
-中英文文章使用相同文件名时，Sveltia CMS 会将它们视为同一篇文章的不同语言版本。
+中英文文章使用相同文件名时，Sveltia CMS 会将它们视为同一篇文章的不同语言版本。后台的 Homepage 集合可以修改首页的姓名、所在地、自我介绍和发布方式文案；保存后同样会触发 Pages 重新构建。
 
 ## Sveltia CMS
 
