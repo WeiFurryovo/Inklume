@@ -62,16 +62,17 @@ For the first deployment, register an OAuth App under GitHub [Developer settings
 
 Then add the following to Production under the Cloudflare Pages project's **Settings → Variables and Secrets**:
 
-- `GITHUB_CLIENT_ID`: the OAuth App Client ID, stored as a secret
+- `ALLOWED_DOMAINS`: `inklume.pages.dev`, stored as plain text
+- `GITHUB_CLIENT_ID`: the OAuth App Client ID, stored as plain text
 - `GITHUB_CLIENT_SECRET`: the OAuth App Client Secret, stored as a secret
 
-The allowed host is pinned as `ALLOWED_DOMAINS=inklume.pages.dev` in `wrangler.jsonc`. The Client ID is not sensitive, but Pages deployments overwrite plain-text dashboard variables that are absent from Wrangler configuration, so store it as a secret here to preserve it. Never commit the Client Secret or store it as a plain-text variable. Redeploy after setting the values, then use GitHub sign-in at `https://inklume.pages.dev/admin/`. Production OAuth is intentionally unavailable on preview deployments and local development; use GitHub Personal Access Token sign-in there. When adding a custom domain, append its hostname to `ALLOWED_DOMAINS` in `wrangler.jsonc`, using commas between multiple domains.
+This repository does not use a Wrangler file as the Pages configuration source; variables and secrets are managed in the Cloudflare Dashboard. Never commit the Client Secret or store it as a plain-text variable. Redeploy after setting the values, then use GitHub sign-in at `https://inklume.pages.dev/admin/`. Production OAuth is intentionally unavailable on preview deployments and local development; use GitHub Personal Access Token sign-in there. When adding a custom domain, append its hostname to `ALLOWED_DOMAINS`, using commas between multiple domains.
 
 Sveltia CMS is Git-based: saving content creates Git commits rather than rows in a separate draft database.
 
 ## Deploying to Cloudflare Pages
 
-The blog frontend is a static Astro build; only the Sveltia OAuth endpoints at `/auth` and `/callback` use Pages Functions. `wrangler.jsonc` points Pages at `dist/` with `pages_build_output_dir`. The recommended setup is to connect this GitHub repository to Cloudflare Pages and let Pages build and publish it.
+The blog frontend is a static Astro build; only the Sveltia OAuth endpoints at `/auth` and `/callback` use Pages Functions. The recommended setup is to connect this GitHub repository to Cloudflare Pages and let Pages build and publish it. The repository intentionally has no Wrangler configuration file, so Pages variables, secrets, and runtime settings remain editable in the Cloudflare Dashboard.
 
 In the Cloudflare Dashboard, open **Workers & Pages → Create application → Pages → Import an existing Git repository**, select `WeiFurryovo/Inklume`, and set:
 

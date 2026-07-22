@@ -62,16 +62,17 @@ public/admin/config.yml
 
 然后在 Cloudflare Pages 项目的 **Settings → Variables and Secrets** 中，为 Production 添加：
 
-- `GITHUB_CLIENT_ID`：OAuth App 的 Client ID，类型选择 Secret
+- `ALLOWED_DOMAINS`：`inklume.pages.dev`，类型选择 Plain text
+- `GITHUB_CLIENT_ID`：OAuth App 的 Client ID，类型选择 Plain text
 - `GITHUB_CLIENT_SECRET`：OAuth App 的 Client Secret，类型选择 Secret
 
-允许使用认证器的域名已通过 `wrangler.jsonc` 中的 `ALLOWED_DOMAINS=inklume.pages.dev` 固定。Client ID 本身不敏感，但 Pages 部署会覆盖未写入 Wrangler 配置的普通变量，所以这里也使用 Secret 类型来保留它。不要把 Client Secret 写进仓库或普通环境变量。配置后重新部署一次，打开 `https://inklume.pages.dev/admin/` 即可使用 GitHub 登录。预览部署和本地开发不会使用生产 OAuth，请改用 GitHub Personal Access Token 登录。以后绑定自定义域名时，还要把新主机名追加到 `wrangler.jsonc` 的 `ALLOWED_DOMAINS`，多个域名使用逗号分隔。
+本仓库不使用 Wrangler 配置文件作为 Pages 配置源，变量和 Secret 均由 Cloudflare Dashboard 管理。不要把 Client Secret 写进仓库或普通环境变量。配置后重新部署一次，打开 `https://inklume.pages.dev/admin/` 即可使用 GitHub 登录。预览部署和本地开发不会使用生产 OAuth，请改用 GitHub Personal Access Token 登录。以后绑定自定义域名时，还要把新主机名追加到 `ALLOWED_DOMAINS`，多个域名使用逗号分隔。
 
 Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based CMS，保存内容就是创建 Git 提交，不提供独立数据库草稿。
 
 ## Cloudflare Pages 部署
 
-本项目前台是静态 Astro 输出，只有 Sveltia OAuth 的 `/auth` 和 `/callback` 使用 Pages Functions。`wrangler.jsonc` 使用 `pages_build_output_dir` 指向 `dist/`。推荐在 Cloudflare Pages 中连接这个 GitHub 仓库，让 Pages 负责构建和发布。
+本项目前台是静态 Astro 输出，只有 Sveltia OAuth 的 `/auth` 和 `/callback` 使用 Pages Functions。推荐在 Cloudflare Pages 中连接这个 GitHub 仓库，让 Pages 负责构建和发布。仓库刻意不包含 Wrangler 配置文件，因此 Pages 的变量、Secret 和运行时设置都可以直接在 Cloudflare Dashboard 中管理。
 
 在 Cloudflare Dashboard 的 **Workers & Pages → Create application → Pages → Import an existing Git repository** 中选择 `WeiFurryovo/Inklume`，然后设置：
 

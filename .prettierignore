@@ -11,7 +11,6 @@
 !tsconfig.json
 !astro.config.ts
 !package.json
-!wrangler.jsonc
 !.prettierrc
 !eslint.config.js
 !README.md
