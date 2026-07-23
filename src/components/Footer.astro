@@ -52,7 +52,8 @@ const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
 
       <div class="flex items-center gap-x-4">
         <Socials />
-        <a href={rssHref} rel="me" aria-label="RSS">
+        <a href={rssHref} rel="me" class="sl-flex">
+          <span class="sr-only">RSS</span>
           <Icon name="rss" />
         </a>
       </div>

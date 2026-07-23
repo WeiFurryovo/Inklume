@@ -1,3 +1,5 @@
+import type { IconsType } from "astro-pure/types";
+
 interface SiteConfig {
   /** Deployed URL of the site, e.g. "https://example.com" */
   url: string;
@@ -77,13 +79,12 @@ interface FeaturesConfig {
 
 interface SocialLink {
   /**
-   * Must match an SVG filename in src/assets/icons/socials/.
-   * e.g. "github" → src/assets/icons/socials/github.svg
+   * Must match an Astro Pure built-in icon name, e.g. "github".
    */
-  name: string;
+  name: IconsType;
   url: string;
   /**
-   * Accessible label for the icon link (aria-label, title attribute).
+   * Accessible label announced by screen readers.
    * Auto-generated if omitted: "{site.title} on GitHub", "Send an email to {site.title}", etc.
    * Override when the default wording doesn't fit.
    */
