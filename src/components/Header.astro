@@ -70,7 +70,7 @@ const menu = [
           {
             config.features.search !== false && (
               <a
-                class="grid size-9 place-items-center py-2 transition-none"
+                class="hover:text-primary grid size-9 place-items-center py-2 transition-none"
                 href={getRelativeLocaleUrl(locale, "search")}
                 title={t.nav.search}
                 aria-label={t.nav.search}
@@ -80,7 +80,7 @@ const menu = [
             )
           }
           <a
-            class="grid size-9 place-items-center py-2 transition-none"
+            class="hover:text-primary grid size-9 place-items-center py-2 transition-none"
             href={getAssetPath("admin/")}
             title="Sveltia CMS"
             aria-label="Sveltia CMS"
