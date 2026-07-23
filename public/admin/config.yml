@@ -43,6 +43,10 @@ collections:
             label: Display Name
             widget: string
             i18n: true
+          - name: avatar
+            label: Avatar
+            widget: image
+            i18n: duplicate
           - name: location
             label: Location
             widget: string

@@ -50,7 +50,7 @@ public/admin/index.html
 public/admin/config.yml
 ```
 
-Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the display name, location, introduction, and publishing copy; saving those fields also triggers a Pages rebuild.
+Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the shared avatar, display name, location, introduction, and publishing copy; saving those fields also triggers a Pages rebuild.
 
 ## Sveltia CMS
 
