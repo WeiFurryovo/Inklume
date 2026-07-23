@@ -6,7 +6,7 @@ about: Inklume 是一个由自己拥有的中英双语写作空间，记录技�
 publishingHeading: 独立、静态、可迁移
 publishingDescription: Markdown 内容由 Sveltia CMS 管理，Astro 构建后通过 Cloudflare Pages 发布。
 links:
-  source: 源代码
+  source: GitHub
   readPosts: 阅读文章
   moreAbout: 更多关于我
   morePosts: 更多文章
