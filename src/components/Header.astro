@@ -3,22 +3,24 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-pure/user";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { useTranslations } from "@/i18n";
+import { getHomepage } from "@/utils/getHomepage";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+const home = await getHomepage(locale);
 
 const menu = [
-  { title: t.nav.posts, path: "posts" },
+  { title: home.navigation.posts, path: "posts" },
   ...(config.features.gallery.enabled
-    ? [{ title: t.nav.gallery, path: "gallery" }]
+    ? [{ title: home.navigation.gallery, path: "gallery" }]
     : []),
   ...(config.features.showArchives
-    ? [{ title: t.nav.archives, path: "archives" }]
+    ? [{ title: home.navigation.archives, path: "archives" }]
     : []),
-  { title: t.nav.tags, path: "tags" },
-  { title: t.nav.about, path: "about" },
+  { title: home.navigation.tags, path: "tags" },
+  { title: home.navigation.about, path: "about" },
 ];
 ---
 

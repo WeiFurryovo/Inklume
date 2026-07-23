@@ -1,5 +1,5 @@
 ---
-import { getEntry, type CollectionEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Quote } from "astro-pure/advanced";
 import { Button, Card as PureCard, Icon, Label } from "astro-pure/user";
@@ -7,6 +7,7 @@ import Card from "./Card.astro";
 import Section from "./home/Section.astro";
 import ProjectCard from "./home/ProjectCard.astro";
 import { getGalleryAlbums } from "@/utils/getGalleryAlbums";
+import { getHomepage } from "@/utils/getHomepage";
 import config from "@/config";
 
 type Props = {
@@ -16,15 +17,7 @@ type Props = {
 
 const { locale, posts } = Astro.props;
 const isZh = locale === "zh";
-const homepage = await getEntry("homepage", `${locale}/home`);
-
-if (!homepage) {
-  throw new Error(
-    `Missing content entry: \`${locale}/home.yml\` in \`src/content/home/\``
-  );
-}
-
-const home = homepage.data;
+const home = await getHomepage(locale);
 const sourceUrl =
   config.socials.find(social => social.name === "github")?.url ??
   config.site.profile;
@@ -43,12 +36,8 @@ const homePosts = [
 
 const copy = isZh
   ? {
-      source: "源代码",
-      action: "阅读文章",
       aboutTitle: "关于",
-      moreAbout: "更多关于我",
       postsTitle: "文章",
-      morePosts: "更多文章",
       galleryTitle: "相册",
       galleryFallback: "浏览旅途中的影像",
       publishingTitle: "发布方式",
@@ -58,12 +47,8 @@ const copy = isZh
       platform: "平台",
     }
   : {
-      source: "Source code",
-      action: "Read the journal",
       aboutTitle: "About",
-      moreAbout: "More about me",
       postsTitle: "Posts",
-      morePosts: "More posts",
       galleryTitle: "Gallery",
       galleryFallback: "Browse images from the road",
       publishingTitle: "Publishing",
@@ -102,7 +87,7 @@ const stack = [
           <Icon name="location" class="size-5" slot="icon" />
         </Label>
         <Label
-          title={copy.source}
+          title={home.links.source}
           as="a"
           href={sourceUrl}
           target="_blank"
@@ -123,7 +108,9 @@ const stack = [
         ></span>
         <span class="size-2 rounded-full bg-green-400"></span>
       </span>
-      <span class="text-muted-foreground font-medium">{copy.action}</span>
+      <span class="text-muted-foreground font-medium">
+        {home.links.readPosts}
+      </span>
     </a>
   </section>
 
@@ -132,7 +119,7 @@ const stack = [
       <p class="text-muted-foreground">{home.role}</p>
       <p class="text-muted-foreground">{home.about}</p>
       <Button
-        title={copy.moreAbout}
+        title={home.links.moreAbout}
         class="w-fit self-end"
         href={getRelativeLocaleUrl(locale, "about")}
         variant="ahead"
@@ -148,7 +135,7 @@ const stack = [
             ))}
           </ul>
           <Button
-            title={copy.morePosts}
+            title={home.links.morePosts}
             class="w-fit self-end"
             href={getRelativeLocaleUrl(locale, "posts")}
             variant="ahead"
@@ -172,7 +159,7 @@ const stack = [
             ))}
           </div>
           <Button
-            title={copy.galleryTitle}
+            title={home.links.gallery}
             class="w-fit self-end"
             href={getRelativeLocaleUrl(locale, "gallery")}
             variant="ahead"

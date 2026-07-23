@@ -67,6 +67,56 @@ collections:
             label: Publishing Description
             widget: text
             i18n: true
+          - name: links
+            label: Homepage Link Labels
+            widget: object
+            i18n: true
+            fields:
+              - name: source
+                label: Source Code
+                widget: string
+                i18n: true
+              - name: readPosts
+                label: Read Posts
+                widget: string
+                i18n: true
+              - name: moreAbout
+                label: More About
+                widget: string
+                i18n: true
+              - name: morePosts
+                label: More Posts
+                widget: string
+                i18n: true
+              - name: gallery
+                label: Gallery
+                widget: string
+                i18n: true
+          - name: navigation
+            label: Navigation Labels
+            widget: object
+            i18n: true
+            fields:
+              - name: posts
+                label: Posts
+                widget: string
+                i18n: true
+              - name: gallery
+                label: Gallery
+                widget: string
+                i18n: true
+              - name: archives
+                label: Archives
+                widget: string
+                i18n: true
+              - name: tags
+                label: Tags
+                widget: string
+                i18n: true
+              - name: about
+                label: About
+                widget: string
+                i18n: true
 
   - name: posts
     label: Blog Posts

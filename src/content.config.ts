@@ -52,6 +52,20 @@ const homepage = defineCollection({
     about: z.string(),
     publishingHeading: z.string(),
     publishingDescription: z.string(),
+    links: z.object({
+      source: z.string(),
+      readPosts: z.string(),
+      moreAbout: z.string(),
+      morePosts: z.string(),
+      gallery: z.string(),
+    }),
+    navigation: z.object({
+      posts: z.string(),
+      gallery: z.string(),
+      archives: z.string(),
+      tags: z.string(),
+      about: z.string(),
+    }),
   }),
 });
 

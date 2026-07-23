@@ -5,3 +5,15 @@ role: Developer / Writer
 about: Inklume is an owned bilingual writing space for technology, creative work, everyday life, and the process of building the space itself.
 publishingHeading: Independent, static, portable
 publishingDescription: Sveltia CMS manages Markdown content, Astro builds the site, and Cloudflare Pages publishes it.
+links:
+  source: Source code
+  readPosts: Read the journal
+  moreAbout: More about me
+  morePosts: More posts
+  gallery: Gallery
+navigation:
+  posts: Posts
+  gallery: Gallery
+  archives: Archives
+  tags: Tags
+  about: About
