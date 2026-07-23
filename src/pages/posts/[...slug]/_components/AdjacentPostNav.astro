@@ -1,6 +1,4 @@
 ---
-import IconArrowLeft from "@/assets/icons/IconArrowLeft.svg";
-import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
@@ -21,33 +19,82 @@ const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
 ---
 
-<div data-pagefind-ignore class="my-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+<div
+  data-pagefind-ignore
+  class="my-8 flex gap-2 max-sm:flex-col sm:justify-between"
+>
   {
     prevPost && (
-      <a
-        href={getPostUrl(prevPost.id, prevPost.filePath, locale)}
-        class="flex w-full gap-1 hover:opacity-75"
-      >
-        <IconArrowLeft class="inline-block flex-none rtl:rotate-180" />
-        <div>
-          <span>{t.post.previousPost}</span>
-          <div class="text-accent/85 text-sm">{prevPost.title}</div>
-        </div>
-      </a>
+      <span class="min-w-0">
+        <a
+          href={getPostUrl(prevPost.id, prevPost.filePath, locale)}
+          aria-label={`${t.post.previousPost}: ${prevPost.title}`}
+          class="group hover:bg-muted inline-flex items-center gap-x-2 rounded-xl px-4 py-2 no-underline transition-colors duration-300 max-sm:max-w-[80%] sm:flex"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="stroke-muted-foreground group-hover:stroke-primary shrink-0 rotate-180 transition-colors rtl:rotate-0"
+            aria-hidden="true"
+          >
+            <line
+              x1="5"
+              y1="12"
+              x2="19"
+              y2="12"
+              class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"
+            />
+            <polyline
+              points="12 5 19 12 12 19"
+              class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"
+            />
+          </svg>
+          <p class="truncate font-medium transition-colors">{prevPost.title}</p>
+        </a>
+      </span>
     )
   }
   {
     nextPost && (
-      <a
-        href={getPostUrl(nextPost.id, nextPost.filePath, locale)}
-        class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
-      >
-        <div>
-          <span>{t.post.nextPost}</span>
-          <div class="text-accent/85 text-sm">{nextPost.title}</div>
-        </div>
-        <IconArrowRight class="inline-block flex-none rtl:rotate-180" />
-      </a>
+      <span class="min-w-0">
+        <a
+          href={getPostUrl(nextPost.id, nextPost.filePath, locale)}
+          aria-label={`${t.post.nextPost}: ${nextPost.title}`}
+          class="group hover:bg-muted inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-right no-underline transition-colors duration-300 max-sm:float-end max-sm:max-w-[80%] sm:flex"
+        >
+          <p class="truncate font-medium transition-colors">{nextPost.title}</p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="stroke-muted-foreground group-hover:stroke-primary shrink-0 transition-colors rtl:rotate-180"
+            aria-hidden="true"
+          >
+            <line
+              x1="5"
+              y1="12"
+              x2="19"
+              y2="12"
+              class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"
+            />
+            <polyline
+              points="12 5 19 12 12 19"
+              class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"
+            />
+          </svg>
+        </a>
+      </span>
     )
   }
 </div>

@@ -24,8 +24,8 @@ export default {
     nextPost: "Next Post",
   },
   pagination: {
-    prev: "Prev",
-    next: "Next",
+    prev: "Previous Posts",
+    next: "Next Posts",
     page: "Page",
   },
   home: {

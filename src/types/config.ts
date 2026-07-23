@@ -93,15 +93,14 @@ interface SocialLink {
 
 interface ShareLink {
   /**
-   * Must match an SVG filename in src/assets/icons/socials/.
-   * e.g. "facebook" → src/assets/icons/socials/facebook.svg
+   * Must match an Astro Pure built-in icon name, e.g. "x".
    */
-  name: string;
+  name: IconsType;
   /** Base share URL. The post URL will be appended as a query param. */
   url: string;
   /**
    * Accessible label for the icon link (aria-label, title attribute).
-   * Auto-generated if omitted: "Share this post on Facebook", "Share this post via WhatsApp", etc.
+   * Auto-generated if omitted: "Share this post on X", "Share this post via email", etc.
    * Override when the default wording doesn't fit.
    */
   linkTitle?: string;
