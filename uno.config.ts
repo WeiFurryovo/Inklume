@@ -5,7 +5,9 @@ import {
   presetTypography,
   type Rule,
 } from "unocss";
+import pureConfig from "./src/pure.config";
 
+const typographyCustom = pureConfig.integ.typography ?? {};
 const foreground = "hsl(var(--foreground) / var(--un-text-opacity, 1))";
 const mutedForeground =
   "hsl(var(--muted-foreground) / var(--un-text-opacity, 1))";
@@ -72,7 +74,9 @@ const typography: TypographyOptions = {
       "border-radius": "calc(1.5 * var(--radius))",
       "padding-inline": "1.6rem",
       "box-shadow": `0 5px 0 ${mutedBackground}`,
-      "font-style": "normal",
+      ...(typographyCustom.blockquoteStyle === "normal" && {
+        "font-style": "normal",
+      }),
     },
     "blockquote::after": {
       color: mutedForeground,
@@ -81,7 +85,8 @@ const typography: TypographyOptions = {
       top: "2.6rem",
       right: "-1.4rem",
       "font-size": "10rem",
-      "font-family": "Georgia, serif",
+      "font-family":
+        '"Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif',
       transform: "rotate(-15deg)",
       opacity: "0.1",
     },
@@ -94,6 +99,9 @@ const typography: TypographyOptions = {
     "tbody tr:last-child": { "border-bottom-width": "0" },
     "thead th": { "font-weight": "500", color: foreground },
     "td,th": { border: "inherit", "text-align": "start", padding: "0.57em" },
+    "thead th:first-child,tbody td:first-child,tfoot td:first-child": {
+      "padding-inline-start": "0",
+    },
     "ol,ul": { "padding-inline-start": "1.625em" },
     "ol>li,ul>li": { "padding-inline-start": ".375em" },
     li: { "margin-top": ".5em", "margin-bottom": ".5em" },

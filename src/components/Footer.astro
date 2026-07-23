@@ -3,28 +3,17 @@ import type { HTMLAttributes } from "astro/types";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-pure/user";
 import Socials from "./Socials.astro";
-import { useTranslations } from "@/i18n";
 import config from "@/config";
 
-type Props = {
-  noMarginTop?: boolean;
-} & HTMLAttributes<"footer">;
+type Props = HTMLAttributes<"footer">;
 
-const { noMarginTop = false, class: className, ...attrs } = Astro.props;
+const { class: className, ...attrs } = Astro.props;
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
 const currentYear = new Date().getFullYear();
 const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
 ---
 
-<footer
-  class:list={[
-    "mx-auto mb-5 w-full",
-    noMarginTop ? "mt-8" : "mt-16",
-    className,
-  ]}
-  {...attrs}
->
+<footer class:list={["mx-auto mt-16 mb-5 w-full", className]} {...attrs}>
   <div class="border-t pt-5">
     <div
       class="flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0"
@@ -33,9 +22,12 @@ const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
         class="text-muted-foreground flex items-center gap-x-4 gap-y-2 max-sm:flex-col"
       >
         <div>© {currentYear} {config.site.author}</div>
-        <div>{t.footer.allRightsReserved}</div>
         <span>
-          <a href="https://astro.build/" target="_blank" rel="noreferrer">
+          <a
+            href="https://github.com/withastro/astro"
+            target="_blank"
+            rel="noreferrer"
+          >
             Astro
           </a>
           &amp;
@@ -63,7 +55,7 @@ const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
 
 <style>
   footer a {
-    color: hsl(var(--foreground));
+    color: hsl(var(--foreground) / var(--un-text-opacity, 1));
     font-weight: 500;
     text-decoration: underline;
   }

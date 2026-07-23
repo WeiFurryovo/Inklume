@@ -13,7 +13,7 @@ Inklume keeps content in Git: visitors receive Astro-generated static pages, whi
 - Sveltia CMS with a GitHub backend and no database
 - Cloudflare Pages Git integration with branch and pull request previews
 - Pagefind full-text search
-- Markdown / MDX, syntax highlighting, math, and callouts
+- Markdown / MDX, Pure syntax highlighting, and math
 - Article-based photo gallery with a PhotoSwipe lightbox
 - Light/dark mode, RSS, sitemap, and OpenGraph metadata
 

@@ -76,7 +76,7 @@ const pureConfig: Config = {
     },
     typography: {
       class: "prose text-base",
-      blockquoteStyle: "normal",
+      blockquoteStyle: "italic",
       inlineCodeBlockStyle: "modern",
     },
     // PhotoSwipe already provides a shared gallery/article viewer.

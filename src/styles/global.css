@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "./theme.css";
 @import "./typography.css";
-@import "rehype-callouts/theme/obsidian";
 @import "katex/dist/katex.min.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -9,8 +8,6 @@
 @layer base {
   * {
     @apply border-border outline-accent/75;
-    scrollbar-width: auto;
-    scrollbar-color: var(--color-muted) transparent;
   }
   a,
   button {
@@ -20,14 +17,16 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+}
 
-  a {
-    transition: color 0.2s ease;
-  }
+/* Keep this outside Tailwind's layers, matching Pure's app.css. Pure's UnoCSS
+   reset is unlayered, so a layered hover rule loses in the cascade. */
+a {
+  transition: color 0.2s ease;
+}
 
-  a:hover {
-    color: hsl(var(--primary));
-  }
+a:hover {
+  color: hsl(var(--primary) / var(--un-text-opacity, 1));
 }
 
 @utility max-w-app {
@@ -52,10 +51,6 @@
 
 @utility active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-8;
-}
-
-:target {
-  scroll-margin-block: 1rem;
 }
 
 @keyframes pure-fade-in-up {
@@ -87,11 +82,49 @@
   animation-delay: 150ms;
 }
 
+/* Match Pure's compact scrollbars inside page widgets without changing the
+   document scrollbar. */
+:root {
+  --scrollbar-thumb: hsl(var(--muted-foreground) / 0.3);
+}
+
+:not(html) ::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+:not(html) ::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background-color: var(--scrollbar-thumb);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate,
   .pure-animate {
     animation-duration: 100ms;
   }
+}
+
+/* ===== KaTeX ===== */
+span.katex-display {
+  overflow-y: scroll;
+  padding: 0.5rem;
+}
+
+.katex-html {
+  overflow: auto hidden;
+  padding: 3px;
+}
+
+.katex-html .base {
+  margin-block: 0;
+  margin-inline: auto;
+}
+
+.katex-html .tag {
+  position: relative !important;
+  display: inline-block;
+  padding-inline-start: 0.5rem;
 }
 
 /* ===== Article image hover info (caption + EXIF) =====
@@ -102,9 +135,7 @@
   display: block;
   width: fit-content;
   max-width: 100%;
-  /* Transplanted from the typography plugin's img margins so the wrapper
-     swap doesn't shift layout. */
-  margin-block: 2em;
+  margin-block: 0;
   margin-inline: auto;
 }
 .app-prose .img-info > img {
@@ -112,21 +143,20 @@
 }
 .img-info-overlay {
   position: absolute;
-  inset: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   gap: 0.125rem;
   padding: 0.5rem 0.625rem;
-  background: linear-gradient(
-    to top,
-    rgb(0 0 0 / 0.72) 0%,
-    rgb(0 0 0 / 0.35) 35%,
-    transparent 70%
-  );
-  color: #fff;
+  border-top: 1px solid hsl(var(--border));
+  background-color: hsl(var(--background) / 0.82);
+  color: hsl(var(--foreground));
   opacity: 0;
-  transition: opacity 0.2s ease;
+  backdrop-filter: blur(8px);
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 /* Reveal on hover only for real pointers; touch devices get the same info in
@@ -143,7 +173,6 @@
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.4;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
 }
 .img-info-meta {
   overflow: hidden;
@@ -151,8 +180,7 @@
   line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
-  opacity: 0.75;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+  color: hsl(var(--muted-foreground));
 }
 
 /* ===== Shared PhotoSwipe viewer (gallery + post articles) =====
@@ -175,8 +203,10 @@
   flex-direction: column;
   gap: 0.15rem;
   padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, rgb(0 0 0 / 0.7), transparent);
-  color: #fff;
+  border-top: 1px solid hsl(var(--border));
+  background-color: hsl(var(--background) / 0.82);
+  color: hsl(var(--foreground));
+  backdrop-filter: blur(8px);
   text-align: center;
   pointer-events: none;
 }
@@ -189,5 +219,5 @@
 }
 .pswp-caption .cap-meta {
   font-size: 0.78rem;
-  opacity: 0.8;
+  color: hsl(var(--muted-foreground));
 }

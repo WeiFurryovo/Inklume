@@ -36,16 +36,10 @@ const ui =
     ? {
         toc: "目录",
         toggleToc: "打开或关闭目录",
-        headingLink: "链接到",
-        copy: "复制",
-        copied: "已复制",
       }
     : {
         toc: "TABLE OF CONTENTS",
         toggleToc: "Toggle table of contents",
-        headingLink: "Link to",
-        copy: "Copy",
-        copied: "Copied",
       };
 const {
   title,
@@ -116,8 +110,8 @@ const ogImage = ogImageUrl
       data-pagefind-body
     >
       <aside
-        class="animate max-md:bg-muted top-20 z-40 min-w-48 basis-60 overflow-y-auto max-md:fixed max-md:hidden max-md:border max-md:px-4 max-md:py-3 md:sticky md:order-2 lg:shrink-0"
-        style="height:calc(100vh - 7rem)"
+        class="animate max-md:bg-muted top-20 z-40 min-w-48 basis-60 overflow-y-scroll max-md:fixed max-md:hidden max-md:rounded-xl max-md:border max-md:px-4 max-md:py-3 md:sticky md:order-2 lg:shrink-0"
+        style="height:calc(100vh - 7rem);"
         id="sidebar"
         data-pagefind-ignore
       >
@@ -132,8 +126,8 @@ const ogImage = ogImageUrl
       </aside>
       <div
         id="sidebar-shade"
-        class="fixed inset-0 hidden bg-black/55"
-        style="z-index:31"
+        class="fixed start-0 top-0 h-full w-full"
+        style="display:none;background-color:#00000091;z-index:31"
       >
       </div>
 
@@ -144,31 +138,22 @@ const ogImage = ogImageUrl
 
         <div
           id="content"
-          class="animate mt-8 max-w-none overflow-x-hidden md:min-w-[45ch]"
+          class="app-prose prose prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg) animate mt-8 max-w-none overflow-x-hidden text-base md:min-w-[45ch]"
+          data-back-to-top-label={t.post.backToTop}
+          data-image-info={Object.keys(imageInfo).length
+            ? JSON.stringify(imageInfo)
+            : undefined}
         >
-          <div
-            id="article"
-            class="app-prose prose prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg) max-w-none"
-            data-heading-link-label={ui.headingLink}
-            data-copy-label={ui.copy}
-            data-copied-label={ui.copied}
-            data-back-to-top-label={t.post.backToTop}
-            data-image-info={Object.keys(imageInfo).length
-              ? JSON.stringify(imageInfo)
-              : undefined}
-          >
-            <Content />
-          </div>
-          <PostImages />
+          <Content />
         </div>
+        <PostImages />
       </article>
     </main>
 
-    <div class="mt-6 items-start gap-x-10 md:flex">
+    <div class="bottom mt-6 items-start gap-x-10 md:flex">
       <div class="text-muted-foreground flex-1 md:min-w-[50ch]">
-        <hr class="my-6 border-dashed" />
-        <EditPost class="mb-5 sm:hidden" {hideEditPost} {post} />
-        <ShareLinks />
+        <EditPost class="mb-3" {hideEditPost} {post} />
+        <ShareLinks {post} />
         <AdjacentPostNav {prevPost} {nextPost} />
       </div>
       <div class="min-w-48 basis-60"></div>
@@ -194,7 +179,11 @@ const ogImage = ogImageUrl
 </PostLayout>
 
 <script>
+  import { localizeBackToTop } from "@/scripts/localizeBackToTop";
+
   function initPostPage() {
+    localizeBackToTop();
+
     const backButton =
       document.querySelector<HTMLAnchorElement>("#back-button");
     const backUrl = sessionStorage.getItem("backUrl");
@@ -204,23 +193,15 @@ const ogImage = ogImageUrl
       document.querySelector<HTMLButtonElement>("#sidebar-btn");
     const sidebar = document.querySelector<HTMLElement>("#sidebar");
     const shade = document.querySelector<HTMLElement>("#sidebar-shade");
-    const article = document.querySelector<HTMLElement>("#article");
-
-    const toTopButton =
-      document.querySelector<HTMLButtonElement>("#to-top-btn");
-    if (toTopButton && article?.dataset.backToTopLabel) {
-      toTopButton.setAttribute("aria-label", article.dataset.backToTopLabel);
-    }
-
     const closeSidebar = () => {
       sidebar?.classList.remove("show");
-      shade?.classList.add("hidden");
+      if (shade) shade.style.display = "none";
     };
     const toggleSidebar = () => {
       if (!sidebar) return;
       const show = !sidebar.classList.contains("show");
       sidebar.classList.toggle("show", show);
-      shade?.classList.toggle("hidden", !show);
+      if (shade) shade.style.display = show ? "block" : "none";
     };
 
     if (sidebarButton && sidebarButton.dataset.ready !== "true") {
@@ -228,45 +209,6 @@ const ogImage = ogImageUrl
       sidebarButton.addEventListener("click", toggleSidebar);
       shade?.addEventListener("click", closeSidebar);
     }
-
-    document
-      .querySelectorAll<HTMLElement>(
-        "#article h2, #article h3, #article h4, #article h5, #article h6"
-      )
-      .forEach(heading => {
-        if (!heading.id || heading.querySelector(".heading-link")) return;
-        heading.classList.add("group");
-        const link = document.createElement("a");
-        link.className =
-          "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
-        link.href = `#${heading.id}`;
-        link.setAttribute(
-          "aria-label",
-          `${article?.dataset.headingLinkLabel ?? "Link to"} ${heading.textContent ?? "section"}`
-        );
-        link.textContent = "#";
-        heading.appendChild(link);
-      });
-
-    document.querySelectorAll<HTMLPreElement>("#article pre").forEach(block => {
-      if (block.querySelector(".copy-code")) return;
-      const button = document.createElement("button");
-      button.className =
-        "copy-code absolute end-3 -top-3 rounded border border-muted bg-muted px-2 py-1 text-xs font-medium leading-4 text-foreground";
-      button.textContent = article?.dataset.copyLabel ?? "Copy";
-      block.style.position = "relative";
-      block.setAttribute("tabindex", "0");
-      block.appendChild(button);
-      button.addEventListener("click", async () => {
-        const code = block.querySelector("code")?.innerText ?? "";
-        await navigator.clipboard.writeText(code);
-        button.textContent = article?.dataset.copiedLabel ?? "Copied";
-        window.setTimeout(
-          () => (button.textContent = article?.dataset.copyLabel ?? "Copy"),
-          700
-        );
-      });
-    });
   }
 
   initPostPage();
@@ -282,7 +224,7 @@ const ogImage = ogImageUrl
     margin-top: 1rem;
   }
 
-  #article > :global(h1:first-child) {
+  #content > :global(h1:first-child) {
     display: none;
   }
 
@@ -298,17 +240,24 @@ const ogImage = ogImageUrl
       top: 0 !important;
       right: 0;
       height: 100vh !important;
-      min-width: 55vw;
+      min-width: 40vw;
       max-width: 75vw;
       padding-block: 1.5rem !important;
-      border-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
       opacity: 1;
       animation: 300ms sidebar-in both !important;
     }
 
-    #sidebar-shade:not(.hidden) {
+    #sidebar-shade {
       display: block;
       animation: 300ms shade-in both;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    #sidebar.show {
+      min-width: 55vw;
     }
   }
 

@@ -1,12 +1,34 @@
 ---
+import type { CollectionEntry } from "astro:content";
+import { QRCode } from "astro-pure/advanced";
 import { Icon } from "astro-pure/user";
 import { tplStr, useTranslations } from "@/i18n";
 import config from "@/config";
 
-const { shareLinks } = config;
-const t = useTranslations(Astro.currentLocale);
+type Props = {
+  post: CollectionEntry<"posts">;
+};
 
-const pageUrl = Astro.url;
+const { post } = Astro.props;
+const { shareLinks } = config;
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+const pageUrl = Astro.url.href;
+
+const labels =
+  locale === "zh"
+    ? {
+        author: "作者",
+        copyLink: "复制链接",
+        getQrCode: "获取二维码",
+        linkCopied: "链接已复制",
+      }
+    : {
+        author: "Author",
+        copyLink: "Copy link",
+        getQrCode: "Get QR code",
+        linkCopied: "Link copied!",
+      };
 
 const platformLabel = (name: string) =>
   name.charAt(0).toUpperCase() + name.slice(1);
@@ -19,25 +41,120 @@ const items = shareLinks.map(({ name, url, linkTitle }) => {
       : tplStr(t.post.sharePostOn, { platform: platformLabel(name) }));
   return { name, url, title };
 });
+
+const publishedAt = new Intl.DateTimeFormat(locale, {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: post.data.timezone ?? config.site.timezone,
+}).format(new Date(post.data.pubDatetime));
 ---
 
-{
-  items.length > 0 && (
-    <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start">
-      <span class="italic">{t.post.sharePostIntro}</span>
-      <div class="flex flex-row gap-3">
-        {items.map(({ name, url, title }) => (
+<div
+  data-copyright-card
+  data-link-copied={labels.linkCopied}
+  data-pagefind-ignore
+  class="relative flex flex-col gap-y-2 rounded-xl border px-3 py-2 sm:px-4 sm:py-3"
+>
+  <Icon class="absolute end-4 top-4 size-20 opacity-10" name="copyright" />
+
+  <div class="flex flex-col">
+    <div class="text-foreground font-medium">{post.data.title}</div>
+    <div class="line-clamp-1 text-sm">{pageUrl}</div>
+  </div>
+
+  <div class="flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8">
+    <div class="flex gap-x-2 sm:flex-col">
+      <span>{labels.author}</span>
+      <span class="text-foreground text-sm max-sm:place-self-center">
+        {post.data.author}
+      </span>
+    </div>
+    <div class="flex gap-x-2 sm:min-w-16 sm:flex-col">
+      <span>{t.post.publishedAt}</span>
+      <span class="text-foreground text-sm max-sm:place-self-center">
+        {publishedAt}
+      </span>
+    </div>
+    <div class="flex gap-x-2 sm:flex-col">
+      <span>{t.footer.copyright}</span>
+      <a
+        class="text-foreground text-sm max-sm:place-self-center"
+        href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        CC BY-NC-SA 4.0
+      </a>
+    </div>
+  </div>
+
+  <div class="relative">
+    <div class="flex flex-row gap-3">
+      <button
+        id="copy-link"
+        type="button"
+        aria-label={labels.copyLink}
+        class="group bg-muted text-muted-foreground hover:text-primary rounded-full p-1 transition-colors sm:p-1.5"
+      >
+        <Icon class="size-5" name="link" />
+      </button>
+      <button
+        id="get-qrcode"
+        type="button"
+        aria-label={labels.getQrCode}
+        class="group bg-muted text-muted-foreground hover:text-primary rounded-full p-1 transition-colors sm:p-1.5"
+      >
+        <Icon class="size-5" name="qrcode" />
+      </button>
+      {
+        items.map(({ name, url, title }) => (
           <a
             href={`${url}${pageUrl}`}
             target="_blank"
             rel="noopener noreferrer"
+            id={`share-${name}`}
             aria-label={title}
             class="group bg-muted text-muted-foreground hover:text-primary rounded-full p-1 transition-colors sm:p-1.5"
           >
             <Icon class="size-5" name={name} />
           </a>
-        ))}
-      </div>
+        ))
+      }
     </div>
-  )
-}
+    <QRCode
+      class="bg-muted absolute z-10 -mt-2 box-content max-h-0 max-w-44 overflow-hidden rounded-xl border p-4 opacity-0 transition-all duration-300 ease-in-out"
+    />
+  </div>
+</div>
+
+<style>
+  #qrcode-container.expanded {
+    max-height: 11rem;
+    transform: translateY(6px);
+    opacity: 100;
+  }
+</style>
+
+<script>
+  import { showToast } from "astro-pure/utils";
+
+  function initShareLinks() {
+    const card = document.querySelector<HTMLElement>("[data-copyright-card]");
+    if (!card || card.dataset.ready === "true") return;
+    card.dataset.ready = "true";
+
+    card.querySelector("#copy-link")?.addEventListener("click", () => {
+      navigator.clipboard.writeText(window.location.href);
+      showToast({ message: card.dataset.linkCopied ?? "Link copied!" });
+    });
+
+    const qrcodeContainer = card.querySelector("#qrcode-container");
+    card.querySelector("#get-qrcode")?.addEventListener("click", () => {
+      qrcodeContainer?.classList.toggle("expanded");
+    });
+  }
+
+  initShareLinks();
+  document.addEventListener("astro:page-load", initShareLinks);
+</script>

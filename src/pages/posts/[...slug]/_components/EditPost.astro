@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { Button } from "astro-pure/user";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
@@ -20,19 +21,20 @@ const t = useTranslations(Astro.currentLocale);
 
 {
   showEditPost && (
-    <a
+    <Button
+      as="a"
+      title={t.post.editPage}
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      class:list={[
-        "hover:text-accent text-muted-foreground flex justify-baseline gap-1.5",
-        className,
-      ]}
+      class={`px-3 py-2 ${className}`.trim()}
+      style="font-size:1rem"
     >
-      {/* mingcute:edit-2-line, matching Astro Theme Pure's docs edit link. */}
+      {/* mingcute:edit-2-line, from Astro Theme Pure's docs edit button. */}
       <svg
+        slot="before"
         aria-hidden="true"
-        class="size-5"
+        focusable="false"
         xmlns="http://www.w3.org/2000/svg"
         width="20"
         height="20"
@@ -47,6 +49,6 @@ const t = useTranslations(Astro.currentLocale);
         </g>
       </svg>
       <span>{t.post.editPage}</span>
-    </a>
+    </Button>
   )
 }

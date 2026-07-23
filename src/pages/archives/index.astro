@@ -4,10 +4,10 @@ import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
 import { postFilter } from "@/utils/postFilter";
+import { getSortedPosts } from "@/utils/getSortedPosts";
 import { getPostsByGroupCondition } from "./_utils/getPostsByGroupCondition";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
@@ -23,67 +23,52 @@ if (!config.features.showArchives && notFoundUrl) {
 const t = useTranslations(locale);
 
 const posts = await getCollection("posts", ({ id }) => id.startsWith("zh/"));
-const filteredPosts = posts.filter(postFilter);
-const monthFormatter = new Intl.DateTimeFormat(locale, { month: "long" });
+const filteredPosts = getSortedPosts(posts.filter(postFilter));
+const postsByYear = Object.entries(
+  getPostsByGroupCondition(filteredPosts, post =>
+    post.data.pubDatetime.getFullYear()
+  )
+).sort(([yearA], [yearB]) => Number(yearB) - Number(yearA));
+const postsUrl = getRelativeLocaleUrl(locale, "posts");
 ---
 
 <Layout title={`${t.pages.archivesTitle} | ${config.site.title}`}>
   <Header />
 
-  <Breadcrumb />
+  <div class="w-full flex-1">
+    <Breadcrumb href={postsUrl} />
 
-  <Main pageTitle={t.pages.archivesTitle} pageDesc={t.pages.archivesDesc}>
-    {
-      Object.entries(
-        getPostsByGroupCondition(filteredPosts, post =>
-          post.data.pubDatetime.getFullYear()
-        )
-      )
-        .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
-        .map(([year, yearGroup]) => (
-          <div>
-            <span class="text-2xl font-bold">{year}</span>
-            <sup class="text-muted-foreground text-sm">{yearGroup.length}</sup>
-            {Object.entries(
-              getPostsByGroupCondition(
-                yearGroup,
-                post => post.data.pubDatetime.getMonth() + 1
-              )
-            )
-              .sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
-              .map(([month, monthGroup]) => (
-                <div class="flex flex-col sm:flex-row">
-                  <div class="mt-6 min-w-36 text-lg sm:my-6">
-                    <span class="font-bold">
-                      {monthFormatter.format(
-                        new Date(2000, Number(month) - 1, 1)
-                      )}
-                    </span>
-                    <sup class="text-muted-foreground text-xs">
-                      {monthGroup.length}
-                    </sup>
-                  </div>
-                  <ul class="flex flex-1 flex-col gap-3">
-                    {monthGroup
-                      .sort(
-                        (a, b) =>
-                          Math.floor(
-                            new Date(b.data.pubDatetime).getTime() / 1000
-                          ) -
-                          Math.floor(
-                            new Date(a.data.pubDatetime).getTime() / 1000
-                          )
-                      )
-                      .map(data => (
-                        <Card {...data} />
-                      ))}
-                  </ul>
-                </div>
-              ))}
-          </div>
-        ))
-    }
-  </Main>
+    <main id="main-content" class="mt-6 lg:mt-10">
+      <div id="content-header" class="animate">
+        <h1 class="mb-6 text-3xl font-medium">{t.pages.archivesTitle}</h1>
+      </div>
+
+      {filteredPosts.length === 0 && <p>还没有文章。</p>}
+
+      <section id="content" class="animate" aria-label={t.pages.postsTitle}>
+        {
+          postsByYear.map(([year, yearGroup]) => (
+            <div class="relative mt-20">
+              <h2
+                class="absolute -start-6 -top-16 z-0 text-9xl font-bold text-transparent opacity-12 dark:opacity-25"
+                style="-webkit-text-stroke-width:2px;-webkit-text-stroke-color:hsl(var(--foreground))"
+              >
+                <samp>{year}</samp>
+              </h2>
+              <p class="text-muted-foreground px-5">
+                {yearGroup.length} 篇文章
+              </p>
+              <ul class="flex flex-col text-start">
+                {yearGroup.map(post => (
+                  <Card {...post} class="border-0 bg-transparent py-2" />
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </section>
+    </main>
+  </div>
 
   <Footer />
 </Layout>

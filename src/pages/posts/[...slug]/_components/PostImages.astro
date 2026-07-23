@@ -5,7 +5,7 @@ import config from "@/config";
 /**
  * Article image enhancements, shared by the zh and en post pages:
  * - hover overlay (caption + EXIF) for photos listed in the gallery manifest
- *   (read from `data-image-info` on `#article`); other images are untouched;
+ *   (read from `data-image-info` on `#content`); other images are untouched;
  * - a PhotoSwipe viewer over all article images (src/scripts/photoViewer.ts —
  *   the same viewer as the gallery page), with prev/next across the post.
  */
@@ -79,7 +79,7 @@ const pswpStrings = JSON.stringify({
   }
 
   function initPostImages() {
-    const article = document.getElementById("article");
+    const article = document.getElementById("content");
     if (!article) {
       destroyViewer();
       return;

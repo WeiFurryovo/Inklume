@@ -9,27 +9,34 @@ import config from "@/config";
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+const copy =
+  locale === "zh"
+    ? {
+        problem: "糟糕，出现了一些问题。",
+        missing: "抱歉，我们找不到这个页面。",
+      }
+    : {
+        problem: "Oops, something went wrong.",
+        missing: "Sorry, we couldn't find your page.",
+      };
 ---
 
 <Layout title={`${t.notFound.title} | ${config.site.title}`}>
   <Header />
 
-  <main
-    id="main-content"
-    class="app-layout flex flex-1 items-center justify-center"
-  >
-    <div class="mb-14 flex flex-col items-center justify-center">
-      <h1 class="text-accent text-9xl font-bold">404</h1>
-      <span aria-hidden="true"> ¯\_(ツ)_/¯ </span>
-      <p class="mt-4 text-2xl sm:text-3xl">{t.notFound.message}</p>
+  <div class="w-full flex-1">
+    <main id="main-content" class="px-4 py-10 text-center sm:px-6 lg:px-8">
+      <h1 class="block text-7xl font-bold sm:text-9xl">404</h1>
+      <p class="text-muted-foreground mt-3">{copy.problem}</p>
+      <p class="text-lg">{copy.missing}</p>
       <Button
         title={t.notFound.goHome}
         href={getRelativeLocaleUrl(locale, "")}
         variant="ahead"
         class="mt-5"
       />
-    </div>
-  </main>
+    </main>
+  </div>
 
   <Footer />
 </Layout>

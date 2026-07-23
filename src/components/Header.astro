@@ -34,7 +34,6 @@ const menu = [
 
 <header-component
   class="group sticky top-4 z-50 mb-12 flex items-center justify-between rounded-xl border border-transparent max-md:z-30 max-sm:py-1 sm:rounded-2xl"
-  data-show="true"
 >
   <a
     class="z-30 text-xl font-medium group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3"
@@ -45,10 +44,10 @@ const menu = [
     {config.site.title}
   </a>
 
-  <div class="flex items-center gap-x-2">
+  <div class="flex items-center gap-x-2 sm:gap-x-1 md:gap-x-2">
     <div
       id="headerExpandContent"
-      class="max-sm:group-[.not-top]:border-border absolute inset-x-0 top-12 grid border border-transparent opacity-0 group-[.expanded]:opacity-100 group-[.not-top]:rounded-xl max-sm:group-[.not-top]:px-4 max-sm:group-[.not-top]:py-2 sm:static sm:grid-rows-1 sm:opacity-100"
+      class="dark:group-[.expanded.not-top]:bg-muted max-sm:group-[.not-top]:border-border max-sm:group-[.expanded.not-top]:bg-background start-0 end-0 top-12 grid border border-transparent group-[.expanded]:opacity-100 group-[.not-top]:rounded-xl max-sm:absolute max-sm:opacity-0 max-sm:group-[.not-top]:px-4 max-sm:group-[.not-top]:py-2 sm:grid-rows-1"
     >
       <div
         class="flex flex-col items-center justify-center overflow-hidden sm:flex-row"
@@ -65,27 +64,29 @@ const menu = [
           ))
         }
         <div
-          class="flex w-full grow flex-row items-center justify-end gap-x-1 sm:w-fit sm:gap-x-2"
+          class="flex w-full grow flex-row justify-end gap-x-1 sm:w-fit sm:gap-x-2"
         >
           {
             config.features.search !== false && (
               <a
-                class="hover:text-primary grid size-9 place-items-center py-2 transition-none"
+                class="grid size-9 place-items-center py-2 transition-none"
                 href={getRelativeLocaleUrl(locale, "search")}
                 title={t.nav.search}
                 aria-label={t.nav.search}
               >
+                <span class="sr-only">{t.nav.search}</span>
                 <Icon name="search" class="size-5" />
               </a>
             )
           }
           <a
-            class="hover:text-primary grid size-9 place-items-center py-2 transition-none"
+            class="grid size-9 place-items-center py-2 transition-none"
             href={getAssetPath("admin/")}
             title="Sveltia CMS"
             aria-label="Sveltia CMS"
             data-astro-reload
           >
+            <span class="sr-only">Sveltia CMS</span>
             <Icon name="document" class="size-5" />
           </a>
           <LanguageSwitcher />
@@ -105,6 +106,7 @@ const menu = [
             title={t.a11y.toggleTheme}
             aria-label={t.a11y.toggleTheme}
           >
+            <span class="sr-only">{t.a11y.toggleTheme}</span>
             <Icon
               class="system group-hover/dark:text-primary size-5"
               name="computer"
@@ -128,6 +130,7 @@ const menu = [
         data-close-label={t.a11y.closeMenu}
         aria-expanded="false"
       >
+        <span class="sr-only">{t.a11y.openMenu}</span>
         <Icon class="size-5" name="menu" />
       </button>
     </div>
@@ -143,7 +146,7 @@ const menu = [
 </script>
 
 <script>
-  import { setTheme } from "astro-pure/utils";
+  import { setTheme, showToast } from "astro-pure/utils";
 
   class InklumeHeader extends HTMLElement {
     connectedCallback() {
@@ -163,7 +166,9 @@ const menu = [
 
       const darkModeButton = this.querySelector<HTMLElement>("#toggleDarkMode");
       darkModeButton?.addEventListener("click", () => {
-        darkModeButton.dataset.theme = setTheme(undefined, true) ?? "system";
+        const newTheme = setTheme(undefined, true) ?? "system";
+        darkModeButton.dataset.theme = newTheme;
+        showToast({ message: `Set theme to ${newTheme}` });
       });
 
       const menuButton = this.querySelector<HTMLButtonElement>("#toggleMenu");

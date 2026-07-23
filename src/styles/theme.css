@@ -36,7 +36,7 @@
   --un-default-border-color: hsl(var(--border) / 1);
 }
 
-.dark {
+html.dark {
   --primary: 195 95% 85%;
   --background: 240 20.54% 5.2%;
   --foreground: 0 0% 98%;

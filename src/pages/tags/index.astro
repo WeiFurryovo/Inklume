@@ -1,9 +1,9 @@
 ---
 import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import Tag from "@/components/Tag.astro";
 import { getUniqueTags } from "@/utils/getUniqueTags";
@@ -18,18 +18,36 @@ const tags = getUniqueTags(posts);
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+const postsUrl = getRelativeLocaleUrl(locale, "posts");
+const empty = "还没有标签。";
 ---
 
 <Layout title={`${t.pages.tagsTitle} | ${config.site.title}`}>
   <Header />
 
-  <Breadcrumb />
+  <div class="w-full flex-1">
+    <Breadcrumb href={postsUrl} />
 
-  <Main pageTitle={t.pages.tagsTitle} pageDesc={t.pages.tagsDesc}>
-    <ul class="flex flex-wrap gap-3">
-      {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} />)}
-    </ul>
-  </Main>
+    <main id="main-content" class="mt-6 lg:mt-10">
+      <div id="content-header" class="animate">
+        <h1 class="mb-6 text-3xl font-medium">{t.pages.tagsTitle}</h1>
+      </div>
+
+      <div id="content" class="animate">
+        {
+          tags.length > 0 ? (
+            <ul class="flex flex-wrap gap-4">
+              {tags.map(({ tag, tagName, count }) => (
+                <Tag {tag} {tagName} {count} />
+              ))}
+            </ul>
+          ) : (
+            <p>{empty}</p>
+          )
+        }
+      </div>
+    </main>
+  </div>
 
   <Footer />
 </Layout>

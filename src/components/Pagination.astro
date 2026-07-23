@@ -25,13 +25,4 @@ const nextUrl = page.url.next
   : undefined;
 ---
 
-{
-  page.lastPage > 1 && (
-    <div class="mt-auto mb-8">
-      <p class="text-muted-foreground text-center text-sm">
-        {t.pagination.page} {page.currentPage} / {page.lastPage}
-      </p>
-      <Paginator {prevUrl} {nextUrl} />
-    </div>
-  )
-}
+{page.lastPage > 1 && <Paginator {prevUrl} {nextUrl} />}

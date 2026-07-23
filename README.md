@@ -13,7 +13,7 @@ Inklume 把内容保存在 Git 仓库中：访客看到的是 Astro 构建的静
 - Sveltia CMS：Git-based 内容管理，不需要数据库
 - Cloudflare Pages：通过 Git 集成自动构建静态站点，并提供分支和 Pull Request 预览
 - Pagefind 静态全文搜索
-- Markdown / MDX、代码高亮、数学公式与 callouts
+- Markdown / MDX、Pure 代码高亮与数学公式
 - 按文章组织的照片相册和 PhotoSwipe 灯箱
 - 明暗主题、RSS、Sitemap 与 OpenGraph
 

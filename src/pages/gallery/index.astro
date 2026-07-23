@@ -1,10 +1,10 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getCollection } from "astro:content";
+import { BackToTop } from "astro-pure/components/pages";
+import { Button } from "astro-pure/user";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
 import Footer from "@/components/Footer.astro";
 import Gallery from "@/components/Gallery.astro";
 import { getGalleryAlbums } from "@/utils/getGalleryAlbums";
@@ -31,11 +31,47 @@ const albums = getGalleryAlbums(posts);
 >
   <Header />
 
-  <Breadcrumb />
+  <div class="w-full flex-1">
+    <Button
+      title={t.post.goBack}
+      href={getRelativeLocaleUrl(locale, "")}
+      variant="back"
+    />
 
-  <Main pageTitle={t.pages.galleryTitle} pageDesc={t.pages.galleryDesc} wide>
-    <Gallery albums={albums} />
-  </Main>
+    <main
+      id="main-content"
+      class="mt-6 items-start gap-x-10 md:flex lg:mt-10"
+      data-pagefind-body
+    >
+      <article class="min-w-0 grow">
+        <div id="content-header" class="animate">
+          <h1 class="text-2xl font-medium sm:mb-2 sm:text-3xl">
+            {t.pages.galleryTitle}
+          </h1>
+          <p class="text-muted-foreground mt-2 text-sm sm:text-base">
+            {t.pages.galleryDesc}
+          </p>
+        </div>
+
+        <div
+          id="content"
+          class="animate mt-8 max-w-none overflow-x-hidden"
+          data-back-to-top-label={t.post.backToTop}
+        >
+          <Gallery albums={albums} />
+        </div>
+      </article>
+    </main>
+
+    <BackToTop header="content-header" content="content" />
+  </div>
 
   <Footer />
 </Layout>
+
+<script>
+  import { localizeBackToTop } from "@/scripts/localizeBackToTop";
+
+  localizeBackToTop();
+  document.addEventListener("astro:page-load", localizeBackToTop);
+</script>

@@ -41,7 +41,7 @@ const pswpStrings = JSON.stringify({
             <h2 class="text-lg font-medium">
               <a
                 href={album.post.url}
-                class="text-foreground hover:text-accent underline decoration-dashed decoration-1 underline-offset-4 transition-colors"
+                class="text-foreground hover:text-primary underline underline-offset-4 transition-colors"
               >
                 {album.post.title}
               </a>
@@ -93,27 +93,15 @@ const pswpStrings = JSON.stringify({
 }
 
 <style>
-  /* CSS-only justified grid: each item grows in proportion to its aspect ratio
-     so rows share a common height; the ::after spacer keeps the last (partial)
-     row left-aligned instead of stretching its items across the full width. */
+  /* Justified rows retain each photo's natural aspect ratio. */
   .g-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.375rem;
+    gap: 0.5rem;
   }
   .g-grid::after {
     content: "";
     flex-grow: 1000000;
-  }
-  /* Album-app feel on phones: photo rows bleed to the screen edges by
-     cancelling the page's 1rem side padding; titles/dates stay padded. */
-  @media (width < 40rem) {
-    .g-grid {
-      margin-inline: -1rem;
-    }
-    .g-grid .g-item {
-      border-radius: 0;
-    }
   }
   .g-item {
     position: relative;
@@ -121,9 +109,8 @@ const pswpStrings = JSON.stringify({
     flex-grow: calc(var(--ar) * 100);
     flex-basis: calc(var(--ar) * 11rem);
     overflow: hidden;
-    border-radius: 0.25rem;
-    /* Doubles as a loading placeholder before the thumbnail paints. */
-    background-color: var(--color-muted);
+    border-radius: var(--radius);
+    background-color: hsl(var(--muted));
   }
   .g-item img {
     display: block;
@@ -134,21 +121,20 @@ const pswpStrings = JSON.stringify({
 
   .g-overlay {
     position: absolute;
-    inset: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     gap: 0.125rem;
     padding: 0.5rem 0.625rem;
-    background: linear-gradient(
-      to top,
-      rgb(0 0 0 / 0.72) 0%,
-      rgb(0 0 0 / 0.35) 35%,
-      transparent 70%
-    );
-    color: #fff;
+    border-top: 1px solid hsl(var(--border));
+    background-color: hsl(var(--background) / 0.82);
+    color: hsl(var(--foreground));
     opacity: 0;
-    transition: opacity 0.2s ease;
+    backdrop-filter: blur(8px);
+    transition: opacity 0.3s ease;
     pointer-events: none;
   }
   /* Reveal on hover only for real pointers; touch devices rely on the lightbox. */
@@ -159,7 +145,7 @@ const pswpStrings = JSON.stringify({
   }
   /* Keyboard parity: focusing an item shows its overlay + a visible outline. */
   .g-item:focus-visible {
-    outline: 2px dashed var(--color-accent);
+    outline: 2px dashed hsl(var(--primary));
     outline-offset: 2px;
   }
   .g-item:focus-visible .g-overlay {
@@ -169,7 +155,6 @@ const pswpStrings = JSON.stringify({
     font-size: 0.75rem;
     font-weight: 500;
     line-height: 1.3;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
   }
   .g-meta {
     overflow: hidden;
@@ -177,8 +162,7 @@ const pswpStrings = JSON.stringify({
     line-height: 1.3;
     text-overflow: ellipsis;
     white-space: nowrap;
-    opacity: 0.75;
-    text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+    color: hsl(var(--muted-foreground));
   }
 </style>
 

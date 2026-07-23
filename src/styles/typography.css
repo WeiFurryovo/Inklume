@@ -1,135 +1,237 @@
-@plugin "@tailwindcss/typography";
+.app-prose img[role="button"] {
+  cursor: zoom-in;
+}
 
-@layer base {
-  /* ===== Override default Tailwind Typography styles ===== */
-  .app-prose {
-    @apply prose;
+.app-prose img[role="button"]:focus-visible {
+  outline: 2px dashed hsl(var(--primary));
+  outline-offset: 2px;
+}
 
-    h1,
-    h2,
-    h3,
-    h4,
-    th {
-      @apply text-foreground mb-3;
-    }
+/* Keep Pure's Shiki rules unlayered. Its UnoCSS typography is also unlayered,
+   and would otherwise override the code-block container regardless of selector
+   specificity. */
+.astro-code {
+  display: flex;
+  flex-direction: column;
+  margin-block: 0.5rem;
+  border-radius: 0.75rem;
+  background-color: hsl(var(--muted)) !important;
 
-    h3 {
-      @apply italic;
-    }
-
-    p,
-    strong,
-    ol,
-    ul,
-    figcaption,
-    table,
-    code {
-      @apply text-foreground;
-    }
-
-    a {
-      @apply text-foreground hover:text-accent wrap-break-word decoration-dashed underline-offset-4 focus-visible:no-underline;
-    }
-
-    ul {
-      @apply overflow-x-clip;
-    }
-
-    li {
-      @apply marker:text-accent;
-    }
-
-    hr {
-      @apply border-border;
-    }
-
-    img {
-      @apply border-border mx-auto border;
-    }
-
-    img[role="button"] {
-      @apply cursor-zoom-in;
-
-      &:focus-visible {
-        @apply outline-2 outline-offset-2 outline-dashed;
-      }
-    }
-
-    figcaption {
-      @apply opacity-75;
-    }
-
-    table {
-      th,
-      td {
-        @apply border-border border p-2;
-      }
-
-      th {
-        @apply py-1.5;
-      }
-    }
+  pre {
+    margin: 0;
+    overflow-x: scroll;
+    padding-block: 0.85rem;
+    padding-inline: 0;
+    background: none;
 
     code {
-      @apply bg-muted/75 text-foreground rounded p-1 wrap-break-word before:content-none after:content-none;
+      display: block;
+      width: fit-content;
+      min-width: 100%;
+      min-height: 1.5rem;
+      counter-increment: step 0;
+      counter-reset: step;
+
+      &::before {
+        position: absolute;
+        z-index: 1;
+        inset-inline-start: 0;
+        top: 0.8571429em;
+        bottom: 0;
+        display: block;
+        width: 2.75rem;
+        background-color: hsl(var(--muted));
+        content: "";
+      }
+
+      .line {
+        padding-inline-end: 3rem;
+
+        &::before {
+          position: sticky;
+          z-index: 2;
+          inset-inline-start: 0;
+          display: inline-flex;
+          box-sizing: content-box;
+          width: 2rem;
+          justify-content: end;
+          padding-inline-end: 0.75rem;
+          background-color: hsl(var(--muted));
+          color: hsl(var(--muted-foreground) / 0.6);
+          content: counter(step);
+          counter-increment: step;
+        }
+
+        &:last-child:empty,
+        &:last-child:has(> span:empty:only-child) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &:has(code) {
+    position: relative;
+  }
+
+  &:has(div.title) {
+    padding-top: 2rem;
+
+    code::before {
+      top: calc(2rem + 0.8571429em);
+    }
+  }
+
+  .title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0.5rem;
+  }
+
+  .language {
+    position: absolute;
+    top: 0.75rem;
+    right: 0;
+    transition: opacity 0.3s;
+  }
+
+  button.copy {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+    user-select: none;
+
+    .success::before {
+      position: absolute;
+      top: 0;
+      right: 100%;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: 0.25rem;
+      background-color: hsl(var(--card));
+      color: hsl(var(--muted-foreground));
+      content: "Copied!";
+      font-size: 0.75rem;
     }
 
-    .astro-code code {
-      @apply flex-[1_0_100%] bg-inherit p-0;
+    &.copied {
+      .success {
+        display: block;
+      }
+
+      .ready {
+        display: none;
+      }
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    button.copy {
+      opacity: 1;
     }
 
-    blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+    .language {
+      opacity: 0;
+    }
+  }
+
+  .highlighted,
+  .diff {
+    display: inline-block;
+    min-width: 100%;
+  }
+
+  .highlighted,
+  .highlighted::before {
+    background-color: rgb(149 166 183 / 0.32) !important;
+  }
+
+  .diff.remove {
+    background-color: rgb(244 63 94 / 0.16);
+
+    &::before {
+      background-color: rgb(244 63 94 / 0.16);
+      content: "-";
+    }
+  }
+
+  .diff.add {
+    background-color: rgb(16 185 129 / 0.16);
+
+    &::before {
+      background-color: rgb(16 185 129 / 0.16);
+      content: "+";
+    }
+  }
+
+  .collapse-toggle {
+    z-index: 3;
+    display: flex;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0.25rem;
+    border-top: 1px solid hsl(var(--border));
+    column-gap: 0.3rem;
+    user-select: none;
+
+    .desc::before {
+      content: "Collapse";
     }
 
-    details:not(.callout) {
-      @apply text-foreground inline-block cursor-pointer select-none [&_p]:hidden [&_ul]:my-0!;
+    svg {
+      transform: rotate(180deg);
+      transition: transform 0.2s ease;
     }
+  }
 
-    summary {
-      @apply focus-visible:outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-dashed;
-    }
-
+  &.collapsed {
     pre {
-      @apply focus-visible:outline-accent focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-dashed;
+      max-height: 15rem;
+      overflow: hidden;
     }
 
-    /* KaTeX math inherits the prose base color by default, which doesn't track
-       the dark theme (no prose-invert here). Force the theme foreground so
-       display math stays legible in dark mode. */
-    .katex {
-      @apply text-foreground;
+    .collapse-toggle {
+      margin: 0.5rem;
+      border: 1px solid hsl(var(--border));
+
+      .desc::before {
+        content: "Show all";
+      }
+
+      svg {
+        transform: rotate(0deg);
+      }
     }
 
-    /* Allow wide KaTeX display equations to scroll horizontally on narrow screens */
-    .katex-display {
-      @apply overflow-x-auto overflow-y-hidden;
+    .collapse-fade {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 8rem;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        hsl(var(--muted)) 60%
+      );
+      pointer-events: none;
+      user-select: none;
     }
   }
+}
 
-  /* ===== Code Blocks & Syntax Highlighting ===== */
-  .astro-code {
-    @apply outline-border flex border bg-(--shiki-light-bg) text-(--shiki-light) [&_span]:text-(--shiki-light);
-  }
-
-  html.dark .astro-code {
-    @apply bg-(--shiki-dark-bg) text-(--shiki-dark) [&_span]:text-(--shiki-dark);
-  }
-
-  /* Styles for Shiki transformers */
-  /* https://shiki.style/packages/transformers */
-  .astro-code {
-    .line.diff.add {
-      @apply relative inline-block w-full bg-green-400/20 before:absolute before:-left-3 before:text-green-500 before:content-['+'];
-    }
-    .line.diff.remove {
-      @apply relative inline-block w-full bg-red-500/20 before:absolute before:-left-3 before:text-red-500 before:content-['-'];
-    }
-    .line.highlighted {
-      @apply inline-block w-full bg-slate-400/20;
-    }
-    .highlighted-word {
-      @apply border-border rounded-sm border px-0.5 py-px;
-    }
-  }
+.dark .astro-code pre span {
+  color: var(--shiki-dark) !important;
 }

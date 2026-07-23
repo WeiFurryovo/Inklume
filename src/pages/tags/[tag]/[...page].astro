@@ -1,9 +1,9 @@
 ---
 import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
 import type { GetStaticPathsOptions } from "astro";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
-import Main from "@/components/Main.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Card from "@/components/Card.astro";
 import Footer from "@/components/Footer.astro";
@@ -38,23 +38,31 @@ const { page, tagName } = Astro.props;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
+const postsUrl = getRelativeLocaleUrl(locale, "posts");
 ---
 
 <Layout title={`${t.pages.tagTitle}: ${tagName} | ${config.site.title}`}>
   <Header />
 
-  <Breadcrumb />
+  <div class="w-full flex-1">
+    <Breadcrumb href={postsUrl} />
 
-  <Main
-    pageTitle={`${t.pages.tagTitle}: ${tagName}`}
-    pageDesc={`${t.pages.tagDesc} "${tagName}".`}
-  >
-    <ul class="flex flex-col gap-3">
-      {page.data.map(data => <Card {...data} detailed />)}
-    </ul>
-  </Main>
+    <main id="main-content" class="mt-6 lg:mt-10">
+      <div id="content-header" class="animate">
+        <h1 class="mb-6 flex items-end gap-x-2 text-3xl font-medium">
+          {t.pages.tagsTitle}:
+          <span class="text-2xl">#{tagName}</span>
+        </h1>
+      </div>
 
-  <Pagination {page} />
+      <section id="content" class="animate" aria-label={t.pages.postsTitle}>
+        <ul class="flex flex-col gap-y-3 text-start">
+          {page.data.map(data => <Card {...data} detailed />)}
+        </ul>
+        <Pagination {page} />
+      </section>
+    </main>
+  </div>
 
-  <Footer noMarginTop={page.lastPage > 1} />
+  <Footer />
 </Layout>

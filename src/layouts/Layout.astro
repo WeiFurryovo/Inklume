@@ -37,14 +37,13 @@ const rssHref = getRelativeLocaleUrl(
 ---
 
 <!doctype html>
-<html
-  dir={site.dir ?? "ltr"}
-  lang={Astro.currentLocale ?? site.lang}
-  class="overflow-y-scroll scroll-smooth"
->
+<html dir={site.dir ?? "ltr"} lang={Astro.currentLocale ?? site.lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover"
+    />
 
     <!--
       Bilingual redirect: honour a manually chosen language (set by the language
@@ -83,13 +82,9 @@ const rssHref = getRelativeLocaleUrl(
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Pure's display font plus the existing code font. -->
+    <!-- Pure's display font. -->
     <Font
       cssVariable="--font-satoshi"
-      preload={[{ subset: "latin", weight: 400, style: "normal" }]}
-    />
-    <Font
-      cssVariable="--font-google-sans-code"
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
     />
 
@@ -123,7 +118,7 @@ const rssHref = getRelativeLocaleUrl(
       href={new URL(rssHref, Astro.site)}
     />
 
-    <meta name="theme-color" content="#f9fbfc" />
+    <meta name="color-scheme" content="light dark" />
 
     <!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) -->
     <slot name="head" />
@@ -137,37 +132,21 @@ const rssHref = getRelativeLocaleUrl(
       )
     }
 
-    <!-- Set both theme conventions before paint for Pure and legacy widgets. -->
-    <script is:inline>
-      (function () {
-        const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        const dark = stored === "dark" || (stored !== "light" && prefersDark);
-        const root = document.firstElementChild;
-        root?.setAttribute("data-theme", dark ? "dark" : "light");
-        root?.classList.toggle("dark", dark);
-      })();
-    </script>
-
     <ThemeProvider />
   </head>
-  <body
-    class="bg-background font-app text-foreground selection:bg-primary/20 flex min-h-svh justify-center"
-  >
+  <body class="font-app bg-background text-foreground flex justify-center">
     {
       highlightColor && (
         <div
           id="highlight-gradient"
-          class="pointer-events-none absolute inset-x-0 top-0 z-0 h-screen opacity-25"
+          class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25"
           style={`background-image:linear-gradient(${highlightColor},transparent)`}
         />
       )
     }
     <div
       id="main-container"
-      class="relative z-10 flex min-h-svh w-full max-w-[70rem] flex-col justify-between"
+      class="flex min-h-[100dvh] w-full max-w-[70rem] flex-col justify-between"
     >
       <slot />
     </div>
