@@ -42,11 +42,11 @@ collections:
           - name: siteName
             label: Site Name
             widget: string
-            i18n: true
+            i18n: duplicate
           - name: browserTitle
             label: Browser Tab Title
             widget: string
-            i18n: true
+            i18n: duplicate
           - name: displayName
             label: Display Name
             widget: string

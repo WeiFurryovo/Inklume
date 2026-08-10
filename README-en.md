@@ -50,7 +50,7 @@ public/admin/index.html
 public/admin/config.yml
 ```
 
-Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the localized site name, browser tab title, shared avatar, display name, location, introduction, publishing copy, homepage link labels, and top navigation labels. Link destinations stay fixed, and saving these fields triggers a Pages rebuild.
+Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the shared site name, browser tab title, and avatar, along with localized display names, locations, introductions, publishing copy, homepage link labels, and top navigation labels. Link destinations stay fixed, and saving these fields triggers a Pages rebuild.
 
 ## Sveltia CMS
 
