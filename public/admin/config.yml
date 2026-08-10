@@ -39,6 +39,10 @@ collections:
         i18n: true
         preview_path: "/{{locale}}/"
         fields:
+          - name: siteName
+            label: Site Name
+            widget: string
+            i18n: true
           - name: displayName
             label: Display Name
             widget: string

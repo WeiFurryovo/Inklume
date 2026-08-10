@@ -45,6 +45,7 @@ const pages = defineCollection({
 const homepage = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{yml,yaml}", base: "./src/content/home" }),
   schema: z.object({
+    siteName: z.string(),
     displayName: z.string(),
     avatar: z.string(),
     location: z.string(),
