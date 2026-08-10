@@ -3,7 +3,7 @@ import Layout from "./Layout.astro";
 import config from "@/config";
 
 type Props = {
-  title?: string;
+  pageTitle?: string;
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
@@ -15,7 +15,7 @@ type Props = {
 const { site } = config;
 
 const {
-  title,
+  pageTitle,
   description,
   ogImage,
   canonicalURL,
@@ -27,7 +27,7 @@ const {
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  headline: title ?? site.title,
+  headline: pageTitle ?? site.title,
   image: ogImage,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
@@ -42,7 +42,7 @@ const structuredData = {
 ---
 
 <Layout
-  {title}
+  {pageTitle}
   {description}
   {ogImage}
   {canonicalURL}

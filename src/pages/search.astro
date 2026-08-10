@@ -19,7 +19,7 @@ const t = useTranslations(locale);
 const postsUrl = getRelativeLocaleUrl(locale, "posts");
 ---
 
-<Layout title={`${t.pages.searchTitle} | ${config.site.title}`}>
+<Layout pageTitle={t.pages.searchTitle}>
   <Header />
 
   <div class="w-full flex-1">

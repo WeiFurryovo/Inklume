@@ -41,7 +41,7 @@ const t = useTranslations(locale);
 const postsUrl = getRelativeLocaleUrl(locale, "posts");
 ---
 
-<Layout title={`${t.pages.tagTitle}: ${tagName} | ${config.site.title}`}>
+<Layout pageTitle={`${t.pages.tagTitle}: ${tagName}`}>
   <Header />
 
   <div class="w-full flex-1">

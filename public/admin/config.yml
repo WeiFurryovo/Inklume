@@ -43,6 +43,10 @@ collections:
             label: Site Name
             widget: string
             i18n: true
+          - name: browserTitle
+            label: Browser Tab Title
+            widget: string
+            i18n: true
           - name: displayName
             label: Display Name
             widget: string

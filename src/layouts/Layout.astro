@@ -2,13 +2,14 @@
 import { Font } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { ThemeProvider } from "astro-pure/components/basic";
+import { getHomepage } from "@/utils/getHomepage";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
 import "@/styles/global.css";
 
 type Props = {
-  title?: string;
+  pageTitle?: string;
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
@@ -17,9 +18,11 @@ type Props = {
 };
 
 const { site } = config;
+const locale = Astro.currentLocale ?? site.lang;
+const home = await getHomepage(locale);
 
 const {
-  title = site.title,
+  pageTitle,
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
@@ -27,17 +30,18 @@ const {
   ogType = "website",
 } = Astro.props;
 
+const title = pageTitle
+  ? `${pageTitle} | ${home.browserTitle}`
+  : home.browserTitle;
+
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
 // Endpoint files are emitted without a trailing slash. Astro's locale helper
 // normalizes regular pages to slash URLs, so normalize this file URL explicitly.
-const rssHref = getRelativeLocaleUrl(
-  Astro.currentLocale ?? config.site.lang,
-  "rss.xml"
-).replace(/\/+$/, "");
+const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
 ---
 
 <!doctype html>
-<html dir={site.dir ?? "ltr"} lang={Astro.currentLocale ?? site.lang}>
+<html dir={site.dir ?? "ltr"} lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta

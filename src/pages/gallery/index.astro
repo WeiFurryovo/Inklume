@@ -25,10 +25,7 @@ const posts = await getCollection("posts", ({ id }) => id.startsWith("zh/"));
 const albums = getGalleryAlbums(posts);
 ---
 
-<Layout
-  title={`${t.pages.galleryTitle} | ${config.site.title}`}
-  description={t.pages.galleryDesc}
->
+<Layout pageTitle={t.pages.galleryTitle} description={t.pages.galleryDesc}>
   <Header />
 
   <div class="w-full flex-1">
