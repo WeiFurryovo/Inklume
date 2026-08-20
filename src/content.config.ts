@@ -33,6 +33,11 @@ const posts = defineCollection({
 });
 
 const httpUrl = z.url({ protocol: /^https?$/ });
+const socialUrl = z
+  .string()
+  .regex(
+    /^(?:https?:\/\/[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::\d{1,5})?(?:[/?#][^\s\\]*)?|mailto:[^\s@\\]+@[^\s@\\]+(?:\?[^\s\\]*)?|\/(?:$|[^/\\\s][^\s\\]*))$/
+  );
 
 const aboutModules = z.object({
   motto: z.object({
@@ -82,7 +87,7 @@ const aboutModules = z.object({
           .string()
           .regex(/^#[0-9a-f]{6}$/i)
           .optional(),
-        href: httpUrl,
+        href: socialUrl,
         metric: z.string().optional(),
         api: z
           .string()

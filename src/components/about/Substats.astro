@@ -11,6 +11,10 @@ type Stat = {
   api?: string;
 };
 
+type ResolvedStat = Stat & {
+  count?: number;
+};
+
 type Props = {
   locale: string;
   stats: Stat[];
@@ -19,39 +23,61 @@ type Props = {
 const { locale, stats } = Astro.props;
 const copy =
   locale === "zh"
-    ? { loading: "正在载入统计数据", poweredBy: "实时显示，数据来自" }
+    ? { poweredBy: "构建时更新，数据来自" }
     : {
-        loading: "Loading statistics",
-        poweredBy: "Displayed live; powered by",
+        poweredBy: "Updated at build time; powered by",
       };
+
+async function resolveStat(item: Stat): Promise<ResolvedStat> {
+  if (!item.api) return item;
+
+  try {
+    const response = await fetch(`https://api.swo.moe/stats/${item.api}`, {
+      signal: AbortSignal.timeout(5_000),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = (await response.json()) as {
+      failed?: boolean;
+      count?: unknown;
+      message?: string;
+    };
+    if (data.failed || typeof data.count !== "number") {
+      throw new Error(data.message ?? "Invalid Substats response");
+    }
+
+    return { ...item, count: data.count };
+  } catch (error) {
+    // eslint-disable-next-line no-console -- keep build failures visible while using the fallback.
+    console.error(`Error fetching Substats for ${item.platform}:`, error);
+    return item;
+  }
+}
+
+const resolvedStats = await Promise.all(stats.map(resolveStat));
 ---
 
 <div
   class="not-prose grid grid-cols-1 gap-3 rounded-xl border p-2 sm:grid-cols-2 sm:p-3"
-  data-substats
 >
   {
-    stats.map(({ href, platform, icon, color, api, metric }) => (
+    resolvedStats.map(({ href, platform, icon, color, count, metric }) => (
       <a
         class="group text-muted-foreground no-underline"
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-substats-api={api}
+        target={/^https?:\/\//i.test(href) ? "_blank" : undefined}
+        rel={/^https?:\/\//i.test(href) ? "noopener noreferrer" : undefined}
       >
         <span class="hover:border-border hover:bg-muted flex items-center gap-3 rounded-lg border border-transparent px-3 py-2 transition-all">
           <Icon name={icon} color={color} />
           <span class="text-foreground group-hover:text-primary flex-1 transition-colors">
             {platform}
           </span>
-          {api && (
-            <span
-              class="flex min-w-20 items-center justify-end gap-1.5"
-              aria-label={copy.loading}
-              aria-live="polite"
-              data-substats-value
-            >
-              <samp>--</samp>
+          {typeof count === "number" && (
+            <span class="flex min-w-20 items-center justify-end gap-1.5">
+              <samp>{new Intl.NumberFormat(locale).format(count)}</samp>
               {metric && <span class="text-sm font-normal">{metric}</span>}
             </span>
           )}
@@ -69,43 +95,3 @@ const copy =
     rel="noopener noreferrer">Substats</a
   >
 </div>
-
-<script>
-  function initSubstats() {
-    document
-      .querySelectorAll<HTMLElement>("[data-substats-api]")
-      .forEach(card => {
-        if (card.dataset.substatsReady === "true") return;
-        card.dataset.substatsReady = "true";
-
-        const api = card.dataset.substatsApi;
-        const value = card.querySelector<HTMLElement>("[data-substats-value]");
-        const count = value?.querySelector<HTMLElement>("samp");
-        if (!api || !value || !count) return;
-
-        const path = api
-          .split("/")
-          .map(segment => encodeURIComponent(segment))
-          .join("/");
-
-        fetch(`https://api.swo.moe/stats/${path}`)
-          .then(response => {
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return response.json();
-          })
-          .then(data => {
-            if (data.failed || typeof data.count !== "number") {
-              throw new Error(data.message ?? "Invalid Substats response");
-            }
-            count.textContent = new Intl.NumberFormat().format(data.count);
-            value.removeAttribute("aria-label");
-          })
-          .catch(() => {
-            value.hidden = true;
-          });
-      });
-  }
-
-  initSubstats();
-  document.addEventListener("astro:page-load", initSubstats);
-</script>
