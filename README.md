@@ -48,6 +48,7 @@ src/content/home/zh/home.yml      # 中文首页文案
 src/content/home/en/home.yml      # 英文首页文案
 public/admin/index.html
 public/admin/config.yml
+public/admin/locale-labels.js     # 中文编辑栏字段标签
 ```
 
 中英文文章使用相同文件名时，Sveltia CMS 会将它们视为同一篇文章的不同语言版本。后台的 Homepage 集合可以修改左上角站点名称、浏览器标签页标题和图标、首页头像、姓名、所在地、自我介绍、发布方式文案、按钮文字和顶部导航文字；站点名称、浏览器标签页标题、图标和头像由中英文共用，跳转地址保持固定，保存后同样会触发 Pages 重新构建。
