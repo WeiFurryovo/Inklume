@@ -48,7 +48,6 @@ src/content/home/zh/home.yml      # Chinese homepage copy
 src/content/home/en/home.yml      # English homepage copy
 public/admin/index.html
 public/admin/config.yml
-public/admin/locale-labels.js     # Chinese editor-pane field labels
 ```
 
 Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the shared site name, browser tab title, favicon, and avatar, along with localized display names, locations, introductions, publishing copy, homepage link labels, and top navigation labels. Link destinations stay fixed, and saving these fields triggers a Pages rebuild.
