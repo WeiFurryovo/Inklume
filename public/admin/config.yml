@@ -47,6 +47,10 @@ collections:
             label: Browser Tab Title
             widget: string
             i18n: duplicate
+          - name: favicon
+            label: Favicon
+            widget: image
+            i18n: duplicate
           - name: displayName
             label: Display Name
             widget: string

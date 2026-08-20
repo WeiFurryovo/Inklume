@@ -47,6 +47,7 @@ const homepage = defineCollection({
   schema: z.object({
     siteName: z.string(),
     browserTitle: z.string(),
+    favicon: z.string(),
     displayName: z.string(),
     avatar: z.string(),
     location: z.string(),
