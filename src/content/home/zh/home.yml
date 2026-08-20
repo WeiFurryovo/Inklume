@@ -1,8 +1,8 @@
 siteName: Inklume
 browserTitle: Inklume
-favicon: /favicon.svg
+favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
 displayName: Inklume
-avatar: https://avatars.githubusercontent.com/u/106266815?v=4
+avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
 location: 新加坡
 role: 开发者 / 写作者
 about: Inklume 是一个由自己拥有的中英双语写作空间，记录技术、创作与生活，也记录构建这个空间本身的过程。
