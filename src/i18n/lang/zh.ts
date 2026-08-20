@@ -46,13 +46,13 @@ export default {
     tagsDesc: "文章中使用的所有标签。",
 
     postsTitle: "文章",
-    postsDesc: "我发布的所有文章。",
+    postsDesc: "演示站中的所有文章。",
 
     archivesTitle: "归档",
-    archivesDesc: "我归档的所有文章。",
+    archivesDesc: "演示站中按时间归档的文章。",
 
     galleryTitle: "相册",
-    galleryDesc: "旅途中的照片，按游记分组。",
+    galleryDesc: "用于展示相册与 EXIF 功能的示例照片。",
     galleryEmpty: "还没有照片。",
 
     searchTitle: "搜索",

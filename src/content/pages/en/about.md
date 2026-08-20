@@ -1,6 +1,6 @@
 ---
 title: "About"
-description: "About Inklume."
+description: "The Inklume project demo and feature overview."
 aboutModules:
   motto:
     text: "Keep the writing at the center."
@@ -9,8 +9,8 @@ aboutModules:
     label: "View Inklume source"
     href: "https://github.com/WeiFurryovo/Inklume"
   siteStack:
-    title: "Site Stack"
-    description: "The framework, theme, and services behind this bilingual writing space:"
+    title: "Demo Stack"
+    description: "The framework, theme, and services behind the Inklume project demo:"
     groupLabel: "Stack"
     items:
       - name: "Astro"
@@ -38,8 +38,8 @@ aboutModules:
         icon: "github"
         href: "https://github.com/WeiFurryovo/Inklume"
   social:
-    title: "Social Networks"
-    description: "Find the project and its maintainer here."
+    title: "GitHub Stats Demo"
+    description: "This card uses public GitHub data from the project maintainer to demonstrate the Substats integration."
     items:
       - platform: "GitHub"
         icon: "github"
@@ -51,8 +51,8 @@ aboutModules:
     summary: "How content moves from the dashboard to the site"
     body: "Content is stored in Git and edited with Sveltia CMS. Astro generates static pages, then Cloudflare Pages rebuilds and publishes them after every commit."
   timeline:
-    title: "About the Blog"
-    description: "A short history of Inklume:"
+    title: "Project History"
+    description: "A short development history of Inklume:"
     items:
       - date: "2026-07-19"
         content: "Initialized Inklume as a bilingual blog."
@@ -64,13 +64,14 @@ aboutModules:
         content: "Added dashboard-managed site icons and footer settings."
 ---
 
-Inklume is an owned bilingual writing space for technology, creative work, and life.
+Inklume is a bilingual Astro blog template with an integrated dashboard. This site is the project demo for its default theme, content structure, and publishing workflow.
 
-Chinese articles live at the site root, English articles under `/en/`. Use the language switch in the header to move between the two.
+Chinese demo content lives at the site root and English demo content under `/en/`. Use the language switch in the header to move between the two.
 
 ## Principles
 
 - Keep content portable as plain Markdown
 - Give Chinese and English a shared structure without forcing identical prose
+- Treat the bundled posts and gallery as replaceable example content
 - Keep the interface fast and quiet so the writing stays central
 - Build with Astro and publish through Cloudflare Pages

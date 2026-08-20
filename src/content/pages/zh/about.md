@@ -1,6 +1,6 @@
 ---
 title: "关于"
-description: "关于 Inklume。"
+description: "Inklume 项目演示站与功能说明。"
 aboutModules:
   motto:
     text: "让文章始终处于中心。"
@@ -9,8 +9,8 @@ aboutModules:
     label: "查看 Inklume 源码"
     href: "https://github.com/WeiFurryovo/Inklume"
   siteStack:
-    title: "本站技术栈"
-    description: "支撑这个双语写作空间的框架、主题与服务："
+    title: "演示站技术栈"
+    description: "构成 Inklume 项目演示站的框架、主题与服务："
     groupLabel: "构成"
     items:
       - name: "Astro"
@@ -38,8 +38,8 @@ aboutModules:
         icon: "github"
         href: "https://github.com/WeiFurryovo/Inklume"
   social:
-    title: "社交网络"
-    description: "可以在这里找到这个项目和它的维护者。"
+    title: "GitHub 统计演示"
+    description: "这里使用项目维护者的 GitHub 公开数据演示 Substats 统计卡片。"
     items:
       - platform: "GitHub"
         icon: "github"
@@ -51,8 +51,8 @@ aboutModules:
     summary: "内容如何从后台发布到网站"
     body: "内容保存在 Git 中并由 Sveltia CMS 编辑；Astro 生成静态页面，Cloudflare Pages 在每次提交后重新构建并发布。"
   timeline:
-    title: "关于本站"
-    description: "Inklume 的建站记录："
+    title: "项目历程"
+    description: "Inklume 的开发记录："
     items:
       - date: "2026-07-19"
         content: "初始化 Inklume 的中英双语博客结构。"
@@ -64,13 +64,14 @@ aboutModules:
         content: "增加可在后台管理的站点图标与页脚信息。"
 ---
 
-Inklume 是一个由自己拥有的中英双语写作空间，用来记录技术、创作与生活。
+Inklume 是一个带后台的中英双语 Astro 博客模板。当前站点是项目演示站，用于展示默认主题、内容结构与发布流程。
 
-中文文章位于站点根路径，英文文章位于 `/en/` 下。点击页眉的语言切换即可在两种语言间跳转。
+中文演示内容位于站点根路径，英文演示内容位于 `/en/` 下。点击页眉的语言切换即可在两种语言间跳转。
 
 ## 原则
 
 - 内容以 Markdown 保存，随时可以迁移
 - 中文与英文共享结构，但可以独立表达
+- 默认文章和相册均为可替换的示例内容
 - 页面尽量快速、安静，并让文章始终处于中心
 - 站点由 Astro 构建，通过 Cloudflare Pages 发布

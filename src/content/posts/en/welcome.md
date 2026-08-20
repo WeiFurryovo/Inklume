@@ -1,7 +1,7 @@
 ---
 title: Welcome to Inklume
 pubDatetime: 2026-01-11T00:00:00Z
-description: "The first Inklume entry: a bilingual writing space that is owned, portable, and built to last."
+description: "The Inklume project demo welcome post: bilingual content, dashboard editing, and static deployment."
 featured: true
 draft: false
 heroImage:
@@ -13,15 +13,15 @@ tags:
   - introduction
 ---
 
-Inklume is a bilingual personal publishing space for projects in progress, problems worth unpacking, and fragments of life worth keeping.
+Inklume is a bilingual Astro blog template with a Sveltia CMS dashboard. This default post demonstrates regular prose, lists, code, and mathematical notation.
 
 ## Why Inklume
 
-`Ink` is for writing; `lume` is for a quiet source of light. The name does not belong to a framework. It is a reminder to write the thought down first, then let it be seen.
+`Ink` stands for writing; `lume` suggests a quiet source of light. The name puts writing first, then lets a restrained interface bring it into view.
 
-## How this space works
+## How this demo works
 
-Posts live as Markdown in an owned Git repository. Sveltia CMS provides the editor, Astro rebuilds both language editions after each content change, and Cloudflare Pages publishes the resulting static site.
+Demo posts live as Markdown in Git. Sveltia CMS provides the editor, Astro rebuilds both language editions after each content change, and Cloudflare Pages publishes the resulting static site.
 
 - Chinese content lives at the site root
 - English content lives under `/en/`
@@ -36,4 +36,4 @@ $$
 \int_0^1 x^2 \, dx = \frac{1}{3}
 $$
 
-This is only the first edition. From here, the writing matters more than the feature list.
+This post only demonstrates the default content presentation. Replace or delete it from the dashboard when deploying your own site.

@@ -2,7 +2,9 @@
 
 [English](README-en.md)
 
-一个使用 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 作为前台基底、由 Astro、Sveltia CMS 和 Cloudflare Pages 驱动的中英双语个人写作空间。
+一个使用 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 作为前台基底、由 Astro、Sveltia CMS 和 Cloudflare Pages 驱动的中英双语 Astro 博客模板。
+
+`https://inklume.pages.dev/` 是 Inklume 的项目功能演示站，默认文章、相册和介绍均为可替换的示例内容，并不代表维护者的个人博客。
 
 Inklume 把内容保存在 Git 仓库中：访客看到的是 Astro 构建的静态页面，编辑者通过 `/admin/index.html` 的 Sveltia CMS 修改 Markdown 与 YAML 内容，提交后由 Cloudflare Pages 自动重新构建并发布。
 
@@ -50,13 +52,15 @@ public/admin/index.html
 public/admin/config.yml
 ```
 
-中英文文章使用相同文件名时，Sveltia CMS 会将它们视为同一篇文章的不同语言版本。后台的 Homepage 集合可以修改左上角站点名称、浏览器标签页标题和图标、首页头像、姓名、所在地、自我介绍、发布方式文案、按钮文字、顶部导航文字，以及页脚版权名称和可增删的备案链接；站点名称、浏览器标签页标题、图标、头像和页脚设置由中英文共用。Pages 集合中的 About 页面还可以管理遮罩文字、按钮、技术栈、社交链接、折叠说明和时间线；在中文栏增删或排序结构项会同步到英文栏，只需分别翻译文案。保存内容后会触发 Pages 重新构建。
+中英文文章使用相同文件名时，Sveltia CMS 会将它们视为同一篇文章的不同语言版本。后台的 Homepage 集合可以修改左上角站点名称、浏览器标签页标题和图标、首页头像、显示名称、状态标签、简介、发布方式文案、按钮文字、顶部导航文字，以及页脚版权名称和可增删的备案链接；站点名称、浏览器标签页标题、图标、头像和页脚设置由中英文共用。Pages 集合中的 About 页面还可以管理遮罩文字、按钮、技术栈、社交链接、折叠说明和时间线；在中文栏增删或排序结构项会同步到英文栏，只需分别翻译文案。保存内容后会触发 Pages 重新构建。
 
 ## Sveltia CMS
 
 `public/admin/config.yml` 已配置 GitHub backend、双语 `multiple_folders` 内容模型和 GitHub OAuth。认证器基于官方 [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth)，以 Pages Functions 的形式集成在当前项目的 `/auth` 与 `/callback`，不需要额外部署 Worker。`public/_routes.json` 确保只有这两个路径调用 Functions，其余博客页面继续作为纯静态资源提供。
 
 首次部署时需要在 GitHub 的 [Developer settings → OAuth Apps](https://github.com/settings/developers) 注册一个 OAuth App：
+
+以下域名值是 Inklume 官方演示实例的配置；自行部署时请替换为自己的 Pages 域名或自定义域名。
 
 - Application name：`Inklume Sveltia CMS`
 - Homepage URL：`https://inklume.pages.dev/admin/`
@@ -84,7 +88,7 @@ Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based
 - Build output directory：`dist`
 - 仓库 `.nvmrc` 已固定 Node.js `24`；如果构建镜像没有读取它，再在环境变量中添加 `NODE_VERSION=24`
 
-默认站点地址是稳定的 `https://inklume.pages.dev/`，无需额外变量即可正确生成 canonical URL、RSS、Sitemap 和 OpenGraph。绑定自定义域名后，在 Pages 项目的 **Settings → Environment variables** 中为 Production 配置 `SITE_URL`，例如 `https://blog.example.com/`；修改后需要重新触发一次部署。构建不会使用 Pages 自动注入的预览部署地址作为 canonical，避免搜索引擎收录带哈希的临时域名。
+仓库默认的 `https://inklume.pages.dev/` 只用于 Inklume 官方演示实例。自行部署时必须在 Pages 项目的 **Settings → Environment variables** 中为 Production 配置 `SITE_URL`，例如 `https://blog.example.com/`；否则 canonical URL、RSS、Sitemap 和 OpenGraph 会错误指向官方演示站。修改后需要重新触发一次部署。预览构建仍会使用稳定的生产地址，而不是 Cloudflare 自动注入的带哈希临时域名。
 
 本地构建可以在命令前设置：
 
@@ -108,4 +112,4 @@ npm run deploy
 
 ## 许可证与致谢
 
-本仓库是 Inklume 对 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的个人改版，沿用了它的双语路由和内容结构；不是上游项目本身。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的 MIT 许可证和来源说明均予以保留，第三方主题说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+Inklume 基于 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的双语路由和内容结构继续开发；不是上游项目本身。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的 MIT 许可证和来源说明均予以保留，第三方主题说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。

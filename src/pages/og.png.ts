@@ -6,8 +6,7 @@ import { getFontPathByWeight } from "@/utils/getFontPathByWeight";
 import { inklumeOgTheme } from "@/utils/ogTheme";
 import config from "@/config";
 
-const ogDescription =
-  "Bilingual field notes on technology, creativity, and life.";
+const ogDescription = "Bilingual Astro blog template demo with Sveltia CMS.";
 
 export const GET: APIRoute = async context => {
   const fonts = fontData["--font-google-sans-code"];

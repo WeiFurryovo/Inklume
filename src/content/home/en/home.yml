@@ -3,17 +3,17 @@ browserTitle: Inklume
 favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
 displayName: Inklume
 avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
-location: Singapore
-role: Developer / Writer
-about: Inklume is an owned bilingual writing space for technology, creative work, everyday life, and the process of building the space itself.
-publishingHeading: Independent, static, portable
+location: Cloudflare Pages
+role: Bilingual Astro blog template
+about: Inklume is a bilingual Astro blog template with a Sveltia CMS dashboard. This site demonstrates the default theme, content workflow, search, gallery, and deployment setup.
+publishingHeading: Git-backed, static, portable
 publishingDescription: Sveltia CMS manages Markdown content, Astro builds the site, and Cloudflare Pages publishes it.
 links:
   source: GitHub
-  readPosts: Read the journal
-  moreAbout: More about me
-  morePosts: More posts
-  gallery: Gallery
+  readPosts: View demo posts
+  moreAbout: About Inklume
+  morePosts: More demo posts
+  gallery: View demo gallery
 navigation:
   posts: Posts
   gallery: Gallery
@@ -22,6 +22,4 @@ navigation:
   about: About
 footer:
   copyrightName: WeiFurryovo
-  filings:
-    - label: ICP备案信息
-      url: https://beian.miit.gov.cn/
+  filings: []

@@ -46,13 +46,13 @@ export default {
     tagsDesc: "All the tags used in posts.",
 
     postsTitle: "Posts",
-    postsDesc: "All the articles I've posted.",
+    postsDesc: "All posts included in this demo.",
 
     archivesTitle: "Archives",
-    archivesDesc: "All the articles I've archived.",
+    archivesDesc: "Posts in this demo, organized by date.",
 
     galleryTitle: "Gallery",
-    galleryDesc: "Photos from my travels, grouped by story.",
+    galleryDesc: "Example photos demonstrating the gallery and EXIF features.",
     galleryEmpty: "No photos yet.",
 
     searchTitle: "Search",

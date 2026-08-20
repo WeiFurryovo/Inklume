@@ -9,7 +9,7 @@ const pureConfig: Config = {
   title: "Inklume",
   author: "WeiFurryovo",
   description:
-    "Inklume 是一个记录技术、创作与生活的中英双语博客。A bilingual journal of technology, creativity, and life.",
+    "Inklume 是一个带 Sveltia CMS 后台、可部署到 Cloudflare Pages 的中英双语 Astro 博客模板演示站。A bilingual Astro blog template demo with Sveltia CMS and Cloudflare Pages.",
   favicon: "/favicon.svg",
   socialCard: "/inklume-og.png",
   logo: {

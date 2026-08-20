@@ -2,7 +2,9 @@
 
 [中文](README.md)
 
-A bilingual personal writing space using [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) as its frontend foundation, powered by Astro, Sveltia CMS, and Cloudflare Pages.
+A bilingual Astro blog template using [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) as its frontend foundation, powered by Astro, Sveltia CMS, and Cloudflare Pages.
+
+`https://inklume.pages.dev/` is the Inklume project demo. Its default posts, gallery, and introduction are replaceable example content and do not represent the maintainer's personal blog.
 
 Inklume keeps content in Git: visitors receive Astro-generated static pages, while editors use the Sveltia CMS at `/admin/index.html`. Every content commit can trigger a Cloudflare Pages build and deployment.
 
@@ -50,13 +52,15 @@ public/admin/index.html
 public/admin/config.yml
 ```
 
-Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the shared site name, browser tab title, favicon, avatar, footer copyright name, and filing links, along with localized display names, locations, introductions, publishing copy, homepage link labels, and top navigation labels. The About entry in the Pages collection also manages its spoiler, action button, site stack, social links, collapsible note, and timeline. Adding, removing, or sorting structured items in Chinese synchronizes the English structure, while copy remains independently translatable. Saving content triggers a Pages rebuild.
+Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the shared site name, browser tab title, favicon, avatar, footer copyright name, and filing links, along with localized display names, status labels, introductions, publishing copy, homepage link labels, and top navigation labels. The About entry in the Pages collection also manages its spoiler, action button, site stack, social links, collapsible note, and timeline. Adding, removing, or sorting structured items in Chinese synchronizes the English structure, while copy remains independently translatable. Saving content triggers a Pages rebuild.
 
 ## Sveltia CMS
 
 `public/admin/config.yml` configures the GitHub backend, the bilingual `multiple_folders` content model, and GitHub OAuth. The official [Sveltia CMS Authenticator](https://github.com/sveltia/sveltia-cms-auth) flow is integrated into this Pages project at `/auth` and `/callback`, so no separate Worker is required. `public/_routes.json` ensures that only those two paths invoke Functions; all blog pages remain static assets.
 
 For the first deployment, register an OAuth App under GitHub [Developer settings → OAuth Apps](https://github.com/settings/developers):
+
+The domain values below configure the official Inklume demo. Replace them with your own Pages or custom domain for a separate deployment.
 
 - Application name: `Inklume Sveltia CMS`
 - Homepage URL: `https://inklume.pages.dev/admin/`
@@ -84,7 +88,7 @@ In the Cloudflare Dashboard, open **Workers & Pages → Create application → P
 - Build output directory: `dist`
 - The repository's `.nvmrc` pins Node.js `24`; if the build image does not read it, add `NODE_VERSION=24` as an environment variable
 
-The default `https://inklume.pages.dev/` URL is used for canonical URLs, RSS, the sitemap, and OpenGraph metadata without extra configuration. After adding a custom domain, set a Production `SITE_URL` under the Pages project's **Settings → Environment variables**, for example `https://blog.example.com/`, then trigger a new deployment. Preview builds intentionally keep the stable production URL instead of using Cloudflare's temporary hash-based deployment URL.
+The repository's default `https://inklume.pages.dev/` URL is only for the official Inklume demo. For a separate deployment, set a Production `SITE_URL` under the Pages project's **Settings → Environment variables**, for example `https://blog.example.com/`; otherwise canonical URLs, RSS, the sitemap, and OpenGraph metadata will incorrectly point to the official demo. Trigger a new deployment after changing it. Preview builds intentionally keep the stable production URL instead of using Cloudflare's temporary hash-based deployment URL.
 
 For a local build, set it on the command:
 
@@ -108,4 +112,4 @@ Small media files can live in `public/uploads/` and be committed to Git. Move Sv
 
 ## License and Attribution
 
-This repository is a personal Inklume adaptation of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual), not the upstream project itself. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original MIT license and attribution are retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the theme notice.
+Inklume continues development from the bilingual routes and content structure of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual); it is not the upstream project itself. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original MIT license and attribution are retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the theme notice.

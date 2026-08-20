@@ -3,17 +3,17 @@ browserTitle: Inklume
 favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
 displayName: Inklume
 avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
-location: 新加坡
-role: 开发者 / 写作者
-about: Inklume 是一个由自己拥有的中英双语写作空间，记录技术、创作与生活，也记录构建这个空间本身的过程。
-publishingHeading: 独立、静态、可迁移
+location: Cloudflare Pages
+role: 中英双语 Astro 博客模板
+about: Inklume 是一个带 Sveltia CMS 后台的中英双语 Astro 博客模板；当前站点用于演示默认主题、内容管理、搜索、相册与部署流程。
+publishingHeading: Git 驱动、静态输出、可迁移
 publishingDescription: Markdown 内容由 Sveltia CMS 管理，Astro 构建后通过 Cloudflare Pages 发布。
 links:
   source: GitHub
-  readPosts: 阅读文章
-  moreAbout: 更多关于我
-  morePosts: 更多文章
-  gallery: 相册
+  readPosts: 查看示例文章
+  moreAbout: 了解 Inklume
+  morePosts: 更多示例文章
+  gallery: 查看示例相册
 navigation:
   posts: 文章
   gallery: 相册
@@ -22,6 +22,4 @@ navigation:
   about: 关于
 footer:
   copyrightName: WeiFurryovo
-  filings:
-    - label: ICP备案信息
-      url: https://beian.miit.gov.cn/
+  filings: []

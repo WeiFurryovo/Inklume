@@ -175,3 +175,80 @@ test("CMS social links accept supported URLs and reject ambiguous paths", async 
     assert.doesNotMatch(value, pattern, `${value} should be rejected`);
   }
 });
+
+test("bundled bilingual content stays an official project demo, not a personal site", async () => {
+  const [
+    zhHomeSource,
+    enHomeSource,
+    zhAboutSource,
+    enAboutSource,
+    zhWelcomeSource,
+    enWelcomeSource,
+    readmeZh,
+    readmeEn,
+  ] = await Promise.all([
+    readProjectFile("src/content/home/zh/home.yml"),
+    readProjectFile("src/content/home/en/home.yml"),
+    readProjectFile("src/content/pages/zh/about.md"),
+    readProjectFile("src/content/pages/en/about.md"),
+    readProjectFile("src/content/posts/zh/welcome.md"),
+    readProjectFile("src/content/posts/en/welcome.md"),
+    readProjectFile("README.md"),
+    readProjectFile("README-en.md"),
+  ]);
+  const zhHome = parseFrontmatter(`---\n${zhHomeSource}\n---`).frontmatter;
+  const enHome = parseFrontmatter(`---\n${enHomeSource}\n---`).frontmatter;
+  const zhAbout = parseFrontmatter(zhAboutSource);
+  const enAbout = parseFrontmatter(enAboutSource);
+  const zhWelcome = parseFrontmatter(zhWelcomeSource);
+  const enWelcome = parseFrontmatter(enWelcomeSource);
+
+  assert.match(zhHome.role, /博客模板/);
+  assert.match(zhHome.about, /模板[\s\S]*演示/);
+  assert.match(enHome.role, /blog template/i);
+  assert.match(enHome.about, /template[\s\S]*demonstrates/i);
+
+  assert.match(zhAbout.frontmatter.description, /项目演示站/);
+  assert.match(zhAbout.content, /博客模板[\s\S]*项目演示站/);
+  assert.match(enAbout.frontmatter.description, /project demo/i);
+  assert.match(enAbout.content, /blog template[\s\S]*project demo/i);
+
+  assert.match(zhWelcome.frontmatter.description, /项目演示站/);
+  assert.match(zhWelcome.content, /博客模板[\s\S]*默认示例文章/);
+  assert.match(enWelcome.frontmatter.description, /project demo/i);
+  assert.match(enWelcome.content, /blog template[\s\S]*default post/i);
+
+  assert.deepEqual(zhHome.footer.filings, []);
+  assert.deepEqual(enHome.footer.filings, []);
+
+  assert.match(readmeZh, /inklume\.pages\.dev\/[\s\S]*项目功能演示站/);
+  assert.match(readmeZh, /并不代表维护者的个人博客/);
+  assert.match(
+    readmeZh,
+    /inklume\.pages\.dev\/[\s\S]*只用于 Inklume 官方演示实例/
+  );
+  assert.match(readmeZh, /自行部署时必须[\s\S]*`SITE_URL`/);
+  assert.match(readmeEn, /inklume\.pages\.dev\/[\s\S]*project demo/i);
+  assert.match(readmeEn, /do not represent the maintainer's personal blog/i);
+  assert.match(
+    readmeEn,
+    /inklume\.pages\.dev\/[\s\S]*only for the official Inklume demo/i
+  );
+  assert.match(
+    readmeEn,
+    /For a separate deployment, set a Production `SITE_URL`/i
+  );
+
+  const bundledZh = [zhHomeSource, zhAboutSource, zhWelcomeSource].join("\n");
+  const bundledEn = [enHomeSource, enAboutSource, enWelcomeSource].join("\n");
+  assert.doesNotMatch(
+    bundledZh,
+    /由自己拥有的|我的个人博客|记录技术、创作与生活/,
+    "bundled Chinese copy must describe a reusable demo rather than a personal site"
+  );
+  assert.doesNotMatch(
+    bundledEn,
+    /owned bilingual writing space|my personal blog|for technology, creative work, and life/i,
+    "bundled English copy must describe a reusable demo rather than a personal site"
+  );
+});
