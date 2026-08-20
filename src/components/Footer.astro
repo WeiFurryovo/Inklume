@@ -3,12 +3,14 @@ import type { HTMLAttributes } from "astro/types";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-pure/user";
 import Socials from "./Socials.astro";
+import { getHomepage } from "@/utils/getHomepage";
 import config from "@/config";
 
 type Props = HTMLAttributes<"footer">;
 
 const { class: className, ...attrs } = Astro.props;
 const locale = Astro.currentLocale ?? config.site.lang;
+const home = await getHomepage(locale);
 const currentYear = new Date().getFullYear();
 const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
 ---
@@ -21,7 +23,33 @@ const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
       <div
         class="text-muted-foreground flex items-center gap-x-4 gap-y-2 max-sm:flex-col"
       >
-        <div>© {currentYear} {config.site.author}</div>
+        {
+          home.footer.filings.length > 0 && (
+            <div>
+              {home.footer.filings.map((filing, index) => (
+                <>
+                  {filing.url ? (
+                    <a
+                      href={filing.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {filing.label}
+                    </a>
+                  ) : (
+                    <span>{filing.label}</span>
+                  )}
+                  {index < home.footer.filings.length - 1 && (
+                    <span class="mx-1" aria-hidden="true">
+                      •
+                    </span>
+                  )}
+                </>
+              ))}
+            </div>
+          )
+        }
+        <div>© {currentYear} {home.footer.copyrightName}</div>
         <span>
           <a
             href="https://github.com/withastro/astro"

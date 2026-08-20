@@ -20,3 +20,8 @@ navigation:
   archives: Archives
   tags: Tags
   about: About
+footer:
+  copyrightName: WeiFurryovo
+  filings:
+    - label: ICP备案信息
+      url: https://beian.miit.gov.cn/

@@ -129,6 +129,30 @@ collections:
                 label: About
                 widget: string
                 i18n: true
+          - name: footer
+            label: Footer Settings
+            widget: object
+            i18n: duplicate
+            fields:
+              - name: copyrightName
+                label: Copyright Name
+                widget: string
+              - name: filings
+                label: Filing Records
+                widget: list
+                required: false
+                summary: "{{label}}"
+                fields:
+                  - name: label
+                    label: Display Text
+                    widget: string
+                  - name: url
+                    label: URL
+                    widget: string
+                    required: false
+                    pattern:
+                      - "^https?://"
+                      - URL must start with http:// or https://
 
   - name: posts
     label: Blog Posts

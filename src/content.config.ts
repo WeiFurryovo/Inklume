@@ -69,6 +69,17 @@ const homepage = defineCollection({
       tags: z.string(),
       about: z.string(),
     }),
+    footer: z.object({
+      copyrightName: z.string(),
+      filings: z
+        .array(
+          z.object({
+            label: z.string(),
+            url: z.url({ protocol: /^https?$/ }).optional(),
+          })
+        )
+        .default([]),
+    }),
   }),
 });
 
