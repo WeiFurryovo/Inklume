@@ -1,0 +1,79 @@
+---
+import type { IconsType } from "astro-pure/types";
+import { Icon, Svg } from "astro-pure/user";
+import { cn } from "astro-pure/utils";
+
+// Adapted from Astro Theme Pure's demo ToolSection. The card structure and
+// classes stay aligned with upstream; the icon source is adapted to CMS data.
+const svgIcons: Record<string, Promise<typeof import("*.svg?raw")>> = {
+  astro: import("@/assets/about/astro.svg?raw"),
+  sveltia: import("@/assets/about/sveltia.svg?raw"),
+};
+
+const pureIcons: Record<string, IconsType> = {
+  cloudflare: "earth",
+  github: "github",
+  pagefind: "search",
+  pure: "package",
+};
+
+type Tool = {
+  name: string;
+  description: string;
+  href: string;
+  icon: string;
+};
+
+type Props = {
+  class?: string;
+  title: string;
+  tools: Tool[];
+};
+
+const { class: className, title, tools, ...props } = Astro.props;
+---
+
+<div
+  class={cn(
+    "not-prose flex flex-col gap-y-3 rounded-xl border px-3 py-3 sm:gap-y-4",
+    className
+  )}
+  {...props}
+>
+  <div class="m-0 px-2 text-lg font-medium">{title}</div>
+  <div class="grid grid-cols-1 gap-x-2 gap-y-2 sm:grid-cols-2">
+    {
+      tools.map(tool => {
+        const svgIcon = svgIcons[tool.icon];
+        const pureIcon = pureIcons[tool.icon] ?? "link";
+
+        return (
+          <a
+            class="group relative text-sm leading-normal no-underline"
+            href={tool.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="hover:border-border hover:bg-muted flex items-center gap-x-3 rounded-lg border border-transparent px-1.5 py-1 transition-colors">
+              {svgIcon ? (
+                <Svg
+                  src={svgIcon}
+                  aria-hidden="true"
+                  class="bg-card text-foreground size-10 rounded-lg p-2"
+                />
+              ) : (
+                <span class="bg-card text-foreground flex size-10 items-center justify-center rounded-lg p-2">
+                  <Icon name={pureIcon} />
+                </span>
+              )}
+              <span class="z-20 flex min-w-0 flex-col">
+                <span class="text-foreground font-medium">{tool.name}</span>
+                <span class="font-normal">{tool.description}</span>
+              </span>
+            </div>
+          </a>
+        );
+      })
+    }
+  </div>
+</div>

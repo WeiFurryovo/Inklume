@@ -11,6 +11,19 @@ The package is distributed under the Apache License 2.0. Its source and license 
 
 Inklume keeps its own MIT license for the project code derived from AstroPages-Bilingual. The Pure package is consumed as an npm dependency; local Inklume components adapt its visual system to the site's bilingual routes and content model.
 
+The About page's local `ToolSection` is adapted from the upstream demo component and modified to accept Sveltia CMS icon keys:
+
+- <https://github.com/cworld1/astro-theme-pure/blob/main/src/components/about/ToolSection.astro>
+
+## About page brand assets
+
+The About page uses the following upstream SVG assets solely to identify software used by this project. Both source repositories distribute these files under the MIT License.
+
+- Astro favicon: <https://github.com/withastro/astro/blob/main/examples/basics/public/favicon.svg>
+- Astro license: <https://github.com/withastro/astro/blob/main/LICENSE>
+- Sveltia CMS logo: <https://github.com/sveltia/sveltia-cms/blob/main/src/lib/assets/sveltia-logo.svg>
+- Sveltia CMS license: <https://github.com/sveltia/sveltia-cms/blob/main/LICENSE.txt>
+
 ## Sveltia CMS Authenticator
 
 The Pages Functions OAuth flow is adapted from [sveltia/sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth), distributed under the MIT License.

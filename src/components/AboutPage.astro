@@ -2,10 +2,12 @@
 import { getEntry, render } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { BackToTop, TOC } from "astro-pure/components/pages";
-import { Button, Icon } from "astro-pure/user";
+import { Button, Collapse, Icon, Spoiler, Timeline } from "astro-pure/user";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import Substats from "@/components/about/Substats.astro";
+import ToolSection from "@/components/about/ToolSection.astro";
 import { useTranslations } from "@/i18n";
 
 type Props = {
@@ -22,10 +24,34 @@ if (!about) {
   );
 }
 
-const { Content, headings } = await render(about);
+const { Content, headings: contentHeadings } = await render(about);
+const modules = about.data.aboutModules;
+const headings = modules
+  ? [
+      ...contentHeadings,
+      { depth: 2, slug: "site-stack", text: modules.siteStack.title },
+      { depth: 2, slug: "social-networks", text: modules.social.title },
+      { depth: 2, slug: "notes", text: modules.notes.title },
+      { depth: 2, slug: "about-blog", text: modules.timeline.title },
+    ]
+  : contentHeadings;
 const tocTitle = locale === "zh" ? "目录" : "TABLE OF CONTENTS";
 const toggleToc =
   locale === "zh" ? "打开或关闭目录" : "Toggle table of contents";
+
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+const timelineEvents =
+  modules?.timeline.items.map(item => ({
+    date: item.date,
+    content: escapeHtml(item.content),
+  })) ?? [];
 ---
 
 <Layout
@@ -83,6 +109,47 @@ const toggleToc =
           data-back-to-top-label={t.post.backToTop}
         >
           <Content />
+
+          {
+            modules && (
+              <>
+                <p>
+                  {modules.motto.text}{" "}
+                  <Spoiler>{modules.motto.spoiler}</Spoiler>
+                </p>
+                <Button
+                  as="a"
+                  title={modules.cta.label}
+                  class="w-fit"
+                  href={modules.cta.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="ahead"
+                />
+
+                <h2 id="site-stack">{modules.siteStack.title}</h2>
+                <p>{modules.siteStack.description}</p>
+                <ToolSection
+                  class="mb-5"
+                  title={modules.siteStack.groupLabel}
+                  tools={modules.siteStack.items}
+                />
+
+                <h2 id="social-networks">{modules.social.title}</h2>
+                <p>{modules.social.description}</p>
+                <Substats locale={locale} stats={modules.social.items} />
+
+                <h2 id="notes">{modules.notes.title}</h2>
+                <Collapse title={modules.notes.summary}>
+                  {modules.notes.body}
+                </Collapse>
+
+                <h2 id="about-blog">{modules.timeline.title}</h2>
+                <p>{modules.timeline.description}</p>
+                <Timeline events={timelineEvents} />
+              </>
+            )
+          }
         </div>
       </article>
     </main>
@@ -94,6 +161,8 @@ const toggleToc =
             slot="other-icons"
             type="button"
             aria-label={toggleToc}
+            aria-controls="sidebar"
+            aria-expanded="false"
             class="bg-muted text-muted-foreground hover:border-border/75 flex size-10 items-center justify-center rounded-full border-2 border-transparent duration-300 sm:size-12 md:hidden"
             id="sidebar-btn"
           >
@@ -119,22 +188,79 @@ const toggleToc =
     if (!button || !sidebar || button.dataset.ready === "true") return;
     button.dataset.ready = "true";
 
-    const close = () => {
+    const close = (restoreFocus = false) => {
       sidebar.classList.remove("show");
+      button.setAttribute("aria-expanded", "false");
       if (shade) shade.style.display = "none";
+      if (restoreFocus) button.focus({ preventScroll: true });
     };
     const toggle = () => {
       const show = !sidebar.classList.contains("show");
       sidebar.classList.toggle("show", show);
+      button.setAttribute("aria-expanded", String(show));
       if (shade) shade.style.display = show ? "block" : "none";
+      if (show) {
+        requestAnimationFrame(() =>
+          sidebar.querySelector<HTMLAnchorElement>("a")?.focus()
+        );
+      }
     };
 
     button.addEventListener("click", toggle);
-    shade?.addEventListener("click", close);
+    shade?.addEventListener("click", () => close(true));
+    sidebar.addEventListener("click", event => {
+      if (event.target instanceof Element && event.target.closest("a")) {
+        close(true);
+      }
+    });
+    sidebar.addEventListener("keydown", event => {
+      if (event.key === "Escape") close(true);
+    });
+  }
+
+  function initAboutWidgets() {
+    document
+      .querySelectorAll<HTMLElement>("collapse-component")
+      .forEach((collapse, index) => {
+        const trigger = collapse.querySelector<HTMLElement>(".expand-title");
+        const content = collapse.querySelector<HTMLElement>(".expand-content");
+        if (!trigger || !content || trigger.dataset.ready === "true") return;
+        trigger.dataset.ready = "true";
+
+        content.id ||= `about-collapse-${index + 1}`;
+        trigger.setAttribute("role", "button");
+        trigger.setAttribute("tabindex", "0");
+        trigger.setAttribute("aria-controls", content.id);
+
+        const syncExpanded = () =>
+          trigger.setAttribute(
+            "aria-expanded",
+            String(collapse.classList.contains("expanded"))
+          );
+        syncExpanded();
+        new MutationObserver(syncExpanded).observe(collapse, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+
+        trigger.addEventListener("keydown", event => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          trigger.click();
+        });
+      });
+
+    document.querySelectorAll<HTMLElement>(".spoiler").forEach(spoiler => {
+      spoiler.tabIndex = 0;
+    });
   }
 
   initAboutSidebar();
-  document.addEventListener("astro:page-load", initAboutSidebar);
+  initAboutWidgets();
+  document.addEventListener("astro:page-load", () => {
+    initAboutSidebar();
+    initAboutWidgets();
+  });
 </script>
 
 <style>
@@ -144,6 +270,13 @@ const toggleToc =
 
   :global(.about-toc > ul) {
     margin-top: 1rem;
+  }
+
+  :global(.spoiler:focus-visible),
+  :global(.expand-title[role="button"]:focus-visible) {
+    color: inherit;
+    outline: 2px dashed hsl(var(--accent));
+    outline-offset: 2px;
   }
 
   @media (min-width: 48.0625rem) {

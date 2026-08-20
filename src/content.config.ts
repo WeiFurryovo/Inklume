@@ -32,6 +32,82 @@ const posts = defineCollection({
     }),
 });
 
+const httpUrl = z.url({ protocol: /^https?$/ });
+
+const aboutModules = z.object({
+  motto: z.object({
+    text: z.string(),
+    spoiler: z.string(),
+  }),
+  cta: z.object({
+    label: z.string(),
+    href: httpUrl,
+  }),
+  siteStack: z.object({
+    title: z.string(),
+    description: z.string(),
+    groupLabel: z.string(),
+    items: z.array(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        icon: z.enum([
+          "astro",
+          "cloudflare",
+          "github",
+          "pagefind",
+          "pure",
+          "sveltia",
+        ]),
+        href: httpUrl,
+      })
+    ),
+  }),
+  social: z.object({
+    title: z.string(),
+    description: z.string(),
+    items: z.array(
+      z.object({
+        platform: z.string(),
+        icon: z.enum([
+          "email",
+          "github",
+          "link",
+          "rss",
+          "steam",
+          "telegram",
+          "x",
+        ]),
+        color: z
+          .string()
+          .regex(/^#[0-9a-f]{6}$/i)
+          .optional(),
+        href: httpUrl,
+        metric: z.string().optional(),
+        api: z
+          .string()
+          .regex(/^[a-z0-9_-]+\/[a-z0-9_.:@-]+$/i)
+          .optional(),
+      })
+    ),
+  }),
+  notes: z.object({
+    title: z.string(),
+    summary: z.string(),
+    body: z.string(),
+  }),
+  timeline: z.object({
+    title: z.string(),
+    description: z.string(),
+    items: z.array(
+      z.object({
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        content: z.string(),
+      })
+    ),
+  }),
+});
+
 const pages = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/pages" }),
   schema: z.object({
@@ -39,6 +115,7 @@ const pages = defineCollection({
     description: z.string().optional(),
     ogImage: z.string().optional(),
     canonicalURL: z.string().optional(),
+    aboutModules: aboutModules.optional(),
   }),
 });
 

@@ -294,6 +294,190 @@ collections:
         widget: string
         required: false
         i18n: true
+      - name: aboutModules
+        label: About Page Modules
+        widget: object
+        required: false
+        i18n: duplicate
+        fields:
+          - name: motto
+            label: Motto and Spoiler
+            widget: object
+            i18n: duplicate
+            fields:
+              - name: text
+                label: Motto
+                widget: string
+                i18n: true
+              - name: spoiler
+                label: Hidden Text
+                widget: string
+                i18n: true
+          - name: cta
+            label: Action Button
+            widget: object
+            i18n: duplicate
+            fields:
+              - name: label
+                label: Button Label
+                widget: string
+                i18n: true
+              - name: href
+                label: URL
+                widget: string
+                i18n: duplicate
+                pattern:
+                  - "^https?://"
+                  - URL must start with http:// or https://
+          - name: siteStack
+            label: Site Stack
+            widget: object
+            i18n: duplicate
+            fields:
+              - name: title
+                label: Section Title
+                widget: string
+                i18n: true
+              - name: description
+                label: Introduction
+                widget: text
+                i18n: true
+              - name: groupLabel
+                label: Group Label
+                widget: string
+                i18n: true
+              - name: items
+                label: Stack Items
+                widget: list
+                i18n: duplicate
+                summary: "{{name}}"
+                fields:
+                  - name: name
+                    label: Name
+                    widget: string
+                    i18n: duplicate
+                  - name: description
+                    label: Description
+                    widget: string
+                    i18n: true
+                  - name: icon
+                    label: Icon
+                    widget: select
+                    i18n: duplicate
+                    options:
+                      - { label: Astro, value: astro }
+                      - { label: Cloudflare, value: cloudflare }
+                      - { label: GitHub, value: github }
+                      - { label: Pagefind, value: pagefind }
+                      - { label: Astro Theme Pure, value: pure }
+                      - { label: Sveltia CMS, value: sveltia }
+                  - name: href
+                    label: URL
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^https?://"
+                      - URL must start with http:// or https://
+          - name: social
+            label: Social Networks
+            widget: object
+            i18n: duplicate
+            fields:
+              - name: title
+                label: Section Title
+                widget: string
+                i18n: true
+              - name: description
+                label: Introduction
+                widget: text
+                i18n: true
+              - name: items
+                label: Social Links
+                widget: list
+                i18n: duplicate
+                summary: "{{platform}}"
+                fields:
+                  - name: platform
+                    label: Platform
+                    widget: string
+                    i18n: duplicate
+                  - name: icon
+                    label: Icon
+                    widget: select
+                    i18n: duplicate
+                    options: [email, github, link, rss, steam, telegram, x]
+                  - name: color
+                    label: Icon Color
+                    widget: color
+                    required: false
+                    i18n: duplicate
+                  - name: href
+                    label: URL
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^https?://"
+                      - URL must start with http:// or https://
+                  - name: metric
+                    label: Metric Label
+                    widget: string
+                    required: false
+                    i18n: true
+                  - name: api
+                    label: Substats API Path
+                    widget: string
+                    required: false
+                    i18n: duplicate
+                    pattern:
+                      - "^[A-Za-z0-9_-]+/[A-Za-z0-9_.:@-]+$"
+                      - Use a path such as github/WeiFurryovo
+          - name: notes
+            label: Collapsible Notes
+            widget: object
+            i18n: duplicate
+            fields:
+              - name: title
+                label: Section Title
+                widget: string
+                i18n: true
+              - name: summary
+                label: Collapsed Title
+                widget: string
+                i18n: true
+              - name: body
+                label: Content
+                widget: text
+                i18n: true
+          - name: timeline
+            label: Site Timeline
+            widget: object
+            i18n: duplicate
+            fields:
+              - name: title
+                label: Section Title
+                widget: string
+                i18n: true
+              - name: description
+                label: Introduction
+                widget: text
+                i18n: true
+              - name: items
+                label: Events
+                widget: list
+                i18n: duplicate
+                summary: "{{date}}"
+                fields:
+                  - name: date
+                    label: Date
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^\\d{4}-\\d{2}-\\d{2}$"
+                      - Use YYYY-MM-DD
+                  - name: content
+                    label: Content
+                    widget: text
+                    i18n: true
       - name: body
         label: Body
         widget: richtext
