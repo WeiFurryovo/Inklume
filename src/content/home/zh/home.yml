@@ -22,3 +22,6 @@ navigation:
   about: 关于
 footer:
   copyrightName: Inklume
+  filings:
+    - label: Moe ICP 114514
+      url: https://icp.gov.moe/?keyword=114514
