@@ -51,3 +51,16 @@ test("Homepage CMS fields are organized into clear collapsible groups", async ()
     "the avatar must stay shared across locales"
   );
 });
+
+test("shared Homepage settings stay identical across locales", async () => {
+  const [zhSource, enSource] = await Promise.all([
+    readProjectFile("src/content/home/zh/home.yml"),
+    readProjectFile("src/content/home/en/home.yml"),
+  ]);
+  const zh = parseFrontmatter(`---\n${zhSource}\n---`).frontmatter;
+  const en = parseFrontmatter(`---\n${enSource}\n---`).frontmatter;
+
+  assert.deepEqual(en.identity, zh.identity, "site identity must be shared");
+  assert.equal(en.profile.avatar, zh.profile.avatar, "avatar must be shared");
+  assert.deepEqual(en.footer, zh.footer, "footer settings must be shared");
+});
