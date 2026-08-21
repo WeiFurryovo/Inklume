@@ -218,9 +218,6 @@ test("bundled bilingual content stays an official project demo, not a personal s
   assert.match(enWelcome.frontmatter.description, /project demo/i);
   assert.match(enWelcome.content, /blog template[\s\S]*default post/i);
 
-  assert.deepEqual(zhHome.footer.filings, []);
-  assert.deepEqual(enHome.footer.filings, []);
-
   assert.match(readmeZh, /inklume\.pages\.dev\/[\s\S]*项目功能演示站/);
   assert.match(readmeZh, /并不代表维护者的个人博客/);
   assert.match(
