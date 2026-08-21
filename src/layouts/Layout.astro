@@ -31,8 +31,8 @@ const {
 } = Astro.props;
 
 const title = pageTitle
-  ? `${pageTitle} | ${home.browserTitle}`
-  : home.browserTitle;
+  ? `${pageTitle} | ${home.identity.browserTitle}`
+  : home.identity.browserTitle;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
 // Endpoint files are emitted without a trailing slash. Astro's locale helper
@@ -82,7 +82,7 @@ const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
         } catch (e) {}
       })();
     </script>
-    <link rel="icon" href={getAssetPath(home.favicon)} />
+    <link rel="icon" href={getAssetPath(home.identity.favicon)} />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 

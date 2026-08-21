@@ -203,10 +203,10 @@ test("bundled bilingual content stays an official project demo, not a personal s
   const zhWelcome = parseFrontmatter(zhWelcomeSource);
   const enWelcome = parseFrontmatter(enWelcomeSource);
 
-  assert.match(zhHome.role, /博客模板/);
-  assert.match(zhHome.about, /模板[\s\S]*演示/);
-  assert.match(enHome.role, /blog template/i);
-  assert.match(enHome.about, /template[\s\S]*demonstrates/i);
+  assert.match(zhHome.introduction.role, /博客模板/);
+  assert.match(zhHome.introduction.about, /模板[\s\S]*演示/);
+  assert.match(enHome.introduction.role, /blog template/i);
+  assert.match(enHome.introduction.about, /template[\s\S]*demonstrates/i);
 
   assert.match(zhAbout.frontmatter.description, /项目演示站/);
   assert.match(zhAbout.content, /博客模板[\s\S]*项目演示站/);

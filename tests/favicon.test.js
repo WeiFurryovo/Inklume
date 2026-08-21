@@ -18,8 +18,14 @@ test("favicon asset paths preserve remote URLs and apply Astro base to local fil
   const zh = parseFrontmatter(`---\n${zhSource}\n---`).frontmatter;
   const en = parseFrontmatter(`---\n${enSource}\n---`).frontmatter;
 
-  assert.equal(resolveAssetPath(zh.favicon, "/project/"), zh.favicon);
-  assert.equal(resolveAssetPath(en.favicon, "/project/"), en.favicon);
+  assert.equal(
+    resolveAssetPath(zh.identity.favicon, "/project/"),
+    zh.identity.favicon
+  );
+  assert.equal(
+    resolveAssetPath(en.identity.favicon, "/project/"),
+    en.identity.favicon
+  );
   assert.equal(
     resolveAssetPath("/uploads/favicon.png", "/project/"),
     "/project/uploads/favicon.png"
@@ -32,7 +38,7 @@ test("favicon asset paths preserve remote URLs and apply Astro base to local fil
   );
   assert.match(
     layoutSource,
-    /<link rel="icon" href=\{getAssetPath\(home\.favicon\)\} \/>/,
+    /<link rel="icon" href=\{getAssetPath\(home\.identity\.favicon\)\} \/>/,
     "the document favicon must use the shared asset resolver"
   );
 });

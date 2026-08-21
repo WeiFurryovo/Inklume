@@ -71,8 +71,8 @@ const stack = [
     id="content-header"
   >
     <img
-      src={home.avatar}
-      alt={home.displayName}
+      src={home.profile.avatar}
+      alt={home.profile.displayName}
       width="112"
       height="112"
       class="h-28 w-28 rounded-full border object-cover p-1"
@@ -81,9 +81,9 @@ const stack = [
     />
 
     <div class="flex flex-col items-center gap-y-4">
-      <h1 class="text-3xl font-medium">{home.displayName}</h1>
+      <h1 class="text-3xl font-medium">{home.profile.displayName}</h1>
       <div class="flex flex-wrap justify-center gap-x-7 gap-y-3">
-        <Label title={home.location}>
+        <Label title={home.profile.location}>
           <Icon name="location" class="size-5" slot="icon" />
         </Label>
         <Label
@@ -116,8 +116,8 @@ const stack = [
 
   <div id="content" class="animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6">
     <Section title={copy.aboutTitle}>
-      <p class="text-muted-foreground">{home.role}</p>
-      <p class="text-muted-foreground">{home.about}</p>
+      <p class="text-muted-foreground">{home.introduction.role}</p>
+      <p class="text-muted-foreground">{home.introduction.about}</p>
       <Button
         title={home.links.moreAbout}
         class="w-fit self-end"
@@ -170,8 +170,8 @@ const stack = [
 
     <Section title={copy.publishingTitle}>
       <PureCard
-        heading={home.publishingHeading}
-        subheading={home.publishingDescription}
+        heading={home.publishing.heading}
+        subheading={home.publishing.description}
         date="Astro · Sveltia CMS · Cloudflare Pages"
       />
     </Section>

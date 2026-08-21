@@ -127,16 +127,24 @@ const pages = defineCollection({
 const homepage = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{yml,yaml}", base: "./src/content/home" }),
   schema: z.object({
-    siteName: z.string(),
-    browserTitle: z.string(),
-    favicon: z.string(),
-    displayName: z.string(),
-    avatar: z.string(),
-    location: z.string(),
-    role: z.string(),
-    about: z.string(),
-    publishingHeading: z.string(),
-    publishingDescription: z.string(),
+    identity: z.object({
+      siteName: z.string(),
+      browserTitle: z.string(),
+      favicon: z.string(),
+    }),
+    profile: z.object({
+      displayName: z.string(),
+      avatar: z.string(),
+      location: z.string(),
+    }),
+    introduction: z.object({
+      role: z.string(),
+      about: z.string(),
+    }),
+    publishing: z.object({
+      heading: z.string(),
+      description: z.string(),
+    }),
     links: z.object({
       source: z.string(),
       readPosts: z.string(),

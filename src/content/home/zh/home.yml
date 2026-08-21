@@ -1,13 +1,17 @@
-siteName: Inklume
-browserTitle: Inklume
-favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
-displayName: Inklume
-avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
-location: Cloudflare Pages
-role: 中英双语 Astro 博客模板
-about: Inklume 是一个带 Sveltia CMS 后台的中英双语 Astro 博客模板；当前站点用于演示默认主题、内容管理、搜索、相册与部署流程。
-publishingHeading: Git 驱动、静态输出、可迁移
-publishingDescription: Markdown 内容由 Sveltia CMS 管理，Astro 构建后通过 Cloudflare Pages 发布。
+identity:
+  siteName: Inklume
+  browserTitle: Inklume
+  favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
+profile:
+  displayName: Inklume
+  avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
+  location: Cloudflare Pages
+introduction:
+  role: 中英双语 Astro 博客模板
+  about: Inklume 是一个带 Sveltia CMS 后台的中英双语 Astro 博客模板；当前站点用于演示默认主题、内容管理、搜索、相册与部署流程。
+publishing:
+  heading: Git 驱动、静态输出、可迁移
+  description: Markdown 内容由 Sveltia CMS 管理，Astro 构建后通过 Cloudflare Pages 发布。
 links:
   source: GitHub
   readPosts: 查看示例文章

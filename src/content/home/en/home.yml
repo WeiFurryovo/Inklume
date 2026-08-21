@@ -1,13 +1,17 @@
-siteName: Inklume
-browserTitle: Inklume
-favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
-displayName: Inklume
-avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
-location: Cloudflare Pages
-role: Bilingual Astro blog template
-about: Inklume is a bilingual Astro blog template with a Sveltia CMS dashboard. This site demonstrates the default theme, content workflow, search, gallery, and deployment setup.
-publishingHeading: Git-backed, static, portable
-publishingDescription: Sveltia CMS manages Markdown content, Astro builds the site, and Cloudflare Pages publishes it.
+identity:
+  siteName: Inklume
+  browserTitle: Inklume
+  favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
+profile:
+  displayName: Inklume
+  avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
+  location: Cloudflare Pages
+introduction:
+  role: Bilingual Astro blog template
+  about: Inklume is a bilingual Astro blog template with a Sveltia CMS dashboard. This site demonstrates the default theme, content workflow, search, gallery, and deployment setup.
+publishing:
+  heading: Git-backed, static, portable
+  description: Sveltia CMS manages Markdown content, Astro builds the site, and Cloudflare Pages publishes it.
 links:
   source: GitHub
   readPosts: View demo posts

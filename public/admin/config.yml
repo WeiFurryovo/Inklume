@@ -39,75 +39,119 @@ collections:
         i18n: true
         preview_path: "/{{locale}}/"
         fields:
-          - name: siteName
-            label: Site Name
-            widget: string
-            i18n: duplicate
-          - name: browserTitle
-            label: Browser Tab Title
-            widget: string
-            i18n: duplicate
-          - name: favicon
-            label: Favicon
-            widget: image
-            i18n: duplicate
-          - name: displayName
-            label: Display Name
-            widget: string
-            i18n: true
-          - name: avatar
-            label: Avatar
-            widget: image
-            i18n: duplicate
-          - name: location
-            label: Location
-            widget: string
-            i18n: true
-          - name: role
-            label: Role
-            widget: string
-            i18n: true
-          - name: about
-            label: About
-            widget: text
-            i18n: true
-          - name: publishingHeading
-            label: Publishing Heading
-            widget: string
-            i18n: true
-          - name: publishingDescription
-            label: Publishing Description
-            widget: text
-            i18n: true
-          - name: links
-            label: Homepage Link Labels
+          - name: identity
+            label: Site Identity
             widget: object
-            i18n: true
+            i18n: duplicate
+            collapsed: true
+            hint: Shared branding used across both language versions.
+            fields:
+              - name: siteName
+                label: Header Site Name
+                widget: string
+                hint: Text shown at the top left of every page.
+              - name: browserTitle
+                label: Browser Tab Title
+                widget: string
+                hint: Base title used in browser tabs and page titles.
+              - name: favicon
+                label: Favicon
+                widget: image
+                hint: Small icon shown in browser tabs and bookmarks.
+          - name: profile
+            label: Homepage Profile
+            widget: object
+            i18n: duplicate
+            collapsed: true
+            hint: Profile block at the top of the homepage.
+            fields:
+              - name: displayName
+                label: Display Name
+                widget: string
+                i18n: true
+                hint: Large name shown below the homepage avatar.
+              - name: avatar
+                label: Avatar
+                widget: image
+                i18n: duplicate
+                hint: Shared profile image at the top of the homepage.
+              - name: location
+                label: Location / Status
+                widget: string
+                i18n: true
+                hint: Text shown beside the location icon.
+          - name: introduction
+            label: Homepage About
+            widget: object
+            i18n: duplicate
+            collapsed: true
+            hint: Introductory copy in the homepage About section.
+            fields:
+              - name: role
+                label: Role / Tagline
+                widget: string
+                i18n: true
+                hint: Short line above the homepage introduction.
+              - name: about
+                label: Introduction
+                widget: text
+                i18n: true
+                hint: Main introduction shown in the homepage About section.
+          - name: publishing
+            label: Publishing Card
+            widget: object
+            i18n: duplicate
+            collapsed: true
+            hint: Card describing how the site is built and published.
+            fields:
+              - name: heading
+                label: Heading
+                widget: string
+                i18n: true
+                hint: Title inside the homepage Publishing card.
+              - name: description
+                label: Description
+                widget: text
+                i18n: true
+                hint: Supporting text inside the homepage Publishing card.
+          - name: links
+            label: Homepage Buttons
+            widget: object
+            i18n: duplicate
+            collapsed: true
+            hint: Text shown on homepage buttons and links. Destinations are fixed by the site routes.
             fields:
               - name: source
-                label: Source Code
+                label: Source Link Label
                 widget: string
                 i18n: true
+                hint: Label beside the GitHub icon in the homepage profile.
               - name: readPosts
-                label: Read Posts
+                label: Top Posts Button
                 widget: string
                 i18n: true
+                hint: Main button directly below the homepage profile.
               - name: moreAbout
-                label: More About
+                label: About Section Button
                 widget: string
                 i18n: true
+                hint: Button at the end of the homepage About section.
               - name: morePosts
-                label: More Posts
+                label: Posts Section Button
                 widget: string
                 i18n: true
+                hint: Button at the end of the homepage Posts section.
               - name: gallery
-                label: Gallery
+                label: Gallery Section Button
                 widget: string
                 i18n: true
+                hint: Button at the end of the homepage Gallery section.
           - name: navigation
             label: Navigation Labels
             widget: object
-            i18n: true
+            i18n: duplicate
+            collapsed: true
+            hint: Text shown in the top navigation menu.
             fields:
               - name: posts
                 label: Posts
@@ -133,6 +177,8 @@ collections:
             label: Footer Settings
             widget: object
             i18n: duplicate
+            collapsed: true
+            hint: Shared copyright and filing links shown at the bottom of every page.
             fields:
               - name: copyrightName
                 label: Copyright Name
