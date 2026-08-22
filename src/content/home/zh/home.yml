@@ -19,11 +19,21 @@ links:
   morePosts: 更多示例文章
   gallery: 查看示例相册
 navigation:
-  posts: 文章
-  gallery: 相册
-  archives: 归档
-  tags: 标签
-  about: 关于
+  posts:
+    label: 文章
+    href: posts
+  gallery:
+    label: 相册
+    href: gallery
+  archives:
+    label: 归档
+    href: archives
+  tags:
+    label: 标签
+    href: tags
+  about:
+    label: 关于
+    href: about
 footer:
   copyrightName: Inklume
   filings:

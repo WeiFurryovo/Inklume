@@ -11,17 +11,28 @@ const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
 const home = await getHomepage(locale);
 
+function resolveNavigationHref(path: string) {
+  if (/^https?:\/\//i.test(path)) {
+    return { href: path, external: true };
+  }
+
+  if (path.startsWith("/")) {
+    return { href: getAssetPath(path), external: false };
+  }
+
+  return { href: getRelativeLocaleUrl(locale, path), external: false };
+}
+
 const menu = [
-  { title: home.navigation.posts, path: "posts" },
-  ...(config.features.gallery.enabled
-    ? [{ title: home.navigation.gallery, path: "gallery" }]
-    : []),
-  ...(config.features.showArchives
-    ? [{ title: home.navigation.archives, path: "archives" }]
-    : []),
-  { title: home.navigation.tags, path: "tags" },
-  { title: home.navigation.about, path: "about" },
-];
+  home.navigation.posts,
+  ...(config.features.gallery.enabled ? [home.navigation.gallery] : []),
+  ...(config.features.showArchives ? [home.navigation.archives] : []),
+  home.navigation.tags,
+  home.navigation.about,
+].map(item => ({
+  title: item.label,
+  ...resolveNavigationHref(item.href),
+}));
 ---
 
 <a
@@ -55,9 +66,9 @@ const menu = [
         {
           menu.map(item => (
             <a
-              href={getRelativeLocaleUrl(locale, item.path)}
+              href={item.href}
               class="hover:text-primary w-full flex-none grow py-2 text-right font-medium transition-none sm:w-fit sm:px-3"
-              data-astro-prefetch
+              data-astro-prefetch={item.external ? undefined : true}
             >
               {item.title}
             </a>

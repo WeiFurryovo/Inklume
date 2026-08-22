@@ -147,32 +147,97 @@ collections:
                 i18n: true
                 hint: Button at the end of the homepage Gallery section.
           - name: navigation
-            label: Navigation Labels
+            label: Navigation Menu
             widget: object
             i18n: duplicate
             collapsed: true
-            hint: Text shown in the top navigation menu.
+            hint: Edit the text and destination of each top navigation item. Relative paths keep the current language prefix; full URLs stay in the current tab.
             fields:
               - name: posts
                 label: Posts
-                widget: string
-                i18n: true
+                widget: object
+                i18n: duplicate
+                collapsed: true
+                fields:
+                  - name: label
+                    label: Display Text
+                    widget: string
+                    i18n: true
+                  - name: href
+                    label: Destination URL
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
+                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
               - name: gallery
                 label: Gallery
-                widget: string
-                i18n: true
+                widget: object
+                i18n: duplicate
+                collapsed: true
+                fields:
+                  - name: label
+                    label: Display Text
+                    widget: string
+                    i18n: true
+                  - name: href
+                    label: Destination URL
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
+                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
               - name: archives
                 label: Archives
-                widget: string
-                i18n: true
+                widget: object
+                i18n: duplicate
+                collapsed: true
+                fields:
+                  - name: label
+                    label: Display Text
+                    widget: string
+                    i18n: true
+                  - name: href
+                    label: Destination URL
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
+                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
               - name: tags
                 label: Tags
-                widget: string
-                i18n: true
+                widget: object
+                i18n: duplicate
+                collapsed: true
+                fields:
+                  - name: label
+                    label: Display Text
+                    widget: string
+                    i18n: true
+                  - name: href
+                    label: Destination URL
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
+                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
               - name: about
                 label: About
-                widget: string
-                i18n: true
+                widget: object
+                i18n: duplicate
+                collapsed: true
+                fields:
+                  - name: label
+                    label: Display Text
+                    widget: string
+                    i18n: true
+                  - name: href
+                    label: Destination URL
+                    widget: string
+                    i18n: duplicate
+                    pattern:
+                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
+                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
           - name: footer
             label: Footer Settings
             widget: object

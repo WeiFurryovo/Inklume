@@ -38,6 +38,15 @@ const socialUrl = z
   .regex(
     /^(?:https?:\/\/[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::\d{1,5})?(?:[/?#][^\s\\]*)?|mailto:[^\s@\\]+@[^\s@\\]+(?:\?[^\s\\]*)?|\/(?:$|[^/\\\s][^\s\\]*))$/
   );
+const navigationUrl = z
+  .string()
+  .regex(
+    /^(?:https?:\/\/[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::\d{1,5})?(?:[/?#][^\s\\]*)?|\/(?:$|[^/\\\s][^\s\\]*)|[A-Za-z0-9][^\s\\]*)$/
+  )
+  .refine(
+    value => /^https?:\/\//i.test(value) || !/^[a-z][a-z\d+.-]*:/i.test(value),
+    "Navigation links must use an HTTP(S) URL or a relative path"
+  );
 
 const aboutModules = z.object({
   motto: z.object({
@@ -153,11 +162,26 @@ const homepage = defineCollection({
       gallery: z.string(),
     }),
     navigation: z.object({
-      posts: z.string(),
-      gallery: z.string(),
-      archives: z.string(),
-      tags: z.string(),
-      about: z.string(),
+      posts: z.object({
+        label: z.string(),
+        href: navigationUrl,
+      }),
+      gallery: z.object({
+        label: z.string(),
+        href: navigationUrl,
+      }),
+      archives: z.object({
+        label: z.string(),
+        href: navigationUrl,
+      }),
+      tags: z.object({
+        label: z.string(),
+        href: navigationUrl,
+      }),
+      about: z.object({
+        label: z.string(),
+        href: navigationUrl,
+      }),
     }),
     footer: z.object({
       copyrightName: z.string(),

@@ -19,11 +19,21 @@ links:
   morePosts: More demo posts
   gallery: View demo gallery
 navigation:
-  posts: Posts
-  gallery: Gallery
-  archives: Archives
-  tags: Tags
-  about: About
+  posts:
+    label: Posts
+    href: posts
+  gallery:
+    label: Gallery
+    href: gallery
+  archives:
+    label: Archives
+    href: archives
+  tags:
+    label: Tags
+    href: tags
+  about:
+    label: About
+    href: about
 footer:
   copyrightName: Inklume
   filings:

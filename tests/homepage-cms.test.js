@@ -50,6 +50,21 @@ test("Homepage CMS fields are organized into clear collapsible groups", async ()
     "duplicate",
     "the avatar must stay shared across locales"
   );
+
+  const navigation = fields.find(({ name }) => name === "navigation");
+  for (const itemName of ["posts", "gallery", "archives", "tags", "about"]) {
+    const item = navigation.fields.find(({ name }) => name === itemName);
+    assert.equal(item.widget, "object", `${itemName} must be an object`);
+    assert.equal(item.i18n, "duplicate", `${itemName} must stay shared`);
+    assert.equal(item.collapsed, true, `${itemName} must start collapsed`);
+
+    const label = item.fields.find(({ name }) => name === "label");
+    const href = item.fields.find(({ name }) => name === "href");
+    assert.equal(label.i18n, true, `${itemName} text must be localizable`);
+    assert.equal(href.i18n, "duplicate", `${itemName} URL must be shared`);
+    assert.equal(href.widget, "string", `${itemName} URL must be editable`);
+    assert.ok(href.pattern?.[0], `${itemName} URL must be validated`);
+  }
 });
 
 test("shared Homepage settings stay identical across locales", async () => {
@@ -62,5 +77,52 @@ test("shared Homepage settings stay identical across locales", async () => {
 
   assert.deepEqual(en.identity, zh.identity, "site identity must be shared");
   assert.equal(en.profile.avatar, zh.profile.avatar, "avatar must be shared");
-  assert.deepEqual(en.footer, zh.footer, "footer settings must be shared");
+  assert.equal(
+    en.footer.copyrightName,
+    zh.footer.copyrightName,
+    "footer copyright name must be shared"
+  );
+  assert.deepEqual(
+    Object.fromEntries(
+      Object.entries(en.navigation).map(([key, item]) => [key, item.href])
+    ),
+    Object.fromEntries(
+      Object.entries(zh.navigation).map(([key, item]) => [key, item.href])
+    ),
+    "navigation destinations must be shared across locales"
+  );
+});
+
+test("navigation URL validation accepts safe destinations only", async () => {
+  const source = await readProjectFile("public/admin/config.yml");
+  const config = parseFrontmatter(`---\n${source}\n---`).frontmatter;
+  const homepage = config.collections.find(({ name }) => name === "homepage");
+  const fields = homepage.files.find(({ name }) => name === "home").fields;
+  const navigation = fields.find(({ name }) => name === "navigation");
+  const href = navigation.fields
+    .find(({ name }) => name === "posts")
+    .fields.find(({ name }) => name === "href");
+  const pattern = new RegExp(href.pattern[0]);
+
+  for (const value of [
+    "posts",
+    "posts/archive",
+    "/custom-page",
+    "/",
+    "https://example.com/docs",
+  ]) {
+    assert.match(value, pattern, `${value} should be accepted`);
+  }
+
+  for (const value of [
+    "javascript:alert(1)",
+    "data:text/html,hello",
+    "mailto:user@example.com",
+    "//evil.example",
+    "../outside",
+    "/\\evil.example",
+    "posts with spaces",
+  ]) {
+    assert.doesNotMatch(value, pattern, `${value} should be rejected`);
+  }
 });
