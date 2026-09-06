@@ -11,11 +11,14 @@ name: Gallery thumbnails
 on:
   push:
     branches: [main]
-    # Only post edits change which images the gallery collects. The bot commit
-    # below touches src/data/ + public/gallery/ (not this path), so it never
+    # Regenerate when posts, CMS uploads, or generator configuration change.
+    # The bot commit only touches src/data/ + public/gallery/, so it never
     # re-triggers this workflow — and GITHUB_TOKEN pushes don't recurse.
     paths:
       - "src/content/posts/**"
+      - "public/uploads/**"
+      - "astro-paper.config.ts"
+      - "scripts/generate-gallery-thumbs.mjs"
   workflow_dispatch:
 
 permissions:

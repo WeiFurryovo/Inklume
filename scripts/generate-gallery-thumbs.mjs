@@ -1,8 +1,8 @@
 /**
  * Gallery thumbnail + EXIF generator.
  *
- * Scans posts with `gallery: true`, collects their whitelisted image-host URLs,
- * downloads each once, extracts a privacy-safe EXIF subset (never GPS), and
+ * Scans posts with `gallery: true`, collects local and whitelisted image URLs,
+ * reads each source, extracts a privacy-safe EXIF subset (never GPS), and
  * writes an 800px AVIF thumbnail plus a manifest. The Astro build reads only the
  * manifest — it never downloads or transcodes.
  *
@@ -27,10 +27,12 @@ import crypto from "node:crypto";
 import { spawn } from "node:child_process";
 import sharp from "sharp";
 import exifr from "exifr";
+import { parseFrontmatter } from "@astrojs/markdown-remark";
 
 const ROOT = process.cwd();
 const CONFIG_FILE = path.join(ROOT, "astro-paper.config.ts");
 const POSTS_DIR = path.join(ROOT, "src/content/posts");
+const PUBLIC_DIR = path.join(ROOT, "public");
 const MANIFEST_FILE = path.join(ROOT, "src/data/gallery-manifest.json");
 const THUMBS_DIR = path.join(ROOT, "public/gallery/thumbs");
 
@@ -99,12 +101,7 @@ async function loadConfig() {
 /** Recursively list markdown files, skipping `_`-prefixed files/dirs. */
 async function walk(dir) {
   const out = [];
-  let entries;
-  try {
-    entries = await fs.readdir(dir, { withFileTypes: true });
-  } catch {
-    return out;
-  }
+  const entries = await fs.readdir(dir, { withFileTypes: true });
   for (const entry of entries) {
     if (entry.name.startsWith("_")) continue;
     const full = path.join(dir, entry.name);
@@ -117,25 +114,26 @@ async function walk(dir) {
   return out;
 }
 
-/** Split a markdown file into its frontmatter block and body. */
-function splitFrontmatter(text) {
-  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
-  if (!match) return { frontmatter: "", body: text };
-  return { frontmatter: match[1], body: match[2] };
+function isLocalUrl(url) {
+  return url.startsWith("/") && !url.startsWith("//");
 }
 
-/** Collect unique whitelisted image URLs across all `gallery: true` posts. */
+/** Collect unique local or whitelisted URLs across all `gallery: true` posts. */
 async function collectUrls(domains) {
   const files = await walk(POSTS_DIR);
   const urls = new Set();
   for (const file of files) {
     const text = await fs.readFile(file, "utf8");
-    const { frontmatter, body } = splitFrontmatter(text);
-    if (!/^gallery:\s*true\s*$/m.test(frontmatter)) continue;
+    const { frontmatter, content: body } = parseFrontmatter(text);
+    if (frontmatter.gallery !== true) continue;
     for (const match of body.matchAll(IMAGE_RE)) {
       let url = match[2]?.trim() ?? "";
       if (url.startsWith("<") && url.endsWith(">")) url = url.slice(1, -1);
       if (!url) continue;
+      if (isLocalUrl(url)) {
+        urls.add(url);
+        continue;
+      }
       let hostname;
       try {
         hostname = new URL(url).hostname;
@@ -146,6 +144,33 @@ async function collectUrls(domains) {
     }
   }
   return urls;
+}
+
+function assertInsidePublic(root, file) {
+  const relative = path.relative(root, file);
+  if (
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Local gallery image must stay inside public/");
+  }
+}
+
+async function readLocalImage(url) {
+  const pathname = decodeURIComponent(url.split(/[?#]/, 1)[0]);
+  if (pathname.includes("\\")) {
+    throw new Error("Local gallery image path must not contain backslashes");
+  }
+  const file = path.resolve(PUBLIC_DIR, `.${pathname}`);
+  assertInsidePublic(PUBLIC_DIR, file);
+  // Check both the URL path and its symlink target before reading any bytes.
+  const [publicRoot, realFile] = await Promise.all([
+    fs.realpath(PUBLIC_DIR),
+    fs.realpath(file),
+  ]);
+  assertInsidePublic(publicRoot, realFile);
+  return fs.readFile(realFile);
 }
 
 /* --------------------------------- decode --------------------------------- */
@@ -669,14 +694,10 @@ async function main() {
     return;
   }
   const domains = new Set(gallery.imageDomains ?? []);
-  if (domains.size === 0) {
-    console.log("No `imageDomains` configured — nothing to generate.");
-    return;
-  }
 
   const urls = await collectUrls(domains);
   console.log(
-    `Found ${urls.size} whitelisted image(s) across gallery posts ` +
+    `Found ${urls.size} local or whitelisted image(s) across gallery posts ` +
       `(domains: ${[...domains].join(", ")}).`
   );
 
@@ -691,22 +712,34 @@ async function main() {
     const name = thumbName(url);
     const outPath = path.join(THUMBS_DIR, name);
 
-    // Incremental: skip when the manifest entry and its thumbnail both exist.
-    const existing = manifest[url];
-    if (existing?.thumb === name) {
-      try {
-        await fs.access(outPath);
-        skipped += 1;
-        return;
-      } catch {
-        // Thumbnail missing — regenerate below.
-      }
-    }
-
     try {
-      const res = await fetch(url, { headers: fetchHeaders(url) });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const buf = Buffer.from(await res.arrayBuffer());
+      let buf;
+      let sourceHash;
+      if (isLocalUrl(url)) {
+        buf = await readLocalImage(url);
+        sourceHash = crypto.createHash("sha256").update(buf).digest("hex");
+      }
+
+      // Local files may be replaced at the same URL by the CMS.
+      const existing = manifest[url];
+      if (
+        existing?.thumb === name &&
+        (!sourceHash || existing.sourceHash === sourceHash)
+      ) {
+        try {
+          await fs.access(outPath);
+          skipped += 1;
+          return;
+        } catch {
+          // Thumbnail missing - regenerate below.
+        }
+      }
+
+      if (!buf) {
+        const res = await fetch(url, { headers: fetchHeaders(url) });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        buf = Buffer.from(await res.arrayBuffer());
+      }
 
       const [{ thumb, width, height }, exif] = await Promise.all([
         makeThumb(buf),
@@ -714,7 +747,13 @@ async function main() {
       ]);
       await fs.writeFile(outPath, thumb);
 
-      manifest[url] = { width, height, thumb: name, ...(exif ? { exif } : {}) };
+      manifest[url] = {
+        width,
+        height,
+        thumb: name,
+        ...(sourceHash ? { sourceHash } : {}),
+        ...(exif ? { exif } : {}),
+      };
       generated += 1;
       await flushManifest(manifest); // durable progress for resumable runs
       console.log(`✓ ${name}  ${width}×${height}  ${url}`);

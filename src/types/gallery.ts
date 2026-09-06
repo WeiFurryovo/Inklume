@@ -40,6 +40,8 @@ export interface GalleryManifestEntry {
   height: number;
   /** Thumbnail filename under `public/gallery/thumbs/` */
   thumb: string;
+  /** Local source content hash, used to refresh thumbnails after CMS uploads. */
+  sourceHash?: string;
   /** Extracted EXIF, when present */
   exif?: GalleryExif;
 }

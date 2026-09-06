@@ -3,7 +3,8 @@ import { Icon } from "astro-pure/user";
 import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { getAlternatePath, type Locale } from "@/i18n/helpers";
-import { stripBase } from "@/utils/withBase";
+import { getTranslatedPostUrl } from "@/i18n/getTranslatedPostUrl.js";
+import { stripBase, stripLocale } from "@/utils/withBase";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { postFilter } from "@/utils/postFilter";
 import config from "@/config";
@@ -14,16 +15,20 @@ const label = target === "zh" ? "切换到中文" : "Switch to English";
 
 // Map the current path to its counterpart in the other language.
 const currentPath = stripBase(Astro.url.pathname);
-let href = getAlternatePath(currentPath, target);
+let href = getRelativeLocaleUrl(
+  target,
+  stripLocale(getAlternatePath(currentPath, target), target)
+);
 
 if (/^\/(?:en\/)?posts\/.+/.test(currentPath)) {
   const targetPosts = (
     await getCollection("posts", ({ id }) => id.startsWith(`${target}/`))
   ).filter(postFilter);
-  const hasTranslation = targetPosts.some(
-    post => getPostUrl(post.id, post.filePath, target) === href
+  href = getTranslatedPostUrl(
+    href,
+    targetPosts.map(post => getPostUrl(post.id, post.filePath, target)),
+    getRelativeLocaleUrl(target, "posts")
   );
-  if (!hasTranslation) href = getRelativeLocaleUrl(target, "posts");
 }
 ---
 
