@@ -1,68 +1,14 @@
 ---
-import { getCollection } from "astro:content";
-import { getRelativeLocaleUrl } from "astro:i18n";
 import type { GetStaticPathsOptions } from "astro";
-import Layout from "@/layouts/Layout.astro";
-import Header from "@/components/Header.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Card from "@/components/Card.astro";
-import Footer from "@/components/Footer.astro";
-import Pagination from "@/components/Pagination.astro";
-import { getUniqueTags } from "@/utils/getUniqueTags";
-import { getSortedPosts } from "@/utils/getSortedPosts";
-import { slugifyAll } from "@/utils/slugify";
-import { useTranslations } from "@/i18n";
-import config from "@/config";
+import TaxonomyPostsPage from "@/components/TaxonomyPostsPage.astro";
+import { getTaxonomyStaticPaths } from "@/utils/getTaxonomy";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const posts = await getCollection(
-    "posts",
-    ({ id, data }) => id.startsWith("zh/") && !data.draft
-  );
-  const tags = getUniqueTags(posts);
-
-  return tags.flatMap(({ tag, tagName }) => {
-    const tagPosts = getSortedPosts(
-      posts.filter(({ data }) => slugifyAll(data.tags).includes(tag))
-    );
-
-    return paginate(tagPosts, {
-      params: { tag },
-      props: { tagName },
-      pageSize: config.posts.perPage,
-    });
-  });
+  return getTaxonomyStaticPaths("tags", "zh", paginate);
 }
 
-const { page, tagName } = Astro.props;
-
-const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
-const postsUrl = getRelativeLocaleUrl(locale, "posts");
+const { page, term, redirectTo } = Astro.props;
+if (redirectTo) return Astro.redirect(redirectTo, 301);
 ---
 
-<Layout pageTitle={`${t.pages.tagTitle}: ${tagName}`}>
-  <Header />
-
-  <div class="w-full flex-1">
-    <Breadcrumb href={postsUrl} />
-
-    <main id="main-content" class="mt-6 lg:mt-10">
-      <div id="content-header" class="animate">
-        <h1 class="mb-6 flex items-end gap-x-2 text-3xl font-medium">
-          {t.pages.tagsTitle}:
-          <span class="text-2xl">#{tagName}</span>
-        </h1>
-      </div>
-
-      <section id="content" class="animate" aria-label={t.pages.postsTitle}>
-        <ul class="flex flex-col gap-y-3 text-start">
-          {page.data.map(data => <Card {...data} detailed />)}
-        </ul>
-        <Pagination {page} />
-      </section>
-    </main>
-  </div>
-
-  <Footer />
-</Layout>
+<TaxonomyPostsPage locale="zh" kind="tags" {page} {term} />

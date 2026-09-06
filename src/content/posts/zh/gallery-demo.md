@@ -7,9 +7,10 @@ heroImage:
   src: /gallery/thumbs/2304d9d8b47b02ea.avif
   alt: 秘鲁普诺，的的喀喀湖上的日出
   color: "#D7A584"
+category: unclassified
 tags:
-  - 旅行
-  - 摄影
+  - travel
+  - photography
 ---
 
 任何在 frontmatter 中设置 `gallery: true` 的文章，都会把正文里的图床照片汇入

@@ -1,0 +1,9 @@
+---
+import TaxonomyIndexPage from "@/components/TaxonomyIndexPage.astro";
+
+export function getStaticPaths() {
+  return [{ params: { lang: "en" } }];
+}
+---
+
+<TaxonomyIndexPage locale="en" kind="categories" />

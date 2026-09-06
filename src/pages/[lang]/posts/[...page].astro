@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import PostListPage from "@/components/PostListPage.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { getUniqueTags } from "@/utils/getUniqueTags";
+import { getTaxonomySummaries } from "@/utils/getTaxonomy";
 import config from "@/config";
 
 export const getStaticPaths = (async ({ paginate }) => {
@@ -16,13 +17,14 @@ export const getStaticPaths = (async ({ paginate }) => {
     params: { lang: "en" },
     pageSize: config.posts.perPage,
     props: {
-      tags: getUniqueTags(posts),
+      tags: await getUniqueTags(posts, "en"),
+      categories: await getTaxonomySummaries("categories", posts, "en"),
       postsCount: sortedPosts.length,
     },
   });
 }) satisfies GetStaticPaths;
 
-const { page, tags, postsCount } = Astro.props;
+const { page, tags, categories, postsCount } = Astro.props;
 ---
 
-<PostListPage locale="en" {page} {tags} {postsCount} />
+<PostListPage locale="en" {page} {tags} {categories} {postsCount} />

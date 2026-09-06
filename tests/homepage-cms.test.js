@@ -1,128 +1,151 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-
 import { parseFrontmatter } from "@astrojs/markdown-remark";
 
 const readProjectFile = relativePath =>
   readFile(new URL(`../${relativePath}`, import.meta.url), "utf8");
+const parseYaml = source => parseFrontmatter(`---\n${source}\n---`).frontmatter;
+const readConfig = async () =>
+  parseYaml(await readProjectFile("public/admin/config.yml"));
 
-test("Homepage CMS fields are organized into clear collapsible groups", async () => {
-  const source = await readProjectFile("public/admin/config.yml");
-  const config = parseFrontmatter(`---\n${source}\n---`).frontmatter;
-  const homepage = config.collections.find(({ name }) => name === "homepage");
-  const fields = homepage.files.find(({ name }) => name === "home").fields;
-  const expectedGroups = [
-    "identity",
-    "profile",
-    "introduction",
-    "publishing",
-    "links",
-    "navigation",
-    "footer",
-  ];
-
+test("CMS collections group content, taxonomy, appearance, and site settings", async () => {
+  const config = await readConfig();
   assert.deepEqual(
-    fields.map(({ name }) => name),
-    expectedGroups,
-    "Homepage should expose only grouped top-level settings"
+    config.collections.map(item => (item.divider ? "divider" : item.name)),
+    [
+      "posts",
+      "pages",
+      "homepage",
+      "divider",
+      "categories",
+      "tags",
+      "divider",
+      "navigation",
+      "footer",
+      "divider",
+      "site",
+    ]
   );
-
-  for (const group of fields) {
-    assert.equal(
-      group.widget,
-      "object",
-      `${group.name} must be an object group`
+  for (const name of ["posts", "pages"]) {
+    const collection = config.collections.find(item => item.name === name);
+    assert.deepEqual(
+      collection.fields.slice(0, 3).map(item => item.name),
+      ["title", "body", "description"]
     );
-    assert.equal(group.collapsed, true, `${group.name} must start collapsed`);
-    assert.ok(group.hint, `${group.name} must explain where its values appear`);
-  }
-
-  assert.equal(
-    fields.find(({ name }) => name === "identity").i18n,
-    "duplicate",
-    "site identity must stay shared across locales"
-  );
-  assert.equal(
-    fields
-      .find(({ name }) => name === "profile")
-      .fields.find(({ name }) => name === "avatar").i18n,
-    "duplicate",
-    "the avatar must stay shared across locales"
-  );
-
-  const navigation = fields.find(({ name }) => name === "navigation");
-  for (const itemName of ["posts", "gallery", "archives", "tags", "about"]) {
-    const item = navigation.fields.find(({ name }) => name === itemName);
-    assert.equal(item.widget, "object", `${itemName} must be an object`);
-    assert.equal(item.i18n, "duplicate", `${itemName} must stay shared`);
-    assert.equal(item.collapsed, true, `${itemName} must start collapsed`);
-
-    const label = item.fields.find(({ name }) => name === "label");
-    const href = item.fields.find(({ name }) => name === "href");
-    assert.equal(label.i18n, true, `${itemName} text must be localizable`);
-    assert.equal(href.i18n, "duplicate", `${itemName} URL must be shared`);
-    assert.equal(href.widget, "string", `${itemName} URL must be editable`);
-    assert.ok(href.pattern?.[0], `${itemName} URL must be validated`);
+    const advanced = collection.fields.find(item => item.name === "advanced");
+    assert.equal(advanced.widget, "object");
+    assert.equal(advanced.collapsed, true);
+    assert.equal(advanced.required, false);
+    assert.ok(advanced.fields.some(item => item.name === "canonicalURL"));
   }
 });
 
-test("shared Homepage settings stay identical across locales", async () => {
-  const [zhSource, enSource] = await Promise.all([
-    readProjectFile("src/content/home/zh/home.yml"),
-    readProjectFile("src/content/home/en/home.yml"),
-  ]);
-  const zh = parseFrontmatter(`---\n${zhSource}\n---`).frontmatter;
-  const en = parseFrontmatter(`---\n${enSource}\n---`).frontmatter;
+test("each settings file has one complete CMS editor and no locale copies", async () => {
+  const config = await readConfig();
+  const owners = new Set();
+  for (const collection of config.collections) {
+    for (const file of collection.files ?? []) {
+      assert.equal(
+        owners.has(file.file),
+        false,
+        `duplicate editor: ${file.file}`
+      );
+      owners.add(file.file);
+      if (!file.file.startsWith("src/data/settings/")) continue;
+      assert.notEqual(collection.i18n, true);
+      assert.notEqual(file.i18n, true);
+      const data = JSON.parse(await readProjectFile(file.file));
+      assert.deepEqual(
+        file.fields.map(field => field.name).sort(),
+        Object.keys(data).sort()
+      );
+    }
+  }
+  for (const name of ["site", "navigation", "footer"]) {
+    assert.ok(owners.has(`src/data/settings/${name}.json`));
+  }
+});
 
-  assert.deepEqual(en.identity, zh.identity, "site identity must be shared");
-  assert.equal(en.profile.avatar, zh.profile.avatar, "avatar must be shared");
-  assert.equal(
-    en.footer.copyrightName,
-    zh.footer.copyrightName,
-    "footer copyright name must be shared"
-  );
+test("homepage editors contain only localized page content", async () => {
+  const config = await readConfig();
+  const fields = config.collections.find(item => item.name === "homepage")
+    .files[0].fields;
+  const expected = ["profile", "introduction", "publishing", "links"];
   assert.deepEqual(
-    Object.fromEntries(
-      Object.entries(en.navigation).map(([key, item]) => [key, item.href])
-    ),
-    Object.fromEntries(
-      Object.entries(zh.navigation).map(([key, item]) => [key, item.href])
-    ),
-    "navigation destinations must be shared across locales"
+    fields.map(field => field.name),
+    expected
+  );
+  const homes = await Promise.all(
+    ["zh", "en"].map(async locale =>
+      parseYaml(await readProjectFile(`src/content/home/${locale}/home.yml`))
+    )
+  );
+  for (const home of homes)
+    assert.deepEqual(Object.keys(home).sort(), [...expected].sort());
+  assert.equal(homes[0].profile.avatar, homes[1].profile.avatar);
+  assert.equal(
+    fields[0].fields.find(field => field.name === "avatar").i18n,
+    "duplicate"
   );
 });
 
-test("navigation URL validation accepts safe destinations only", async () => {
-  const source = await readProjectFile("public/admin/config.yml");
-  const config = parseFrontmatter(`---\n${source}\n---`).frontmatter;
-  const homepage = config.collections.find(({ name }) => name === "homepage");
-  const fields = homepage.files.find(({ name }) => name === "home").fields;
-  const navigation = fields.find(({ name }) => name === "navigation");
-  const href = navigation.fields
-    .find(({ name }) => name === "posts")
-    .fields.find(({ name }) => name === "href");
-  const pattern = new RegExp(href.pattern[0]);
-
-  for (const value of [
-    "posts",
-    "posts/archive",
-    "/custom-page",
-    "/",
-    "https://example.com/docs",
+test("taxonomy relations store stable IDs and share article membership across locales", async () => {
+  const config = await readConfig();
+  const posts = config.collections.find(item => item.name === "posts");
+  for (const [fieldName, target] of [
+    ["category", "categories"],
+    ["tags", "tags"],
   ]) {
-    assert.match(value, pattern, `${value} should be accepted`);
+    const field = posts.fields.find(item => item.name === fieldName);
+    assert.equal(field.widget, "relation");
+    assert.equal(field.collection, target);
+    assert.equal(field.value_field, "{{slug}}");
+    assert.equal(field.i18n, "duplicate");
+    assert.deepEqual(field.display_fields, ["name.zh", "name.en"]);
+    const terms = config.collections.find(item => item.name === target);
+    assert.equal(terms.slug, "{{uuid}}");
+    assert.equal(terms.identifier_field, "name.zh");
+    assert.notEqual(terms.i18n, true);
   }
+  assert.equal(posts.fields.find(item => item.name === "tags").multiple, true);
+  assert.equal(
+    posts.fields.find(item => item.name === "category").default,
+    "unclassified"
+  );
+});
 
-  for (const value of [
-    "javascript:alert(1)",
-    "data:text/html,hello",
-    "mailto:user@example.com",
-    "//evil.example",
-    "../outside",
-    "/\\evil.example",
-    "posts with spaces",
-  ]) {
-    assert.doesNotMatch(value, pattern, `${value} should be rejected`);
+test("all navigation editors validate destinations and expose both languages", async () => {
+  const config = await readConfig();
+  const navigation = config.collections.find(item => item.name === "navigation")
+    .files[0];
+  for (const item of navigation.fields) {
+    const label = item.fields.find(field => field.name === "label");
+    assert.deepEqual(
+      label.fields.map(field => field.name),
+      ["zh", "en"]
+    );
+    const href = item.fields.find(field => field.name === "href");
+    const pattern = new RegExp(href.pattern[0]);
+    for (const value of [
+      "posts",
+      "posts/archive",
+      "/custom-page",
+      "/",
+      "https://example.com/docs",
+      "about#site-stack",
+      "search?q=Astro",
+    ])
+      assert.match(value, pattern);
+    for (const value of [
+      "javascript:alert(1)",
+      "data:text/html,hello",
+      "mailto:user@example.com",
+      "//evil.example",
+      "../outside",
+      "/\\evil.example",
+      "posts with spaces",
+    ])
+      assert.doesNotMatch(value, pattern);
   }
 });

@@ -21,17 +21,10 @@ export default defineAstroPaperConfig({
   site: {
     // SITE_URL can override the stable Pages URL when a custom domain is added.
     url: siteUrl,
-    title: "Inklume",
-    description:
-      "Inklume 是一个带 Sveltia CMS 后台、可部署到 Cloudflare Pages 的中英双语 Astro 博客模板演示站。A bilingual Astro blog template demo with Sveltia CMS and Cloudflare Pages.",
-    author: "WeiFurryovo",
-    profile: "https://github.com/WeiFurryovo",
-    // Default social card; individual posts still receive generated OG images.
-    ogImage: "inklume-og.png",
+    // Display metadata is managed in src/data/settings/site.json.
     // Default locale of the Inklume bilingual site (Chinese at root, English at /en/).
     // Used as the html lang fallback when Astro.currentLocale is undefined.
     lang: "zh",
-    timezone: "Asia/Singapore",
     dir: "ltr",
   },
   posts: {
@@ -57,13 +50,6 @@ export default defineAstroPaperConfig({
       imageDomains: ["upload.wikimedia.org"],
     },
   },
-  socials: [
-    {
-      name: "github",
-      url: "https://github.com/WeiFurryovo/Inklume",
-      linkTitle: "Inklume on GitHub",
-    },
-  ],
   shareLinks: [
     { name: "x", url: "https://x.com/intent/post?url=" },
     { name: "telegram", url: "https://t.me/share/url?url=" },

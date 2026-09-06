@@ -1,4 +1,7 @@
 import type { Config } from "astro-pure/types";
+import { siteSettings, footerSettings, navigationSettings } from "./settings";
+import { resolveAssetPath } from "./utils/resolveAssetPath.js";
+import { resolveNavigationHref } from "./utils/resolveNavigationHref.js";
 
 /**
  * Pure's integration configuration. Inklume keeps its own bilingual routing
@@ -6,15 +9,14 @@ import type { Config } from "astro-pure/types";
  * local components instead of Pure's single-language template components.
  */
 const pureConfig: Config = {
-  title: "Inklume",
-  author: "WeiFurryovo",
-  description:
-    "Inklume 是一个带 Sveltia CMS 后台、可部署到 Cloudflare Pages 的中英双语 Astro 博客模板演示站。A bilingual Astro blog template demo with Sveltia CMS and Cloudflare Pages.",
-  favicon: "/favicon.svg",
-  socialCard: "/inklume-og.png",
+  title: siteSettings.siteName,
+  author: siteSettings.author,
+  description: siteSettings.description,
+  favicon: resolveAssetPath(siteSettings.favicon, "/"),
+  socialCard: resolveAssetPath(siteSettings.ogImage, "/"),
   logo: {
-    src: "/favicon.svg",
-    alt: "Inklume",
+    src: resolveAssetPath(siteSettings.favicon, "/"),
+    alt: siteSettings.siteName,
   },
   locale: {
     lang: "zh-CN",
@@ -32,23 +34,22 @@ const pureConfig: Config = {
   head: [],
   customCss: [],
   header: {
-    menu: [
-      { title: "文章", link: "/posts" },
-      { title: "归档", link: "/archives" },
-      { title: "相册", link: "/gallery" },
-      { title: "关于", link: "/about" },
-    ],
+    menu: Object.values(navigationSettings).map(item => ({
+      title: item.label.zh,
+      link: resolveNavigationHref(item.href, pathname => `/${pathname}`, "/")
+        .href,
+    })),
   },
   footer: {
-    year: `© ${new Date().getFullYear()} `,
+    year: `© ${new Date().getFullYear()} ${footerSettings.copyrightName}`,
     credits: true,
     links: [],
     social: [
-      {
-        icon: "github",
-        label: "GitHub",
-        href: "https://github.com/WeiFurryovo/Inklume",
-      },
+      ...footerSettings.socials.map(social => ({
+        icon: social.name,
+        label: social.linkTitle ?? social.name,
+        href: social.url,
+      })),
       { icon: "rss", label: "RSS", href: "/rss.xml" },
     ],
   },

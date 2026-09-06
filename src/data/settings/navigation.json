@@ -1,0 +1,14 @@
+{
+  "posts": { "label": { "zh": "文章", "en": "Posts" }, "href": "posts" },
+  "gallery": { "label": { "zh": "相册", "en": "Gallery" }, "href": "gallery" },
+  "archives": {
+    "label": { "zh": "归档", "en": "Archives" },
+    "href": "archives"
+  },
+  "tags": { "label": { "zh": "标签", "en": "Tags" }, "href": "tags" },
+  "categories": {
+    "label": { "zh": "分类", "en": "Categories" },
+    "href": "categories"
+  },
+  "about": { "label": { "zh": "关于", "en": "About" }, "href": "about" }
+}

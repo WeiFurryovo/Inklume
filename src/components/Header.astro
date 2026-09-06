@@ -3,23 +3,23 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-pure/user";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { useTranslations } from "@/i18n";
-import { getHomepage } from "@/utils/getHomepage";
+import { siteSettings, navigationSettings } from "@/settings";
 import { getAssetPath } from "@/utils/withBase";
 import { resolveNavigationHref } from "@/utils/resolveNavigationHref.js";
 import config from "@/config";
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
-const home = await getHomepage(locale);
 
 const menu = [
-  home.navigation.posts,
-  ...(config.features.gallery.enabled ? [home.navigation.gallery] : []),
-  ...(config.features.showArchives ? [home.navigation.archives] : []),
-  home.navigation.tags,
-  home.navigation.about,
+  navigationSettings.posts,
+  ...(config.features.gallery.enabled ? [navigationSettings.gallery] : []),
+  ...(config.features.showArchives ? [navigationSettings.archives] : []),
+  navigationSettings.tags,
+  navigationSettings.categories,
+  navigationSettings.about,
 ].map(item => ({
-  title: item.label,
+  title: item.label[locale === "en" ? "en" : "zh"],
   ...resolveNavigationHref(
     item.href,
     path => getRelativeLocaleUrl(locale, path),
@@ -43,24 +43,24 @@ const menu = [
     class="z-30 text-xl font-medium group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3"
     style="transition:margin-inline 0.3s"
     href={getRelativeLocaleUrl(locale, "")}
-    aria-label={home.identity.siteName}
+    aria-label={siteSettings.siteName}
   >
-    {home.identity.siteName}
+    {siteSettings.siteName}
   </a>
 
   <div class="flex items-center gap-x-2 sm:gap-x-1 md:gap-x-2">
     <div
       id="headerExpandContent"
-      class="dark:group-[.expanded.not-top]:bg-muted max-sm:group-[.not-top]:border-border max-sm:group-[.expanded.not-top]:bg-background start-0 end-0 top-12 grid border border-transparent group-[.expanded]:opacity-100 group-[.not-top]:rounded-xl max-sm:absolute max-sm:opacity-0 max-sm:group-[.not-top]:px-4 max-sm:group-[.not-top]:py-2 sm:grid-rows-1"
+      class="dark:group-[.expanded.not-top]:bg-muted max-lg:group-[.not-top]:border-border max-lg:group-[.expanded.not-top]:bg-background start-0 end-0 top-12 grid border border-transparent group-[.expanded]:opacity-100 group-[.not-top]:rounded-xl max-lg:absolute max-lg:opacity-0 max-lg:group-[.not-top]:px-4 max-lg:group-[.not-top]:py-2 lg:grid-rows-1"
     >
       <div
-        class="flex flex-col items-center justify-center overflow-hidden sm:flex-row"
+        class="flex flex-col items-center justify-center overflow-hidden lg:flex-row"
       >
         {
           menu.map(item => (
             <a
               href={item.href}
-              class="hover:text-primary w-full flex-none grow py-2 text-right font-medium transition-none sm:w-fit sm:px-3"
+              class="hover:text-primary w-full flex-none grow py-2 text-right font-medium transition-none lg:w-fit lg:px-3"
               data-astro-prefetch={item.external ? undefined : true}
             >
               {item.title}
@@ -68,7 +68,7 @@ const menu = [
           ))
         }
         <div
-          class="flex w-full grow flex-row justify-end gap-x-1 sm:w-fit sm:gap-x-2"
+          class="flex w-full grow flex-row justify-end gap-x-1 lg:w-fit lg:gap-x-2"
         >
           {
             config.features.search !== false && (
@@ -128,7 +128,7 @@ const menu = [
       }
       <button
         id="toggleMenu"
-        class="hover:bg-border rounded-md border p-1.5 transition-colors sm:hidden sm:group-[.not-top]:rounded-xl"
+        class="hover:bg-border rounded-md border p-1.5 transition-colors sm:group-[.not-top]:rounded-xl lg:hidden"
         aria-label={t.a11y.openMenu}
         data-open-label={t.a11y.openMenu}
         data-close-label={t.a11y.closeMenu}
@@ -236,7 +236,7 @@ const menu = [
     }
   }
 
-  @media (max-width: 40rem) {
+  @media (width < 64rem) {
     #headerExpandContent {
       grid-template-rows: 0fr;
       transition:

@@ -3,7 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Icon } from "astro-pure/user";
 import Datetime from "./Datetime.astro";
-import { slugifyStr } from "@/utils/slugify";
+import { getPostTaxonomy } from "@/utils/getTaxonomy";
 import { formatReadingTime } from "@/utils/formatReadingTime";
 import { toTransitionName } from "@/utils/toTransitionName";
 
@@ -20,10 +20,10 @@ const {
   pubDatetime,
   modDatetime,
   timezone,
-  tags,
   draft,
   heroImage,
 } = post.data;
+const { tags, category } = await getPostTaxonomy(post, locale);
 const heroSrc = heroImage?.src;
 const minutesRead = formatReadingTime(
   remarkPluginFrontmatter.minutesRead,
@@ -74,6 +74,13 @@ const minutesRead = formatReadingTime(
         <Icon name="earth" class="size-5" />
         {locale === "zh" ? "中文" : "English"}
       </span>
+      <a
+        class="hover:underline hover:underline-offset-4"
+        data-pagefind-filter="category"
+        href={getRelativeLocaleUrl(locale, `categories/${category.slug}`)}
+      >
+        {category.name}
+      </a>
       {
         tags.length > 0 && (
           <span class="flex items-center gap-1">
@@ -83,9 +90,9 @@ const minutesRead = formatReadingTime(
                 <a
                   class="hover:underline hover:underline-offset-4"
                   data-pagefind-filter="tag"
-                  href={getRelativeLocaleUrl(locale, `tags/${slugifyStr(tag)}`)}
+                  href={getRelativeLocaleUrl(locale, `tags/${tag.slug}`)}
                 >
-                  {tag}
+                  {tag.name}
                 </a>
                 {index < tags.length - 1 && "/"}
               </span>

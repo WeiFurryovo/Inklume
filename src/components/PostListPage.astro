@@ -10,20 +10,17 @@ import Card from "./Card.astro";
 import Pagination from "./Pagination.astro";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
-
-type Tag = {
-  tag: string;
-  tagName: string;
-};
+import type { TaxonomySummary } from "@/utils/getTaxonomy";
 
 type Props = {
   locale: string;
   page: Page<CollectionEntry<"posts">>;
-  tags: Tag[];
+  tags: TaxonomySummary[];
+  categories: TaxonomySummary[];
   postsCount: number;
 };
 
-const { locale, page, tags, postsCount } = Astro.props;
+const { locale, page, tags, categories, postsCount } = Astro.props;
 const t = useTranslations(locale);
 const copy =
   locale === "zh"
@@ -31,6 +28,7 @@ const copy =
         pageSummary: `第 ${page.currentPage} 页 · 显示 ${page.data.length} / ${postsCount} 篇文章`,
         archive: "按年份查看所有文章 →",
         tags: "标签",
+        categories: "分类",
         allTags: "查看全部 →",
         empty: "还没有文章。",
       }
@@ -38,6 +36,7 @@ const copy =
         pageSummary: `Page ${page.currentPage} · Showing ${page.data.length} of ${postsCount} posts`,
         archive: "View all posts by years →",
         tags: "Tags",
+        categories: "Categories",
         allTags: "View all →",
         empty: "No posts yet.",
       };
@@ -93,8 +92,35 @@ const copy =
               <Pagination {page} />
             </section>
 
-            {tags.length > 0 && (
+            {(categories.length > 0 || tags.length > 0) && (
               <aside class="animate" id="sidebar">
+                {categories.length > 0 && (
+                  <section class="mb-8">
+                    <h2 class="mb-4 text-lg font-medium">
+                      <a href={getRelativeLocaleUrl(locale, "categories")}>
+                        {copy.categories}
+                      </a>
+                    </h2>
+                    <ul class="flex flex-col gap-2">
+                      {categories.map(category => (
+                        <li>
+                          <a
+                            class="flex justify-between gap-3"
+                            href={getRelativeLocaleUrl(
+                              locale,
+                              `categories/${category.slug}`
+                            )}
+                          >
+                            <span>{category.name}</span>
+                            <span class="text-muted-foreground">
+                              {category.count}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
                 <h2 class="mb-4 flex items-center text-lg font-medium">
                   <Icon name="tag-2" class="me-2" />
                   {copy.tags}
@@ -103,8 +129,8 @@ const copy =
                   {tags.slice(0, 50).map(tag => (
                     <li>
                       <Button
-                        title={tag.tagName}
-                        href={getRelativeLocaleUrl(locale, `tags/${tag.tag}`)}
+                        title={tag.name}
+                        href={getRelativeLocaleUrl(locale, `tags/${tag.slug}`)}
                         variant="pill"
                       />
                     </li>

@@ -1,0 +1,64 @@
+---
+import type { Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Layout from "@/layouts/Layout.astro";
+import Header from "./Header.astro";
+import Breadcrumb from "./Breadcrumb.astro";
+import Card from "./Card.astro";
+import Footer from "./Footer.astro";
+import Pagination from "./Pagination.astro";
+import type { TaxonomyKind, TaxonomyTerm } from "@/utils/getTaxonomy";
+import { useTranslations } from "@/i18n";
+
+type Props = {
+  locale: "zh" | "en";
+  kind: TaxonomyKind;
+  term: TaxonomyTerm;
+  page: Page<CollectionEntry<"posts">>;
+};
+const { locale, kind, term, page } = Astro.props;
+const t = useTranslations(locale);
+const kindName =
+  kind === "tags" ? t.pages.tagsTitle : locale === "zh" ? "分类" : "Categories";
+const empty = locale === "zh" ? "还没有文章。" : "No posts yet.";
+---
+
+<Layout
+  pageTitle={`${kindName}: ${term.name}`}
+  description={term.description || undefined}
+>
+  <Header />
+  <div class="w-full flex-1">
+    <Breadcrumb href={getRelativeLocaleUrl(locale, kind)} />
+    <main id="main-content" class="mt-6 lg:mt-10">
+      <div id="content-header" class="animate">
+        <h1 class="mb-6 text-3xl font-medium">{term.name}</h1>
+        {
+          term.description && (
+            <p class="text-muted-foreground mb-6">{term.description}</p>
+          )
+        }
+      </div>
+      <section id="content" class="animate" aria-label={t.pages.postsTitle}>
+        {
+          page.data.length > 0 ? (
+            <ul class="flex flex-col gap-y-3 text-start">
+              {page.data.map(post => (
+                <Card {...post} detailed />
+              ))}
+            </ul>
+          ) : (
+            <p>{empty}</p>
+          )
+        }
+        <Pagination {page} />
+      </section>
+    </main>
+  </div>
+  <Footer />
+</Layout>
+
+<script>
+  sessionStorage.setItem("backUrl", window.location.pathname);
+</script>

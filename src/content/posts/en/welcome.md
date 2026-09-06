@@ -8,6 +8,7 @@ heroImage:
   src: /inklume-og.png
   alt: Inklume
   color: "#659EB9"
+category: unclassified
 tags:
   - welcome
   - introduction

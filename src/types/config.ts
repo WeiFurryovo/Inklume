@@ -3,20 +3,8 @@ import type { IconsType } from "astro-pure/types";
 interface SiteConfig {
   /** Deployed URL of the site, e.g. "https://example.com" */
   url: string;
-  /** Blog title shown in header and meta tags */
-  title: string;
-  /** Short description used in SEO meta and RSS feed */
-  description: string;
-  /** Default post author name */
-  author: string;
-  /** Author profile URL (used in structured data) */
-  profile?: string;
-  /** Fallback OG image filename in /public, e.g. "og.jpg" */
-  ogImage?: string;
   /** HTML lang attribute, defaults to "en" */
   lang?: string;
-  /** IANA timezone for post dates, e.g. "Asia/Bangkok" */
-  timezone?: string;
   /** Text direction */
   dir?: "ltr" | "rtl" | "auto";
   /** Google Search Console verification meta tag value */
@@ -110,26 +98,20 @@ interface AstroPaperConfig {
   site: SiteConfig;
   posts?: PostsConfig;
   features?: FeaturesConfig;
-  /** Social profile links shown in header/footer */
-  socials?: SocialLink[];
   /** Share links shown on post detail pages */
   shareLinks?: ShareLink[];
 }
 
-type ResolvedSiteConfig = Required<
-  Pick<
-    SiteConfig,
-    | "url"
-    | "title"
-    | "description"
-    | "author"
-    | "lang"
-    | "timezone"
-    | "dir"
-    | "ogImage"
-  >
-> &
-  Pick<SiteConfig, "profile" | "googleVerification">;
+type ResolvedSiteConfig = Required<Pick<SiteConfig, "url" | "lang" | "dir">> &
+  Pick<SiteConfig, "googleVerification"> & {
+    title: string;
+    description: string;
+    author: string;
+    profile: string;
+    timezone: string;
+    /** HTTP(S) URL or local image path under public/. */
+    ogImage: string;
+  };
 
 export interface ResolvedAstroPaperConfig {
   site: ResolvedSiteConfig;

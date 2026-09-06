@@ -2,34 +2,48 @@ import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 import config from "@/config";
+import { mergeAdvancedFields } from "@/utils/mergeAdvancedFields.js";
+import { termSchema } from "@/taxonomy.schema.js";
 
 export const BLOG_PATH = "src/content/posts";
 
 const posts = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `./${BLOG_PATH}` }),
   schema: ({ image }) =>
-    z.object({
-      author: z.string().default(config.site.author),
-      pubDatetime: z.date(),
-      modDatetime: z.date().optional().nullable(),
-      title: z.string(),
-      featured: z.boolean().optional(),
-      draft: z.boolean().optional(),
-      gallery: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
-      heroImage: z
-        .object({
-          src: z.string(),
-          alt: z.string().optional(),
-          color: z.string().optional(),
-        })
-        .optional(),
-      ogImage: image().or(z.string()).optional(),
-      description: z.string(),
-      canonicalURL: z.string().optional(),
-      hideEditPost: z.boolean().optional(),
-      timezone: z.string().optional(),
-    }),
+    z
+      .object({
+        author: z.string().default(config.site.author),
+        pubDatetime: z.date(),
+        modDatetime: z.date().optional().nullable(),
+        title: z.string(),
+        featured: z.boolean().optional(),
+        draft: z.boolean().optional(),
+        gallery: z.boolean().optional(),
+        tags: z.array(z.string()).default([]),
+        category: z.string().default("unclassified"),
+        heroImage: z
+          .object({
+            src: z.string(),
+            alt: z.string().optional(),
+            color: z.string().optional(),
+          })
+          .optional(),
+        ogImage: image().or(z.string()).optional(),
+        description: z.string(),
+        canonicalURL: z.string().optional(),
+        hideEditPost: z.boolean().optional(),
+        timezone: z.string().optional(),
+        advanced: z
+          .object({
+            modDatetime: z.date().optional().nullable(),
+            ogImage: image().or(z.string()).optional(),
+            canonicalURL: z.string().optional(),
+            hideEditPost: z.boolean().optional(),
+            timezone: z.string().optional(),
+          })
+          .nullish(),
+      })
+      .transform(mergeAdvancedFields),
 });
 
 const httpUrl = z.url({ protocol: /^https?$/ });
@@ -38,16 +52,6 @@ const socialUrl = z
   .regex(
     /^(?:https?:\/\/[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::\d{1,5})?(?:[/?#][^\s\\]*)?|mailto:[^\s@\\]+@[^\s@\\]+(?:\?[^\s\\]*)?|\/(?:$|[^/\\\s][^\s\\]*))$/
   );
-const navigationUrl = z
-  .string()
-  .regex(
-    /^(?:https?:\/\/[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::\d{1,5})?(?:[/?#][^\s\\]*)?|\/(?:$|[^/\\\s][^\s\\]*)|[A-Za-z0-9][^\s\\]*)$/
-  )
-  .refine(
-    value => /^https?:\/\//i.test(value) || !/^[a-z][a-z\d+.-]*:/i.test(value),
-    "Navigation links must use an HTTP(S) URL or a relative path"
-  );
-
 const aboutModules = z.object({
   motto: z.object({
     text: z.string(),
@@ -124,23 +128,26 @@ const aboutModules = z.object({
 
 const pages = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/pages" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    ogImage: z.string().optional(),
-    canonicalURL: z.string().optional(),
-    aboutModules: aboutModules.optional(),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      description: z.string().optional(),
+      ogImage: z.string().optional(),
+      canonicalURL: z.string().optional(),
+      aboutModules: aboutModules.optional(),
+      advanced: z
+        .object({
+          ogImage: z.string().optional(),
+          canonicalURL: z.string().optional(),
+        })
+        .nullish(),
+    })
+    .transform(mergeAdvancedFields),
 });
 
 const homepage = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{yml,yaml}", base: "./src/content/home" }),
   schema: z.object({
-    identity: z.object({
-      siteName: z.string(),
-      browserTitle: z.string(),
-      favicon: z.string(),
-    }),
     profile: z.object({
       displayName: z.string(),
       avatar: z.string(),
@@ -161,40 +168,24 @@ const homepage = defineCollection({
       morePosts: z.string(),
       gallery: z.string(),
     }),
-    navigation: z.object({
-      posts: z.object({
-        label: z.string(),
-        href: navigationUrl,
-      }),
-      gallery: z.object({
-        label: z.string(),
-        href: navigationUrl,
-      }),
-      archives: z.object({
-        label: z.string(),
-        href: navigationUrl,
-      }),
-      tags: z.object({
-        label: z.string(),
-        href: navigationUrl,
-      }),
-      about: z.object({
-        label: z.string(),
-        href: navigationUrl,
-      }),
-    }),
-    footer: z.object({
-      copyrightName: z.string(),
-      filings: z
-        .array(
-          z.object({
-            label: z.string(),
-            url: z.url({ protocol: /^https?$/ }).optional(),
-          })
-        )
-        .default([]),
-    }),
   }),
 });
 
-export const collections = { posts, pages, homepage };
+const tags = defineCollection({
+  loader: glob({
+    pattern: "*.{yml,yaml}",
+    base: "./src/content/tags",
+    generateId: ({ entry }) => entry.replace(/\.(?:yml|yaml)$/, ""),
+  }),
+  schema: termSchema,
+});
+const categories = defineCollection({
+  loader: glob({
+    pattern: "*.{yml,yaml}",
+    base: "./src/content/categories",
+    generateId: ({ entry }) => entry.replace(/\.(?:yml|yaml)$/, ""),
+  }),
+  schema: termSchema,
+});
+
+export const collections = { posts, pages, homepage, tags, categories };

@@ -8,9 +8,10 @@ heroImage:
   src: /inklume-og.png
   alt: Inklume
   color: "#659EB9"
+category: unclassified
 tags:
-  - 欢迎
-  - 介绍
+  - welcome
+  - introduction
 ---
 
 Inklume 是一个带 Sveltia CMS 后台的中英双语 Astro 博客模板。当前页面是一篇默认示例文章，用来展示普通正文、列表、代码与数学公式的呈现方式。

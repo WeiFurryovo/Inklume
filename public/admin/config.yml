@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
 
-app_title: Sveltia CMS
+app_title: Inklume 内容管理
 
 backend:
   name: github
@@ -26,248 +26,9 @@ slug:
   clean_accents: true
 
 collections:
-  - name: homepage
-    label: Homepage
-    label_singular: Homepage
-    icon: home
-    i18n: true
-    files:
-      - name: home
-        label: Homepage
-        file: src/content/home/{{locale}}/home.yml
-        format: yaml
-        i18n: true
-        preview_path: "/{{locale}}/"
-        fields:
-          - name: identity
-            label: Site Identity
-            widget: object
-            i18n: duplicate
-            collapsed: true
-            hint: Shared branding used across both language versions.
-            fields:
-              - name: siteName
-                label: Header Site Name
-                widget: string
-                hint: Text shown at the top left of every page.
-              - name: browserTitle
-                label: Browser Tab Title
-                widget: string
-                hint: Base title used in browser tabs and page titles.
-              - name: favicon
-                label: Favicon
-                widget: image
-                hint: Small icon shown in browser tabs and bookmarks.
-          - name: profile
-            label: Homepage Profile
-            widget: object
-            i18n: duplicate
-            collapsed: true
-            hint: Profile block at the top of the homepage.
-            fields:
-              - name: displayName
-                label: Display Name
-                widget: string
-                i18n: true
-                hint: Large name shown below the homepage avatar.
-              - name: avatar
-                label: Avatar
-                widget: image
-                i18n: duplicate
-                hint: Shared profile image at the top of the homepage.
-              - name: location
-                label: Location / Status
-                widget: string
-                i18n: true
-                hint: Text shown beside the location icon.
-          - name: introduction
-            label: Homepage About
-            widget: object
-            i18n: duplicate
-            collapsed: true
-            hint: Introductory copy in the homepage About section.
-            fields:
-              - name: role
-                label: Role / Tagline
-                widget: string
-                i18n: true
-                hint: Short line above the homepage introduction.
-              - name: about
-                label: Introduction
-                widget: text
-                i18n: true
-                hint: Main introduction shown in the homepage About section.
-          - name: publishing
-            label: Publishing Card
-            widget: object
-            i18n: duplicate
-            collapsed: true
-            hint: Card describing how the site is built and published.
-            fields:
-              - name: heading
-                label: Heading
-                widget: string
-                i18n: true
-                hint: Title inside the homepage Publishing card.
-              - name: description
-                label: Description
-                widget: text
-                i18n: true
-                hint: Supporting text inside the homepage Publishing card.
-          - name: links
-            label: Homepage Buttons
-            widget: object
-            i18n: duplicate
-            collapsed: true
-            hint: Text shown on homepage buttons and links. Destinations are fixed by the site routes.
-            fields:
-              - name: source
-                label: Source Link Label
-                widget: string
-                i18n: true
-                hint: Label beside the GitHub icon in the homepage profile.
-              - name: readPosts
-                label: Top Posts Button
-                widget: string
-                i18n: true
-                hint: Main button directly below the homepage profile.
-              - name: moreAbout
-                label: About Section Button
-                widget: string
-                i18n: true
-                hint: Button at the end of the homepage About section.
-              - name: morePosts
-                label: Posts Section Button
-                widget: string
-                i18n: true
-                hint: Button at the end of the homepage Posts section.
-              - name: gallery
-                label: Gallery Section Button
-                widget: string
-                i18n: true
-                hint: Button at the end of the homepage Gallery section.
-          - name: navigation
-            label: Navigation Menu
-            widget: object
-            i18n: duplicate
-            collapsed: true
-            hint: Edit the text and destination of each top navigation item. Relative paths keep the current language prefix; full URLs stay in the current tab.
-            fields:
-              - name: posts
-                label: Posts
-                widget: object
-                i18n: duplicate
-                collapsed: true
-                fields:
-                  - name: label
-                    label: Display Text
-                    widget: string
-                    i18n: true
-                  - name: href
-                    label: Destination URL
-                    widget: string
-                    i18n: duplicate
-                    pattern:
-                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
-                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
-              - name: gallery
-                label: Gallery
-                widget: object
-                i18n: duplicate
-                collapsed: true
-                fields:
-                  - name: label
-                    label: Display Text
-                    widget: string
-                    i18n: true
-                  - name: href
-                    label: Destination URL
-                    widget: string
-                    i18n: duplicate
-                    pattern:
-                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
-                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
-              - name: archives
-                label: Archives
-                widget: object
-                i18n: duplicate
-                collapsed: true
-                fields:
-                  - name: label
-                    label: Display Text
-                    widget: string
-                    i18n: true
-                  - name: href
-                    label: Destination URL
-                    widget: string
-                    i18n: duplicate
-                    pattern:
-                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
-                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
-              - name: tags
-                label: Tags
-                widget: object
-                i18n: duplicate
-                collapsed: true
-                fields:
-                  - name: label
-                    label: Display Text
-                    widget: string
-                    i18n: true
-                  - name: href
-                    label: Destination URL
-                    widget: string
-                    i18n: duplicate
-                    pattern:
-                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
-                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
-              - name: about
-                label: About
-                widget: object
-                i18n: duplicate
-                collapsed: true
-                fields:
-                  - name: label
-                    label: Display Text
-                    widget: string
-                    i18n: true
-                  - name: href
-                    label: Destination URL
-                    widget: string
-                    i18n: duplicate
-                    pattern:
-                      - "^(?:https?://[^\\s\\\\]+|/(?:$|[^/\\s\\\\][^\\s\\\\]*)|[A-Za-z0-9][^:\\s\\\\]*)$"
-                      - Use an HTTP(S) URL, a root-relative path, or a relative route without spaces.
-          - name: footer
-            label: Footer Settings
-            widget: object
-            i18n: duplicate
-            collapsed: true
-            hint: Shared copyright and filing links shown at the bottom of every page.
-            fields:
-              - name: copyrightName
-                label: Copyright Name
-                widget: string
-              - name: filings
-                label: Filing Records
-                widget: list
-                required: false
-                summary: "{{label}}"
-                fields:
-                  - name: label
-                    label: Display Text
-                    widget: string
-                  - name: url
-                    label: URL
-                    widget: string
-                    required: false
-                    pattern:
-                      - "^https?://"
-                      - URL must start with http:// or https://
-
   - name: posts
-    label: Blog Posts
-    label_singular: Blog Post
+    label: 文章
+    label_singular: 文章
     icon: article
     folder: src/content/posts
     create: true
@@ -276,108 +37,147 @@ collections:
     i18n: true
     slug: "{{slug}}"
     preview_path: "/{{locale}}/posts/{{slug}}"
-    summary: "{{title}} - {{pubDatetime | date('YYYY-MM-DD')}}"
+    summary: "{{title}} · {{pubDatetime | date('YYYY-MM-DD')}}"
+    sortable_fields: [pubDatetime, title]
+    view_filters:
+      - { label: 草稿, field: draft, pattern: true }
+      - { label: 非草稿, field: draft, pattern: false }
+      - { label: 首页推荐, field: featured, pattern: true }
+      - { label: 相册文章, field: gallery, pattern: true }
+    view_groups:
+      - { label: 发布状态, field: draft }
+      - { label: 分类, field: category }
     fields:
-      - name: title
-        label: Title
-        widget: string
-        i18n: true
-      - name: description
-        label: Description
-        widget: text
-        i18n: true
-      - name: author
-        label: Author
-        widget: string
+      - { name: title, label: 标题, widget: string, i18n: true }
+      - { name: body, label: 正文, widget: richtext, i18n: true }
+      - { name: description, label: 摘要, widget: text, i18n: true }
+      - name: heroImage
+        label: 封面
+        widget: object
+        required: false
+        collapsed: true
+        i18n: duplicate
+        fields:
+          - { name: src, label: 图片, widget: image, i18n: duplicate }
+          - {
+              name: alt,
+              label: 图片说明,
+              widget: string,
+              required: false,
+              i18n: true,
+            }
+          - {
+              name: color,
+              label: 强调色,
+              widget: color,
+              required: false,
+              i18n: duplicate,
+            }
+      - name: category
+        label: 分类
+        widget: relation
+        collection: categories
+        value_field: "{{slug}}"
+        display_fields: [name.zh, name.en]
+        search_fields: [name.zh, name.en]
+        default: unclassified
+        i18n: duplicate
+      - name: tags
+        label: 标签
+        widget: relation
+        collection: tags
+        value_field: "{{slug}}"
+        display_fields: [name.zh, name.en]
+        search_fields: [name.zh, name.en]
+        multiple: true
         required: false
         i18n: duplicate
+      - {
+          name: draft,
+          label: 保存为草稿,
+          widget: boolean,
+          default: true,
+          required: false,
+          i18n: true,
+        }
       - name: pubDatetime
-        label: Published At
+        label: 发布时间
         widget: datetime
         default: "{{now}}"
         input_timezone: Asia/Singapore
         output_utc: true
         i18n: duplicate
-      - name: modDatetime
-        label: Updated At
-        widget: datetime
-        required: false
-        input_timezone: Asia/Singapore
-        output_utc: true
-        i18n: true
-      - name: featured
-        label: Featured
-        widget: boolean
-        default: false
-        required: false
-        i18n: duplicate
-      - name: draft
-        label: Draft
-        widget: boolean
-        default: true
-        required: false
-        i18n: true
-      - name: gallery
-        label: Include in Gallery
-        widget: boolean
-        default: false
-        required: false
-        i18n: duplicate
-      - name: tags
-        label: Tags
-        widget: list
-        default: [others]
-        i18n: true
-      - name: heroImage
-        label: Hero Image
+      - {
+          name: author,
+          label: 作者,
+          widget: string,
+          required: false,
+          i18n: duplicate,
+        }
+      - {
+          name: featured,
+          label: 首页推荐,
+          widget: boolean,
+          default: false,
+          required: false,
+          i18n: duplicate,
+        }
+      - {
+          name: gallery,
+          label: 收录到相册,
+          widget: boolean,
+          default: false,
+          required: false,
+          i18n: duplicate,
+        }
+      - name: advanced
+        label: 高级设置
         widget: object
         required: false
-        i18n: true
+        collapsed: true
+        i18n: duplicate
         fields:
-          - name: src
-            label: Image
-            widget: image
-            i18n: duplicate
-          - name: alt
-            label: Alternative Text
-            widget: string
+          - name: modDatetime
+            label: 更新时间
+            widget: datetime
             required: false
+            input_timezone: Asia/Singapore
+            output_utc: true
             i18n: true
-          - name: color
-            label: Accent Color
-            widget: color
-            required: false
-            i18n: duplicate
-      - name: ogImage
-        label: Social Image
-        widget: image
-        required: false
-        i18n: duplicate
-      - name: canonicalURL
-        label: Canonical URL
-        widget: string
-        required: false
-        i18n: true
-      - name: hideEditPost
-        label: Hide Edit Link
-        widget: boolean
-        default: false
-        required: false
-        i18n: duplicate
-      - name: timezone
-        label: Display Timezone
-        widget: string
-        required: false
-        i18n: duplicate
-      - name: body
-        label: Body
-        widget: richtext
-        i18n: true
+          - {
+              name: ogImage,
+              label: 分享图片,
+              widget: image,
+              required: false,
+              i18n: duplicate,
+            }
+          - {
+              name: canonicalURL,
+              label: 原文地址,
+              widget: string,
+              required: false,
+              i18n: true,
+            }
+          - {
+              name: timezone,
+              label: 显示时区,
+              widget: string,
+              required: false,
+              i18n: duplicate,
+            }
+          - {
+              name: hideEditPost,
+              label: 隐藏编辑链接,
+              widget: boolean,
+              default: false,
+              required: false,
+              i18n: duplicate,
+            }
 
   - name: pages
-    label: Pages
-    label_singular: Page
-    icon: web
+    label: 独立页面
+    label_singular: 页面
+    icon: description
     folder: src/content/pages
     create: false
     extension: md
@@ -386,93 +186,67 @@ collections:
     slug: "{{slug}}"
     preview_path: "/{{locale}}/{{slug}}"
     fields:
-      - name: title
-        label: Title
-        widget: string
-        i18n: true
-      - name: description
-        label: Description
-        widget: text
-        required: false
-        i18n: true
-      - name: ogImage
-        label: Social Image
-        widget: image
-        required: false
-        i18n: duplicate
-      - name: canonicalURL
-        label: Canonical URL
-        widget: string
-        required: false
-        i18n: true
+      - { name: title, label: 标题, widget: string, i18n: true }
+      - { name: body, label: 正文, widget: richtext, i18n: true }
+      - {
+          name: description,
+          label: 摘要,
+          widget: text,
+          required: false,
+          i18n: true,
+        }
       - name: aboutModules
-        label: About Page Modules
+        label: 关于页内容
         widget: object
         required: false
+        collapsed: true
         i18n: duplicate
         fields:
           - name: motto
-            label: Motto and Spoiler
+            label: 简介
             widget: object
+            collapsed: true
             i18n: duplicate
             fields:
-              - name: text
-                label: Motto
-                widget: string
-                i18n: true
-              - name: spoiler
-                label: Hidden Text
-                widget: string
-                i18n: true
+              - { name: text, label: 介绍文字, widget: string, i18n: true }
+              - { name: spoiler, label: 遮罩文字, widget: string, i18n: true }
           - name: cta
-            label: Action Button
+            label: 主要链接
             widget: object
+            collapsed: true
             i18n: duplicate
             fields:
-              - name: label
-                label: Button Label
-                widget: string
-                i18n: true
+              - { name: label, label: 链接文字, widget: string, i18n: true }
               - name: href
-                label: URL
+                label: 链接地址
                 widget: string
                 i18n: duplicate
-                pattern:
-                  - "^https?://"
-                  - URL must start with http:// or https://
+                pattern: &http_url ["^https?://", "请输入 HTTP(S) 地址"]
           - name: siteStack
-            label: Site Stack
+            label: 技术栈
             widget: object
+            collapsed: true
             i18n: duplicate
             fields:
-              - name: title
-                label: Section Title
-                widget: string
-                i18n: true
-              - name: description
-                label: Introduction
-                widget: text
-                i18n: true
-              - name: groupLabel
-                label: Group Label
-                widget: string
-                i18n: true
+              - { name: title, label: 标题, widget: string, i18n: true }
+              - { name: description, label: 简介, widget: text, i18n: true }
+              - {
+                  name: groupLabel,
+                  label: 分组名称,
+                  widget: string,
+                  i18n: true,
+                }
               - name: items
-                label: Stack Items
+                label: 技术项目
                 widget: list
+                collapsed: true
                 i18n: duplicate
                 summary: "{{name}}"
                 fields:
-                  - name: name
-                    label: Name
-                    widget: string
-                    i18n: duplicate
-                  - name: description
-                    label: Description
-                    widget: string
-                    i18n: true
+                  - { name: name, label: 名称, widget: string, i18n: duplicate }
+                  - { name: description, label: 说明, widget: text, i18n: true }
                   - name: icon
-                    label: Icon
+                    label: 图标
                     widget: select
                     i18n: duplicate
                     options:
@@ -482,114 +256,424 @@ collections:
                       - { label: Pagefind, value: pagefind }
                       - { label: Astro Theme Pure, value: pure }
                       - { label: Sveltia CMS, value: sveltia }
-                  - name: href
-                    label: URL
-                    widget: string
-                    i18n: duplicate
-                    pattern:
-                      - "^https?://"
-                      - URL must start with http:// or https://
+                  - {
+                      name: href,
+                      label: 地址,
+                      widget: string,
+                      i18n: duplicate,
+                      pattern: *http_url,
+                    }
           - name: social
-            label: Social Networks
+            label: 社交展示
             widget: object
+            collapsed: true
             i18n: duplicate
             fields:
-              - name: title
-                label: Section Title
-                widget: string
-                i18n: true
-              - name: description
-                label: Introduction
-                widget: text
-                i18n: true
+              - { name: title, label: 标题, widget: string, i18n: true }
+              - { name: description, label: 简介, widget: text, i18n: true }
               - name: items
-                label: Social Links
+                label: 社交链接
                 widget: list
+                collapsed: true
                 i18n: duplicate
                 summary: "{{platform}}"
                 fields:
-                  - name: platform
-                    label: Platform
-                    widget: string
-                    i18n: duplicate
-                  - name: icon
-                    label: Icon
-                    widget: select
-                    i18n: duplicate
-                    options: [email, github, link, rss, steam, telegram, x]
-                  - name: color
-                    label: Icon Color
-                    widget: color
-                    required: false
-                    i18n: duplicate
+                  - {
+                      name: platform,
+                      label: 名称,
+                      widget: string,
+                      i18n: duplicate,
+                    }
+                  - {
+                      name: icon,
+                      label: 图标,
+                      widget: select,
+                      i18n: duplicate,
+                      options: [email, github, link, rss, steam, telegram, x],
+                    }
+                  - {
+                      name: color,
+                      label: 图标颜色,
+                      widget: color,
+                      required: false,
+                      i18n: duplicate,
+                    }
                   - name: href
-                    label: URL
+                    label: 链接地址
                     widget: string
                     i18n: duplicate
-                    pattern:
-                      - "^(?:https?://[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::[0-9]{1,5})?(?:[/?#][^\\s\\\\]*)?|mailto:[^\\s@\\\\]+@[^\\s@\\\\]+(?:\\?[^\\s\\\\]*)?|/(?:$|[^/\\\\\\s][^\\s\\\\]*))$"
-                      - Use http(s), mailto, or a root-relative path
-                  - name: metric
-                    label: Metric Label
-                    widget: string
-                    required: false
-                    i18n: true
+                    pattern: &social_url
+                      - '^(?:https?://[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?(?::[0-9]{1,5})?(?:[/?#][^\s\\]*)?|mailto:[^\s@\\]+@[^\s@\\]+(?:\?[^\s\\]*)?|/(?:$|[^/\\\s][^\s\\]*))$'
+                      - 请输入 HTTP(S)、邮箱链接或站内绝对路径
+                  - {
+                      name: metric,
+                      label: 数据单位,
+                      widget: string,
+                      required: false,
+                      i18n: true,
+                    }
                   - name: api
-                    label: Substats API Path
+                    label: 统计数据接口
                     widget: string
                     required: false
                     i18n: duplicate
                     pattern:
-                      - "^[A-Za-z0-9_-]+/[A-Za-z0-9_.:@-]+$"
-                      - Use a path such as github/WeiFurryovo
+                      [
+                        "^[A-Za-z0-9_-]+/[A-Za-z0-9_.:@-]+$",
+                        "例如 github/WeiFurryovo",
+                      ]
           - name: notes
-            label: Collapsible Notes
+            label: 补充说明
             widget: object
+            collapsed: true
             i18n: duplicate
             fields:
-              - name: title
-                label: Section Title
-                widget: string
-                i18n: true
-              - name: summary
-                label: Collapsed Title
-                widget: string
-                i18n: true
-              - name: body
-                label: Content
-                widget: text
-                i18n: true
+              - { name: title, label: 标题, widget: string, i18n: true }
+              - { name: summary, label: 摘要, widget: string, i18n: true }
+              - { name: body, label: 内容, widget: text, i18n: true }
           - name: timeline
-            label: Site Timeline
+            label: 时间线
             widget: object
+            collapsed: true
             i18n: duplicate
             fields:
-              - name: title
-                label: Section Title
-                widget: string
-                i18n: true
-              - name: description
-                label: Introduction
-                widget: text
-                i18n: true
+              - { name: title, label: 标题, widget: string, i18n: true }
+              - { name: description, label: 简介, widget: text, i18n: true }
               - name: items
-                label: Events
+                label: 事件
                 widget: list
+                collapsed: true
                 i18n: duplicate
                 summary: "{{date}}"
                 fields:
-                  - name: date
-                    label: Date
-                    widget: string
-                    i18n: duplicate
-                    pattern:
-                      - "^\\d{4}-\\d{2}-\\d{2}$"
-                      - Use YYYY-MM-DD
-                  - name: content
-                    label: Content
-                    widget: text
-                    i18n: true
-      - name: body
-        label: Body
-        widget: richtext
+                  - {
+                      name: date,
+                      label: 日期,
+                      widget: string,
+                      i18n: duplicate,
+                      pattern: ['^\d{4}-\d{2}-\d{2}$', "请输入 YYYY-MM-DD"],
+                    }
+                  - { name: content, label: 内容, widget: text, i18n: true }
+      - name: advanced
+        label: 高级设置
+        widget: object
+        required: false
+        collapsed: true
+        i18n: duplicate
+        fields:
+          - {
+              name: ogImage,
+              label: 分享图片,
+              widget: image,
+              required: false,
+              i18n: duplicate,
+            }
+          - {
+              name: canonicalURL,
+              label: 原文地址,
+              widget: string,
+              required: false,
+              i18n: true,
+            }
+
+  - name: homepage
+    label: 首页内容
+    label_singular: 首页
+    icon: home
+    i18n: true
+    files:
+      - name: home
+        label: 首页
+        file: src/content/home/{{locale}}/home.yml
+        format: yaml
         i18n: true
+        preview_path: "/{{locale}}/"
+        fields:
+          - name: profile
+            label: 首页资料
+            widget: object
+            i18n: duplicate
+            collapsed: false
+            fields:
+              - {
+                  name: displayName,
+                  label: 显示名称,
+                  widget: string,
+                  i18n: true,
+                }
+              - { name: avatar, label: 头像, widget: image, i18n: duplicate }
+              - {
+                  name: location,
+                  label: 位置或状态,
+                  widget: string,
+                  i18n: true,
+                }
+          - name: introduction
+            label: 首页介绍
+            widget: object
+            i18n: duplicate
+            collapsed: true
+            fields:
+              - { name: role, label: 简短介绍, widget: string, i18n: true }
+              - { name: about, label: 详细介绍, widget: text, i18n: true }
+          - name: publishing
+            label: 发布方式
+            widget: object
+            i18n: duplicate
+            collapsed: true
+            fields:
+              - { name: heading, label: 标题, widget: string, i18n: true }
+              - { name: description, label: 说明, widget: text, i18n: true }
+          - name: links
+            label: 首页按钮
+            widget: object
+            i18n: duplicate
+            collapsed: true
+            fields:
+              - { name: source, label: 项目链接, widget: string, i18n: true }
+              - { name: readPosts, label: 阅读文章, widget: string, i18n: true }
+              - { name: moreAbout, label: 关于页面, widget: string, i18n: true }
+              - { name: morePosts, label: 更多文章, widget: string, i18n: true }
+              - { name: gallery, label: 浏览相册, widget: string, i18n: true }
+
+  - divider: true
+
+  - name: categories
+    label: 分类目录
+    label_singular: 分类
+    icon: folder
+    folder: src/content/categories
+    create: true
+    identifier_field: name.zh
+    sortable_fields: [name.zh, name.en]
+    extension: yml
+    format: yaml
+    slug: "{{uuid}}"
+    summary: "{{name.zh}} / {{name.en}}"
+    preview_path: "/categories/{{fields.slug.zh}}/"
+    fields: &taxonomy_fields
+      - name: name
+        label: 名称
+        widget: object
+        fields:
+          - { name: zh, label: 中文, widget: string }
+          - { name: en, label: English, widget: string }
+      - name: slug
+        label: 网址名称
+        widget: object
+        collapsed: auto
+        fields:
+          - name: zh
+            label: 中文网址
+            widget: string
+            pattern:
+              &term_slug [
+                '^[^\s/?#%\\.][^\s/?#%\\]*$',
+                "请输入不含空格或路径分隔符的网址名称",
+              ]
+          - { name: en, label: 英文网址, widget: string, pattern: *term_slug }
+      - name: description
+        label: 描述
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: zh, label: 中文, widget: text, required: false }
+          - { name: en, label: English, widget: text, required: false }
+      - name: aliases
+        label: 旧网址
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - name: zh
+            label: 中文旧网址名称
+            widget: list
+            required: false
+            field:
+              {
+                name: slug,
+                label: 网址名称,
+                widget: string,
+                pattern: *term_slug,
+              }
+          - name: en
+            label: 英文旧网址名称
+            widget: list
+            required: false
+            field:
+              {
+                name: slug,
+                label: 网址名称,
+                widget: string,
+                pattern: *term_slug,
+              }
+
+  - name: tags
+    label: 标签
+    label_singular: 标签
+    icon: sell
+    folder: src/content/tags
+    create: true
+    identifier_field: name.zh
+    sortable_fields: [name.zh, name.en]
+    extension: yml
+    format: yaml
+    slug: "{{uuid}}"
+    summary: "{{name.zh}} / {{name.en}}"
+    preview_path: "/tags/{{fields.slug.zh}}/"
+    fields: *taxonomy_fields
+
+  - divider: true
+
+  - name: navigation
+    label: 导航菜单
+    icon: menu
+    files:
+      - name: navigation
+        label: 导航菜单
+        file: src/data/settings/navigation.json
+        format: json
+        fields:
+          - name: posts
+            label: 文章
+            widget: object
+            collapsed: true
+            fields: &navigation_fields
+              - name: label
+                label: 菜单文字
+                widget: object
+                fields:
+                  - { name: zh, label: 中文, widget: string }
+                  - { name: en, label: English, widget: string }
+              - name: href
+                label: 目标地址
+                widget: string
+                pattern:
+                  - '^(?:https?://[^\s\\]+|/(?:$|[^/\s\\][^\s\\]*)|[A-Za-z0-9][^:\s\\]*)$'
+                  - 请输入 HTTP(S) 地址或站内路径
+          - {
+              name: categories,
+              label: 分类,
+              widget: object,
+              collapsed: true,
+              fields: *navigation_fields,
+            }
+          - {
+              name: gallery,
+              label: 相册,
+              widget: object,
+              collapsed: true,
+              fields: *navigation_fields,
+            }
+          - {
+              name: archives,
+              label: 归档,
+              widget: object,
+              collapsed: true,
+              fields: *navigation_fields,
+            }
+          - {
+              name: tags,
+              label: 标签,
+              widget: object,
+              collapsed: true,
+              fields: *navigation_fields,
+            }
+          - {
+              name: about,
+              label: 关于,
+              widget: object,
+              collapsed: true,
+              fields: *navigation_fields,
+            }
+
+  - name: footer
+    label: 页脚与联系
+    icon: bottom_navigation
+    files:
+      - name: footer
+        label: 页脚与联系
+        file: src/data/settings/footer.json
+        format: json
+        fields:
+          - { name: copyrightName, label: 版权名称, widget: string }
+          - name: filings
+            label: 备案信息
+            widget: list
+            required: false
+            collapsed: true
+            summary: "{{label}}"
+            fields:
+              - { name: label, label: 备案文字, widget: string }
+              - {
+                  name: url,
+                  label: 查询地址,
+                  widget: string,
+                  required: false,
+                  pattern: *http_url,
+                }
+          - name: socials
+            label: 社交与联系链接
+            widget: list
+            required: false
+            collapsed: true
+            summary: "{{linkTitle}}"
+            fields:
+              - name: name
+                label: 图标
+                widget: select
+                options:
+                  [
+                    github,
+                    gitlab,
+                    discord,
+                    youtube,
+                    instagram,
+                    x,
+                    telegram,
+                    rss,
+                    email,
+                    reddit,
+                    bluesky,
+                    tiktok,
+                    weibo,
+                    steam,
+                    bilibili,
+                    zhihu,
+                    coolapk,
+                    netease,
+                    link,
+                  ]
+              - {
+                  name: linkTitle,
+                  label: 名称,
+                  widget: string,
+                  required: false,
+                }
+              - { name: url, label: 地址, widget: string, pattern: *social_url }
+
+  - divider: true
+
+  - name: site
+    label: 站点资料
+    icon: settings
+    files:
+      - name: site
+        label: 站点资料
+        file: src/data/settings/site.json
+        format: json
+        fields:
+          - { name: siteName, label: 站点名称, widget: string }
+          - { name: browserTitle, label: 浏览器标题, widget: string }
+          - { name: description, label: 站点描述, widget: text }
+          - { name: favicon, label: 站点图标, widget: image }
+          - { name: author, label: 默认作者, widget: string }
+          - {
+              name: profile,
+              label: 作者主页,
+              widget: string,
+              pattern: *http_url,
+            }
+          - { name: ogImage, label: 默认分享图片, widget: image }
+          - { name: timezone, label: 默认时区, widget: string }

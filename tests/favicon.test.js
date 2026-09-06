@@ -2,30 +2,19 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import { parseFrontmatter } from "@astrojs/markdown-remark";
-
 import { resolveAssetPath } from "../src/utils/resolveAssetPath.js";
 
 const readProjectFile = relativePath =>
   readFile(new URL(`../${relativePath}`, import.meta.url), "utf8");
 
 test("favicon asset paths preserve remote URLs and apply Astro base to local files", async () => {
-  const [zhSource, enSource, layoutSource] = await Promise.all([
-    readProjectFile("src/content/home/zh/home.yml"),
-    readProjectFile("src/content/home/en/home.yml"),
+  const [siteSource, layoutSource] = await Promise.all([
+    readProjectFile("src/data/settings/site.json"),
     readProjectFile("src/layouts/Layout.astro"),
   ]);
-  const zh = parseFrontmatter(`---\n${zhSource}\n---`).frontmatter;
-  const en = parseFrontmatter(`---\n${enSource}\n---`).frontmatter;
+  const site = JSON.parse(siteSource);
 
-  assert.equal(
-    resolveAssetPath(zh.identity.favicon, "/project/"),
-    zh.identity.favicon
-  );
-  assert.equal(
-    resolveAssetPath(en.identity.favicon, "/project/"),
-    en.identity.favicon
-  );
+  assert.equal(resolveAssetPath(site.favicon, "/project/"), site.favicon);
   assert.equal(
     resolveAssetPath("/uploads/favicon.png", "/project/"),
     "/project/uploads/favicon.png"
@@ -38,7 +27,7 @@ test("favicon asset paths preserve remote URLs and apply Astro base to local fil
   );
   assert.match(
     layoutSource,
-    /<link rel="icon" href=\{getAssetPath\(home\.identity\.favicon\)\} \/>/,
+    /<link rel="icon" href=\{getAssetPath\(siteSettings\.favicon\)\} \/>/,
     "the document favicon must use the shared asset resolver"
   );
 });

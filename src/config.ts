@@ -1,21 +1,24 @@
 /**
  * Internal resolved configuration used throughout the codebase.
  *
- * Prefer editing `astro-paper.config.ts` instead of this file. This module exists to
- * apply defaults and expose a fully-resolved config shape (`ResolvedAstroPaperConfig`).
+ * Content settings live in src/data/settings; deployment and feature switches
+ * live in astro-paper.config.ts. This module resolves both for site consumers.
  */
 import userConfig from "@/astro-paper.config";
 import type { ResolvedAstroPaperConfig } from "./types/config";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
-
-const DEFAULT_OG_IMAGE = "default-og.jpg";
+import { siteSettings, footerSettings } from "./settings";
 
 const config: ResolvedAstroPaperConfig = {
   site: {
     ...userConfig.site,
-    ogImage: userConfig.site.ogImage ?? DEFAULT_OG_IMAGE,
+    title: siteSettings.siteName,
+    description: siteSettings.description,
+    author: siteSettings.author,
+    profile: siteSettings.profile,
+    ogImage: siteSettings.ogImage,
     lang: userConfig.site.lang ?? "en",
-    timezone: userConfig.site.timezone ?? "UTC",
+    timezone: siteSettings.timezone,
     dir: userConfig.site.dir ?? "ltr",
     googleVerification:
       userConfig.site.googleVerification || PUBLIC_GOOGLE_SITE_VERIFICATION,
@@ -35,7 +38,7 @@ const config: ResolvedAstroPaperConfig = {
     search: userConfig.features?.search ?? "pagefind",
     gallery: userConfig.features?.gallery ?? { enabled: false },
   },
-  socials: userConfig.socials ?? [],
+  socials: footerSettings.socials,
   shareLinks: userConfig.shareLinks ?? [],
 };
 

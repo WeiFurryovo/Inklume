@@ -48,11 +48,31 @@ src/content/pages/zh/about.md
 src/content/pages/en/about.md
 src/content/home/zh/home.yml      # Chinese homepage copy
 src/content/home/en/home.yml      # English homepage copy
+src/content/categories/*.yml     # Category IDs, bilingual names and URL slugs
+src/content/tags/*.yml           # Tag IDs, bilingual names and URL slugs
+src/data/settings/site.json      # Shared site details
+src/data/settings/navigation.json # Bilingual navigation
+src/data/settings/footer.json    # Footer, filing records and contact links
 public/admin/index.html
 public/admin/config.yml
 ```
 
-Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The Homepage collection lets editors change the shared site name, browser tab title, favicon, avatar, footer copyright name, and filing links, along with localized display names, status labels, introductions, publishing copy, homepage link labels, and top navigation labels and destinations. The About entry in the Pages collection also manages its spoiler, action button, site stack, social links, collapsible note, and timeline. Adding, removing, or sorting structured items in Chinese synchronizes the English structure, while copy remains independently translatable. Saving content triggers a Pages rebuild.
+Matching filenames link the Chinese and English versions of a post in Sveltia CMS. The dashboard groups content, taxonomy, appearance and settings, with Chinese menu labels:
+
+| Group      | Entries                                                                             |
+| ---------- | ----------------------------------------------------------------------------------- |
+| Content    | Posts, standalone pages and homepage content; images use the built-in Asset Library |
+| Taxonomy   | Categories and tags                                                                 |
+| Appearance | Navigation and footer/contact links                                                 |
+| Settings   | Site details                                                                        |
+
+Post forms put the title, body and summary first, followed by category and tag relations, publishing details and display options. Social images, canonical URLs and timezone overrides are in a collapsed advanced section. Homepage content contains only the profile, introduction and buttons; About modules remain under standalone pages.
+
+`site.json` is the shared source for the site name, description, default author, timezone, favicon and social image. `navigation.json` manages both languages' navigation labels and destinations; `footer.json` manages copyright, filing records and site-wide contact links. The site, RSS and sharing metadata use the same settings. Deployment URLs and feature flags remain in environment variables and `astro-paper.config.ts`.
+
+Categories are single-level, with one category per post and multiple tags. Term filenames are stable IDs referenced by posts through `category` and `tags`; localized display names and URL slugs live in the term files. New terms receive generated IDs. Renaming a display label does not change its ID or URL. Existing tag URLs are preserved, and existing posts default to Uncategorized.
+
+When changing a term's URL slug, add its previous value to that language's aliases to generate a redirect. Before deleting or merging a term, use the CMS Backlinks panel to find and update its post references; a merged term's URLs can become aliases on the target term. Builds reject unknown references, duplicate URLs and conflicting aliases. Saving content triggers a Pages rebuild.
 
 ## Sveltia CMS
 

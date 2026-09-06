@@ -2,7 +2,7 @@
 import { type CollectionEntry, render } from "astro:content";
 import { Button, Icon } from "astro-pure/user";
 import { getPostUrl } from "@/utils/getPostPaths";
-import { slugifyStr } from "@/utils/slugify";
+import { getPostTaxonomy } from "@/utils/getTaxonomy";
 import { formatReadingTime } from "@/utils/formatReadingTime";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import config from "@/config";
@@ -19,11 +19,14 @@ const {
   pubDatetime,
   modDatetime,
   timezone,
-  tags,
   draft,
   heroImage,
 } = data;
 const locale = Astro.currentLocale ?? config.site.lang;
+const taxonomy = detailed
+  ? await getPostTaxonomy(Astro.props, locale)
+  : undefined;
+const tags = taxonomy?.tags ?? [];
 const href = getPostUrl(id, filePath, locale);
 const postDate = modDatetime ?? pubDatetime;
 const date = new Intl.DateTimeFormat(locale, {
@@ -136,18 +139,28 @@ if (detailed) {
                 {locale === "zh" ? "中文" : "English"}
               </span>
             </div>
-            {tags.length > 0 && (
-              <object title="Tags" aria-label="Tags" aria-labelledby="Tags">
+            {taxonomy && (
+              <object
+                title={locale === "zh" ? "分类与标签" : "Category and tags"}
+              >
                 <ul class="tag-list mt-1 flex flex-wrap gap-2">
+                  <li>
+                    <Button
+                      as="a"
+                      title={taxonomy.category.name}
+                      href={getRelativeLocaleUrl(
+                        locale,
+                        `categories/${taxonomy.category.slug}`
+                      )}
+                      variant="pill"
+                    />
+                  </li>
                   {tags.map(tag => (
                     <li>
                       <Button
                         as="a"
-                        title={tag}
-                        href={getRelativeLocaleUrl(
-                          locale,
-                          `tags/${slugifyStr(tag)}`
-                        )}
+                        title={tag.name}
+                        href={getRelativeLocaleUrl(locale, `tags/${tag.slug}`)}
                         variant="pill"
                       />
                     </li>

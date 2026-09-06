@@ -2,7 +2,7 @@
 import { Font } from "astro:assets";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { ThemeProvider } from "astro-pure/components/basic";
-import { getHomepage } from "@/utils/getHomepage";
+import { siteSettings } from "@/settings";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
@@ -19,7 +19,6 @@ type Props = {
 
 const { site } = config;
 const locale = Astro.currentLocale ?? site.lang;
-const home = await getHomepage(locale);
 
 const {
   pageTitle,
@@ -31,8 +30,8 @@ const {
 } = Astro.props;
 
 const title = pageTitle
-  ? `${pageTitle} | ${home.identity.browserTitle}`
-  : home.identity.browserTitle;
+  ? `${pageTitle} | ${siteSettings.browserTitle}`
+  : siteSettings.browserTitle;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
 // Endpoint files are emitted without a trailing slash. Astro's locale helper
@@ -82,7 +81,7 @@ const rssHref = getRelativeLocaleUrl(locale, "rss.xml").replace(/\/+$/, "");
         } catch (e) {}
       })();
     </script>
-    <link rel="icon" href={getAssetPath(home.identity.favicon)} />
+    <link rel="icon" href={getAssetPath(siteSettings.favicon)} />
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 

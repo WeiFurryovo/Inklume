@@ -1,7 +1,3 @@
-identity:
-  siteName: Inklume
-  browserTitle: Inklume
-  favicon: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
 profile:
   displayName: Inklume
   avatar: https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg
@@ -18,26 +14,3 @@ links:
   moreAbout: 了解 Inklume
   morePosts: 更多示例文章
   gallery: 查看示例相册
-navigation:
-  posts:
-    label: 文章
-    href: posts
-  gallery:
-    label: 相册
-    href: gallery
-  archives:
-    label: 归档
-    href: archives
-  tags:
-    label: 标签
-    href: tags
-  about:
-    label: 关于
-    href: about
-footer:
-  copyrightName: Inklume
-  filings:
-    - label: Moe ICP 114514
-      url: https://icp.gov.moe/?keyword=114514
-    - label: test
-      url: https://test.test

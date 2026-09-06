@@ -1,0 +1,10 @@
+{
+  "siteName": "Inklume",
+  "browserTitle": "Inklume",
+  "description": "Inklume 是一个带 Sveltia CMS 后台、可部署到 Cloudflare Pages 的中英双语 Astro 博客模板演示站。A bilingual Astro blog template demo with Sveltia CMS and Cloudflare Pages.",
+  "author": "WeiFurryovo",
+  "profile": "https://github.com/WeiFurryovo",
+  "timezone": "Asia/Singapore",
+  "ogImage": "inklume-og.png",
+  "favicon": "https://raw.githubusercontent.com/WeiFurryovo/Inklume/c30caee8a1398109b0e90880ab68ad35fe471f68/public/favicon.svg"
+}

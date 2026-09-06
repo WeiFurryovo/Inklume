@@ -1,0 +1,68 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import Layout from "@/layouts/Layout.astro";
+import Header from "./Header.astro";
+import Breadcrumb from "./Breadcrumb.astro";
+import Footer from "./Footer.astro";
+import Tag from "./Tag.astro";
+import { getTaxonomySummaries, type TaxonomyKind } from "@/utils/getTaxonomy";
+
+type Props = { locale: "zh" | "en"; kind: TaxonomyKind };
+const { locale, kind } = Astro.props;
+const posts = await getCollection("posts", post =>
+  post.id.startsWith(`${locale}/`)
+);
+const terms = await getTaxonomySummaries(kind, posts, locale);
+const copy =
+  locale === "zh"
+    ? { tags: "标签", categories: "分类", empty: "还没有内容。" }
+    : { tags: "Tags", categories: "Categories", empty: "No entries yet." };
+---
+
+<Layout pageTitle={copy[kind]}>
+  <Header />
+  <div class="w-full flex-1">
+    <Breadcrumb href={getRelativeLocaleUrl(locale, "posts")} />
+    <main id="main-content" class="mt-6 lg:mt-10">
+      <div id="content-header" class="animate">
+        <h1 class="mb-6 text-3xl font-medium">{copy[kind]}</h1>
+      </div>
+      <nav
+        class="mb-6 flex gap-5 border-b"
+        aria-label={locale === "zh" ? "文章分类与标签" : "Post taxonomy"}
+      >
+        {
+          (["categories", "tags"] as const).map(item => (
+            <a
+              href={getRelativeLocaleUrl(locale, item)}
+              aria-current={item === kind ? "page" : undefined}
+              class:list={[
+                "border-b-2 py-2",
+                item === kind
+                  ? "border-foreground"
+                  : "text-muted-foreground border-transparent",
+              ]}
+            >
+              {copy[item]}
+            </a>
+          ))
+        }
+      </nav>
+      <div id="content" class="animate">
+        {
+          terms.length > 0 ? (
+            <ul class="flex flex-wrap gap-4">
+              {terms.map(term => (
+                <Tag {term} {kind} />
+              ))}
+            </ul>
+          ) : (
+            <p>{copy.empty}</p>
+          )
+        }
+      </div>
+    </main>
+  </div>
+  <Footer />
+</Layout>

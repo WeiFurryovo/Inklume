@@ -7,6 +7,7 @@ heroImage:
   src: /gallery/thumbs/2304d9d8b47b02ea.avif
   alt: Sunrise over Lake Titicaca, Puno, Peru
   color: "#D7A584"
+category: unclassified
 tags:
   - travel
   - photography

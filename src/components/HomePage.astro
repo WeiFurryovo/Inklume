@@ -8,6 +8,8 @@ import Section from "./home/Section.astro";
 import ProjectCard from "./home/ProjectCard.astro";
 import { getGalleryAlbums } from "@/utils/getGalleryAlbums";
 import { getHomepage } from "@/utils/getHomepage";
+import { navigationSettings } from "@/settings";
+import { resolveNavigationHref } from "@/utils/resolveNavigationHref.js";
 import config from "@/config";
 
 type Props = {
@@ -18,6 +20,12 @@ type Props = {
 const { locale, posts } = Astro.props;
 const isZh = locale === "zh";
 const home = await getHomepage(locale);
+const navigationHref = (item: { href: string }) =>
+  resolveNavigationHref(
+    item.href,
+    path => getRelativeLocaleUrl(locale, path),
+    import.meta.env.BASE_URL
+  ).href;
 const sourceUrl =
   config.socials.find(social => social.name === "github")?.url ??
   config.site.profile;
@@ -99,7 +107,7 @@ const stack = [
     </div>
 
     <a
-      href={getRelativeLocaleUrl(locale, "posts")}
+      href={navigationHref(navigationSettings.posts)}
       class="bg-background flex flex-row items-center gap-x-3 rounded-full border px-4 py-2 text-sm shadow-sm transition-shadow hover:shadow-md"
     >
       <span class="relative flex items-center justify-center">
@@ -121,7 +129,7 @@ const stack = [
       <Button
         title={home.links.moreAbout}
         class="w-fit self-end"
-        href={getRelativeLocaleUrl(locale, "about")}
+        href={navigationHref(navigationSettings.about)}
         variant="ahead"
       />
     </Section>
@@ -137,7 +145,7 @@ const stack = [
           <Button
             title={home.links.morePosts}
             class="w-fit self-end"
-            href={getRelativeLocaleUrl(locale, "posts")}
+            href={navigationHref(navigationSettings.posts)}
             variant="ahead"
           />
         </Section>
@@ -161,7 +169,7 @@ const stack = [
           <Button
             title={home.links.gallery}
             class="w-fit self-end"
-            href={getRelativeLocaleUrl(locale, "gallery")}
+            href={navigationHref(navigationSettings.gallery)}
             variant="ahead"
           />
         </Section>

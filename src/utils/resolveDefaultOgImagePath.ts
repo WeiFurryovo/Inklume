@@ -1,7 +1,12 @@
 import type { ResolvedAstroPaperConfig } from "@/types/config";
 import { getAssetPath } from "./withBase";
+import { assetUrlSchema } from "../settings.schema.js";
 
-const publicFiles = import.meta.glob("/public/*", { eager: false });
+const publicFiles = import.meta.glob("/public/**/*", {
+  eager: false,
+  query: "?url",
+  import: "default",
+});
 
 function existsInPublic(filename: string): boolean {
   return `/public/${filename}` in publicFiles;
@@ -10,8 +15,7 @@ function existsInPublic(filename: string): boolean {
 /**
  * Resolves the absolute OG image path used for pages/posts.
  *
- * Security note: `site.ogImage` must be a single filename under `public/` to avoid
- * path traversal or referencing arbitrary files.
+ * Remote HTTP(S) images are preserved. Local images must stay under public/.
  *
  * Behavior:
  * - When `features.dynamicOgImage` is enabled, prefers `public/{site.ogImage}` when present,
@@ -21,20 +25,16 @@ function existsInPublic(filename: string): boolean {
 export function resolveDefaultOgImagePath(
   config: ResolvedAstroPaperConfig
 ): string {
-  const filename = config.site.ogImage;
-  if (
-    filename.includes("..") ||
-    filename.includes("/") ||
-    filename.includes("\\")
-  ) {
-    throw new Error(
-      `site.ogImage must be a single filename in public/ (e.g. "default-og.jpg"), got "${filename}"`
-    );
-  }
+  const image = assetUrlSchema.parse(config.site.ogImage);
+  if (/^https?:\/\//i.test(image)) return image;
+  const filename = decodeURIComponent(image.split(/[?#]/, 1)[0]).replace(
+    /^\/+/,
+    ""
+  );
 
   if (config.features.dynamicOgImage) {
     return existsInPublic(filename)
-      ? getAssetPath(filename)
+      ? getAssetPath(image)
       : getAssetPath("og.png");
   }
 
@@ -44,5 +44,5 @@ export function resolveDefaultOgImagePath(
     );
   }
 
-  return getAssetPath(filename);
+  return getAssetPath(image);
 }

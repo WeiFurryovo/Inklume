@@ -1,0 +1,14 @@
+---
+import type { GetStaticPathsOptions } from "astro";
+import TaxonomyPostsPage from "@/components/TaxonomyPostsPage.astro";
+import { getTaxonomyStaticPaths } from "@/utils/getTaxonomy";
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  return getTaxonomyStaticPaths("categories", "en", paginate);
+}
+
+const { page, term, redirectTo } = Astro.props;
+if (redirectTo) return Astro.redirect(redirectTo, 301);
+---
+
+<TaxonomyPostsPage locale="en" kind="categories" {page} {term} />
