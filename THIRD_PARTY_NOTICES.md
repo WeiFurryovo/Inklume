@@ -26,7 +26,7 @@ The About page uses the following upstream SVG assets solely to identify softwar
 
 ## Sveltia CMS Authenticator
 
-The Pages Functions OAuth flow is adapted from [sveltia/sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth), distributed under the MIT License.
+The Pages Functions OAuth flow, including GitHub App token refresh and scope validation, is adapted from [sveltia/sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) as of commit `5822c9f`, distributed under the MIT License.
 
 - <https://github.com/sveltia/sveltia-cms-auth>
 - <https://github.com/sveltia/sveltia-cms-auth/blob/main/LICENSE.txt>
