@@ -92,6 +92,8 @@ public/admin/config.yml
 - `GITHUB_CLIENT_ID`：OAuth App 的 Client ID，类型选择 Plain text
 - `GITHUB_CLIENT_SECRET`：OAuth App 的 Client Secret，类型选择 Secret
 
+认证器已同步上游对 GitHub App 的支持，现有 OAuth App 配置无需修改即可继续使用。如果希望只授权 Inklume 所在仓库，可以改为[注册 GitHub App](https://github.com/settings/apps/new)：Callback URL 同样填写 `https://inklume.pages.dev/callback`，勾选 Expire user authorization tokens，关闭 Webhook，仓库权限设置 Contents 与 Pull requests 为 Read and write，然后把 App 安装到当前仓库，再用它的 Client ID 和 Client Secret 替换上面两个变量。GitHub App 的访问令牌 8 小时过期，Sveltia CMS 会通过 `POST /auth` 自动刷新，刷新请求同样只接受 `ALLOWED_DOMAINS` 中的来源。继续使用 OAuth App 时，可选变量 `GITHUB_ALLOW_WORKFLOW_SCOPE=true` 允许站点通过 `auth_scope` 请求 `workflow` 权限，默认不开放。
+
 本仓库不使用 Wrangler 配置文件作为 Pages 配置源，变量和 Secret 均由 Cloudflare Dashboard 管理。不要把 Client Secret 写进仓库或普通环境变量。配置后重新部署一次，打开 `https://inklume.pages.dev/admin/` 即可使用 GitHub 登录。预览部署和本地开发不会使用生产 OAuth，请改用 GitHub Personal Access Token 登录。以后绑定自定义域名时，还要把新主机名追加到 `ALLOWED_DOMAINS`，多个域名使用逗号分隔。
 
 Sveltia CMS 的内容提交到 GitHub 后会触发构建。Sveltia 是 Git-based CMS，保存内容就是创建 Git 提交，不提供独立数据库草稿。
@@ -132,4 +134,4 @@ npm run deploy
 
 ## 许可证与致谢
 
-Inklume 基于 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的双语路由和内容结构继续开发；不是上游项目本身。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的 MIT 许可证和来源说明均予以保留，第三方主题说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+Inklume 是一个双语 Astro 博客模板。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。项目的 MIT 许可证予以保留，第三方说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。

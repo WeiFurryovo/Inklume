@@ -1,8 +1,8 @@
 # Contributing to Inklume
 
-Inklume is a bilingual Astro blog template built from AstroPages-Bilingual,
-with Astro Theme Pure as its frontend component layer. The project keeps the
-upstream license and attribution; see the repository README and
+Inklume is a bilingual Astro blog template with Astro Theme Pure as its
+frontend component layer. The project keeps its license and third-party
+attribution; see the repository README and
 `THIRD_PARTY_NOTICES.md` before making changes to shared theme code.
 
 ## Issues and Discussions

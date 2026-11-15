@@ -92,6 +92,8 @@ Then add the following to Production under the Cloudflare Pages project's **Sett
 - `GITHUB_CLIENT_ID`: the OAuth App Client ID, stored as plain text
 - `GITHUB_CLIENT_SECRET`: the OAuth App Client Secret, stored as a secret
 
+The authenticator is synced with upstream GitHub App support; an existing OAuth App keeps working without changes. To grant access to the Inklume repository only, [register a GitHub App](https://github.com/settings/apps/new) instead: use the same `https://inklume.pages.dev/callback` callback URL, enable Expire user authorization tokens, disable the webhook, give Contents and Pull requests Read and write repository permissions, install the app on this repository, and replace the two variables above with its Client ID and Client Secret. GitHub App access tokens expire after 8 hours; Sveltia CMS refreshes them automatically through `POST /auth`, which also only accepts origins listed in `ALLOWED_DOMAINS`. With an OAuth App, the optional `GITHUB_ALLOW_WORKFLOW_SCOPE=true` variable lets the site request the `workflow` scope through `auth_scope`; it is disabled by default.
+
 This repository does not use a Wrangler file as the Pages configuration source; variables and secrets are managed in the Cloudflare Dashboard. Never commit the Client Secret or store it as a plain-text variable. Redeploy after setting the values, then use GitHub sign-in at `https://inklume.pages.dev/admin/`. Production OAuth is intentionally unavailable on preview deployments and local development; use GitHub Personal Access Token sign-in there. When adding a custom domain, append its hostname to `ALLOWED_DOMAINS`, using commas between multiple domains.
 
 Sveltia CMS is Git-based: saving content creates Git commits rather than rows in a separate draft database.
@@ -132,4 +134,4 @@ Small media files can live in `public/uploads/` and be committed to Git. Move Sv
 
 ## License and Attribution
 
-Inklume continues development from the bilingual routes and content structure of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual); it is not the upstream project itself. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original MIT license and attribution are retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the theme notice.
+Inklume is a bilingual Astro blog template. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The project MIT license is retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for third-party notices.
