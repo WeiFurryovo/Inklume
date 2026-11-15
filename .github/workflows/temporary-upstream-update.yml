@@ -1,0 +1,96 @@
+name: Temporary upstream update
+
+on:
+  push:
+    branches:
+      - chore/update-upstream
+    paths:
+      - .github/workflows/temporary-upstream-update.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Apply source changes
+        run: |
+          git apply --verbose <<'PATCH'
+          diff --git a/.github/CONTRIBUTING.md b/.github/CONTRIBUTING.md
+          --- a/.github/CONTRIBUTING.md
+          +++ b/.github/CONTRIBUTING.md
+          @@ -2,5 +2,5 @@
+           
+          -Inklume is a bilingual Astro blog template built from AstroPages-Bilingual,
+          -with Astro Theme Pure as its frontend component layer. The project keeps the
+          -upstream license and attribution; see the repository README and
+          +Inklume is a bilingual Astro blog template with Astro Theme Pure as its
+          +frontend component layer. The project keeps its license and third-party
+          +attribution; see the repository README and
+           `THIRD_PARTY_NOTICES.md` before making changes to shared theme code.
+          diff --git a/README-en.md b/README-en.md
+          --- a/README-en.md
+          +++ b/README-en.md
+          @@ -134,2 +134,2 @@
+           
+          -Inklume continues development from the bilingual routes and content structure of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual); it is not the upstream project itself. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original MIT license and attribution are retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the theme notice.
+          +Inklume is a bilingual Astro blog template. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The project MIT license is retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for third-party notices.
+          diff --git a/README.md b/README.md
+          --- a/README.md
+          +++ b/README.md
+          @@ -134,2 +134,2 @@
+           
+          -Inklume 基于 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的双语路由和内容结构继续开发；不是上游项目本身。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的 MIT 许可证和来源说明均予以保留，第三方主题说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+          +Inklume 是一个双语 Astro 博客模板。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。项目的 MIT 许可证予以保留，第三方说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+          diff --git a/THIRD_PARTY_NOTICES.md b/THIRD_PARTY_NOTICES.md
+          --- a/THIRD_PARTY_NOTICES.md
+          +++ b/THIRD_PARTY_NOTICES.md
+          @@ -4,3 +4,3 @@
+           
+          -Inklume uses the `astro-pure` package from [cworld1/astro-theme-pure](https://github.com/cworld1/astro-theme-pure), pinned to version `1.4.6`.
+          +Inklume uses the `astro-pure` package from [cworld1/astro-theme-pure](https://github.com/cworld1/astro-theme-pure), pinned to version `1.4.7`.
+           
+          @@ -11,3 +11,3 @@
+           
+          -Inklume keeps its own MIT license for the project code derived from AstroPages-Bilingual. The Pure package is consumed as an npm dependency; local Inklume components adapt its visual system to the site's bilingual routes and content model.
+          +Inklume keeps its own MIT license for the project code. The Pure package is consumed as an npm dependency; local Inklume components adapt its visual system to the site's bilingual routes and content model.
+           
+          diff --git a/package.json b/package.json
+          --- a/package.json
+          +++ b/package.json
+          @@ -28,3 +28,3 @@
+               "astro": "^6.4.2",
+          -    "astro-pure": "1.4.6",
+          +    "astro-pure": "1.4.7",
+               "dayjs": "^1.11.21",
+          diff --git a/public/admin/index.html b/public/admin/index.html
+          --- a/public/admin/index.html
+          +++ b/public/admin/index.html
+          @@ -9,3 +9,3 @@
+             <body>
+          -    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+          +    <script src="https://unpkg.com/@sveltia/cms@0.266.0/dist/sveltia-cms.js"></script>
+             </body>
+          PATCH
+
+      - name: Update lockfile
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git status --short
+          git commit -m "chore: update upstream packages and remove AstroPages-Bilingual references"
+          git push
