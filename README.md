@@ -132,4 +132,4 @@ npm run deploy
 
 ## 许可证与致谢
 
-Inklume 基于 [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual) 的双语路由和内容结构继续开发；不是上游项目本身。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。原项目的 MIT 许可证和来源说明均予以保留，第三方主题说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
+Inklume 是一个双语 Astro 博客模板。前台组件层使用独立的 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure)（Apache-2.0），后台使用独立的第三方 [Sveltia CMS](https://github.com/sveltia/sveltia-cms)。项目的 MIT 许可证予以保留，第三方说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。

@@ -132,4 +132,4 @@ Small media files can live in `public/uploads/` and be committed to Git. Move Sv
 
 ## License and Attribution
 
-Inklume continues development from the bilingual routes and content structure of [t0saki/AstroPages-Bilingual](https://github.com/t0saki/AstroPages-Bilingual); it is not the upstream project itself. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The original MIT license and attribution are retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the theme notice.
+Inklume is a bilingual Astro blog template. The frontend component layer uses the independent [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) package (Apache-2.0), and the admin interface is the independent third-party [Sveltia CMS](https://github.com/sveltia/sveltia-cms). The project MIT license is retained; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for third-party notices.
