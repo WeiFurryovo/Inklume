@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { handleAuth, handleCallback } from "../src/server/sveltia-cms-auth.js";
+import {
+  getScope,
+  handleAuth,
+  handleCallback,
+  handlePreflight,
+  handleRefresh,
+} from "../src/server/sveltia-cms-auth.js";
 
 const env = {
   ALLOWED_DOMAINS: "inklume.pages.dev",
@@ -171,4 +177,162 @@ test("callback rejects an origin outside the allowlist", async () => {
 
   assert.equal(response.status, 400);
   assert.match(await response.text(), /UNSUPPORTED_DOMAIN/);
+});
+
+test("auth requests the default scope and honours narrower scopes", () => {
+  assert.equal(getScope(undefined), "repo,user");
+  assert.equal(getScope("public_repo, read:user"), "public_repo,read:user");
+  assert.equal(getScope("admin:org"), "repo,user");
+});
+
+test("auth only allows the workflow scope when explicitly enabled", t => {
+  t.mock.method(console, "warn", () => {});
+
+  assert.equal(getScope("repo,workflow"), "repo");
+  assert.equal(
+    getScope("repo,workflow", { GITHUB_ALLOW_WORKFLOW_SCOPE: "true" }),
+    "repo,workflow"
+  );
+});
+
+test("auth forwards a requested scope to GitHub", async () => {
+  const request = new Request(
+    "https://inklume.pages.dev/auth?provider=github&site_id=inklume.pages.dev&scope=public_repo"
+  );
+  const response = await handleAuth(request, env);
+  const location = new URL(response.headers.get("Location"));
+
+  assert.equal(location.searchParams.get("scope"), "public_repo");
+});
+
+test("callback passes a GitHub App refresh token to Sveltia", async t => {
+  const originalFetch = globalThis.fetch;
+  const csrfToken = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  globalThis.fetch = async () =>
+    Response.json({
+      access_token: "github-token",
+      refresh_token: "github-refresh-token",
+    });
+
+  const request = new Request(
+    `https://inklume.pages.dev/callback?code=oauth-code&state=${csrfToken}`,
+    { headers: { Cookie: csrfCookie(csrfToken) } }
+  );
+  const body = await (await handleCallback(request, env)).text();
+
+  assert.match(body, /github-refresh-token/);
+  assert.match(body, /refreshToken/);
+});
+
+const refreshRequest = (body, origin = targetOrigin) =>
+  new Request("https://inklume.pages.dev/auth", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(origin ? { Origin: origin } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+
+test("refresh rejects origins outside the allowlist", async () => {
+  for (const origin of [
+    "https://malicious.example",
+    "http://inklume.pages.dev",
+    null,
+  ]) {
+    const response = await handleRefresh(
+      refreshRequest(
+        { grant_type: "refresh_token", refresh_token: "r" },
+        origin
+      ),
+      env
+    );
+
+    assert.equal(response.status, 403);
+    assert.equal(response.headers.get("Access-Control-Allow-Origin"), null);
+  }
+});
+
+test("refresh rejects malformed grants", async () => {
+  const response = await handleRefresh(
+    refreshRequest({ grant_type: "authorization_code", code: "c" }),
+    env
+  );
+
+  assert.equal(response.status, 400);
+  assert.deepEqual(await response.json(), { error: "invalid_request" });
+  assert.equal(
+    response.headers.get("Access-Control-Allow-Origin"),
+    targetOrigin
+  );
+});
+
+test("refresh adds the client secret and forwards to GitHub", async t => {
+  const originalFetch = globalThis.fetch;
+
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, "https://github.com/login/oauth/access_token");
+    assert.deepEqual(JSON.parse(options.body), {
+      grant_type: "refresh_token",
+      refresh_token: "old-refresh-token",
+      client_id: "client-id",
+      client_secret: "client-secret",
+    });
+
+    return Response.json({
+      access_token: "new-token",
+      refresh_token: "new-refresh-token",
+    });
+  };
+
+  const response = await handleRefresh(
+    refreshRequest({
+      grant_type: "refresh_token",
+      client_id: "ignored",
+      refresh_token: "old-refresh-token",
+    }),
+    env
+  );
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("Cache-Control"), "no-store");
+  assert.equal(
+    response.headers.get("Access-Control-Allow-Origin"),
+    targetOrigin
+  );
+  assert.deepEqual(await response.json(), {
+    access_token: "new-token",
+    refresh_token: "new-refresh-token",
+  });
+});
+
+test("refresh preflight only allows listed origins", () => {
+  const allowed = handlePreflight(
+    new Request("https://inklume.pages.dev/auth", {
+      method: "OPTIONS",
+      headers: { Origin: targetOrigin },
+    }),
+    env
+  );
+  const denied = handlePreflight(
+    new Request("https://inklume.pages.dev/auth", {
+      method: "OPTIONS",
+      headers: { Origin: "https://malicious.example" },
+    }),
+    env
+  );
+
+  assert.equal(allowed.status, 204);
+  assert.equal(allowed.headers.get("Access-Control-Allow-Methods"), "POST");
+  assert.equal(denied.status, 403);
+  assert.equal(denied.headers.get("Access-Control-Allow-Origin"), null);
 });
