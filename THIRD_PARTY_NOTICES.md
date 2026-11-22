@@ -2,14 +2,14 @@
 
 ## Astro Theme Pure
 
-Inklume uses the `astro-pure` package from [cworld1/astro-theme-pure](https://github.com/cworld1/astro-theme-pure), pinned to version `1.4.6`.
+Inklume uses the `astro-pure` package from [cworld1/astro-theme-pure](https://github.com/cworld1/astro-theme-pure), pinned to version `1.4.7`.
 
 The package is distributed under the Apache License 2.0. Its source and license are available at:
 
 - <https://github.com/cworld1/astro-theme-pure>
 - [Apache License 2.0](THIRD_PARTY_LICENSES/ASTRO-THEME-PURE-APACHE-2.0.txt)
 
-Inklume keeps its own MIT license for the project code derived from AstroPages-Bilingual. The Pure package is consumed as an npm dependency; local Inklume components adapt its visual system to the site's bilingual routes and content model.
+Inklume keeps its own MIT license for the project code. The Pure package is consumed as an npm dependency; local Inklume components adapt its visual system to the site's bilingual routes and content model.
 
 The About page's local `ToolSection` is adapted from the upstream demo component and modified to accept Sveltia CMS icon keys:
 
@@ -26,7 +26,7 @@ The About page uses the following upstream SVG assets solely to identify softwar
 
 ## Sveltia CMS Authenticator
 
-The Pages Functions OAuth flow is adapted from [sveltia/sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth), distributed under the MIT License.
+The Pages Functions OAuth flow, including GitHub App token refresh and scope validation, is adapted from [sveltia/sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth) as of commit `5822c9f`, distributed under the MIT License.
 
 - <https://github.com/sveltia/sveltia-cms-auth>
 - <https://github.com/sveltia/sveltia-cms-auth/blob/main/LICENSE.txt>
