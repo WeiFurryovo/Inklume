@@ -1,0 +1,43 @@
+name: Sveltia CMS update check
+
+# Sveltia CMS is pinned to an exact version with an SRI hash in
+# public/admin/index.html, so upgrades stay deliberate. This verifies the pinned
+# hash against the npm package and keeps one tracking issue open while a newer
+# release exists. The issue closes itself once the pin catches up.
+on:
+  schedule:
+    # Mondays 02:23 UTC (10:23 in China).
+    - cron: "23 2 * * 1"
+  push:
+    branches: [main]
+    paths:
+      - "public/admin/index.html"
+      - "scripts/check-sveltia-cms-update.sh"
+      - ".github/workflows/sveltia-cms-update.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sveltia-cms-update
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check Sveltia CMS version
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: "☁️ Checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "🔎 Verify pin and look for updates"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: bash scripts/check-sveltia-cms-update.sh
